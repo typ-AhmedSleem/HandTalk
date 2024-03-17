@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorParent">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/_t1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/welcome_to_handtalk"
+        android:textColor="@color/colorTextTitle"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="100dp"
+        app:fontFamily="@font/madmi_one_regular"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/_t2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/handtalk_goal_desc"
+        android:layout_marginEnd="25dp"
+        android:layout_marginStart="25dp"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="@color/colorTextSubtitle"
+        app:layout_constraintTop_toBottomOf="@id/_t1" />
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/DefaultMaterialButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/defaultButtonHeight"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:id="@+id/btn_start_app"
+        android:text="@string/start_using_handtalk"
+        app:cornerRadius="@dimen/defaultButtonCornerRadius"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:strokeWidth="0dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

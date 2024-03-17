@@ -30,12 +30,12 @@
     <color name="icPressed">#AAFFFFFF</color>
 
     <!-- HandTalk colors -->
-    <color name="colorLauncherBackground">#FFFFFF</color>
-    <color name="colorLauncherForeground">#000000</color>
-    <color name="colorParent">#FFFFFF</color>
-    <color name="colorSurface">#EEEEEE</color>
-    <color name="colorPrimary">#000000</color>
-    <color name="colorOnPrimary">#FFFFFF</color>
-    <color name="colorTextTitle">#0A0A0A</color>
-    <color name="colorTextSubtitle">#80000000</color>
+    <color name="colorLauncherBackground">#000000</color>
+    <color name="colorLauncherForeground">#FFFFFF</color>
+    <color name="colorParent">#1C1B20</color>
+    <color name="colorSurface">#000000</color>
+    <color name="colorPrimary">#E6FFFFFF</color>
+    <color name="colorOnPrimary">#000000</color>
+    <color name="colorTextTitle">#FFFFFF</color>
+    <color name="colorTextSubtitle">#A6FFFFFF</color>
 </resources>

@@ -22,4 +22,6 @@
     <style name="AppThemeProgressStyle">
         <item name="colorAccent">@color/mp_color_primary_variant</item>
     </style>
+
+    <style name="DefaultMaterialButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton" />
 </resources>

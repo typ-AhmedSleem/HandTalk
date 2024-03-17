@@ -26,7 +26,7 @@
         <item name="colorError">@color/mp_color_error</item>
 
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:statusBarColor">@color/colorParent</item>
     </style>
 </resources>

@@ -40,8 +40,9 @@ import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.typ.handtalk.GestureRecognizerHelper
 import com.typ.handtalk.MainViewModel
 import com.typ.handtalk.R
+import com.typ.handtalk.core.resolvers.RecognizerResultResolver
 import com.typ.handtalk.databinding.FragmentCameraBinding
-import java.util.*
+import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -353,31 +354,45 @@ class CameraFragment : Fragment(),
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        imageAnalyzer?.targetRotation =
-            fragmentCameraBinding.viewFinder.display.rotation
+        imageAnalyzer?.targetRotation = fragmentCameraBinding.viewFinder.display.rotation
     }
 
     // Update UI after a hand gesture has been recognized. Extracts original
     // image height/width to scale and place the landmarks properly through
     // OverlayView. Only one result is expected at a time. If two or more
     // hands are seen in the camera frame, only one will be processed.
-    override fun onResults(
-        resultBundle: GestureRecognizerHelper.ResultBundle
-    ) {
+    override fun onResults(resultBundle: GestureRecognizerHelper.ResultBundle) {
         activity?.runOnUiThread {
             if (_fragmentCameraBinding != null) {
                 // Show result of recognized gesture
-                val gestureCategories = resultBundle.results.first().gestures()
-                if (gestureCategories.isNotEmpty()) {
-                    gestureRecognizerResultAdapter.updateResults(
-                        gestureCategories.first()
-                    )
-                } else {
-                    gestureRecognizerResultAdapter.updateResults(emptyList())
+                with(resultBundle.results) {
+                    if (isEmpty()) {
+                        // Results is empty
+                        gestureRecognizerResultAdapter.setResults(emptyArray())
+                    } else {
+                        // Found at least one result
+                        val resolvedResult = RecognizerResultResolver.resolveResults(first())
+                        gestureRecognizerResultAdapter.setResults(resolvedResult)
+                    }
+//                    if (isNotEmpty()) {
+//                        val result = first()
+//                        val hands = arrayOf<Hand>()
+//                        for ((category, gesture) in result.handedness().zip(result.gestures())) {
+//                            Log.d("CameraFragment", "Category: ${category.size}, gesture: ${gesture.size}")
+//                        }
+//                        gestureRecognizerResultAdapter.setResults(hands)
+//                    } else {
+//                        Log.i("CameraFragment", "onResults: No results.")
+//                    }
                 }
+//                val gestureCategories = resultBundle.results.first().gestures()
+//                if (gestureCategories.isNotEmpty()) {
+//                    gestureRecognizerResultAdapter.updateResults(gestureCategories.first())
+//                } else {
+//                    gestureRecognizerResultAdapter.updateResults(emptyList())
+//                }
 
-                fragmentCameraBinding.bottomSheetLayout.inferenceTimeVal.text =
-                    String.format("%d ms", resultBundle.inferenceTime)
+//                fragmentCameraBinding.bottomSheetLayout.inferenceTimeVal.text = String.format("%d ms", resultBundle.inferenceTime)
 
                 // Pass necessary information to OverlayView for drawing on the canvas
                 fragmentCameraBinding.overlay.setResults(

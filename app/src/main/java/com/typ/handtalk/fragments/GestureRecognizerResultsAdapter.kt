@@ -21,11 +21,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.typ.handtalk.databinding.ItemGestureRecognizerResultBinding
 import com.google.mediapipe.tasks.components.containers.Category
+import com.typ.handtalk.core.models.Hand
 import java.util.Locale
 import kotlin.math.min
 
-class GestureRecognizerResultsAdapter :
-    RecyclerView.Adapter<GestureRecognizerResultsAdapter.ViewHolder>() {
+class GestureRecognizerResultsAdapter : RecyclerView.Adapter<GestureRecognizerResultsAdapter.ViewHolder>() {
     companion object {
         private const val NO_VALUE = "--"
     }
@@ -45,6 +45,10 @@ class GestureRecognizerResultsAdapter :
             adapterCategories.sortedBy { it?.index() }
             notifyDataSetChanged()
         }
+    }
+
+    fun setResults(hands: Array<Hand>) {
+
     }
 
     fun updateAdapterSize(size: Int) {
@@ -74,14 +78,14 @@ class GestureRecognizerResultsAdapter :
     inner class ViewHolder(private val binding: ItemGestureRecognizerResultBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(label: String?, score: Float?) {
-            with(binding) {
-                tvLabel.text = label ?: NO_VALUE
-                tvScore.text = if (score != null) String.format(
-                    Locale.US,
-                    "%.2f",
-                    score
-                ) else NO_VALUE
-            }
+//            with(binding) {
+//                tvLabel.text = label ?: NO_VALUE
+//                tvScore.text = if (score != null) String.format(
+//                    Locale.US,
+//                    "%.2f",
+//                    score
+//                ) else NO_VALUE
+//            }
         }
     }
 }

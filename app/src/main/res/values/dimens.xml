@@ -30,4 +30,7 @@
 
     <integer name="bottom_sheet_control_text_min_ems">3</integer>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="defaultButtonHeight">65dp</dimen>
+    <dimen name="defaultButtonCornerRadius">10dp</dimen>
 </resources>
