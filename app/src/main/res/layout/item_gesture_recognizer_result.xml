@@ -37,29 +37,8 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/bottom_sheet_text_size"
         tools:text="85%"
-        android:textColor="@color/colorTextTitle"
+        android:textColor="#F44336"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvRightHandSignLabel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textColor="#4CAF50"
-        android:layout_marginTop="5dp"
-        android:textSize="@dimen/bottom_sheet_text_size"
-        android:text="Right hand sign:"
-        app:layout_constraintEnd_toStartOf="@+id/tvRightHandSignScore"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvLeftHandSignLabel" />
-
-    <TextView
-        android:id="@+id/tvRightHandSignScore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/bottom_sheet_text_size"
-        tools:text="85%"
-        android:textColor="@color/colorTextTitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvRightHandSignLabel" />
 </androidx.constraintlayout.widget.ConstraintLayout>

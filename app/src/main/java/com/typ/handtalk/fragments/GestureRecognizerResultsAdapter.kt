@@ -16,22 +16,30 @@
 package com.typ.handtalk.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.typ.handtalk.databinding.ItemGestureRecognizerResultBinding
 import com.google.mediapipe.tasks.components.containers.Category
 import com.typ.handtalk.core.models.Hand
+import com.typ.handtalk.core.models.HandSign
+import com.typ.handtalk.core.tts.TextSpeaker
+import com.typ.handtalk.databinding.ItemGestureRecognizerResultBinding
 import java.util.Locale
 import kotlin.math.min
 
-class GestureRecognizerResultsAdapter : RecyclerView.Adapter<GestureRecognizerResultsAdapter.ViewHolder>() {
+class GestureRecognizerResultsAdapter(context: Context) : RecyclerView.Adapter<GestureRecognizerResultsAdapter.ViewHolder>() {
     companion object {
         private const val NO_VALUE = "--"
     }
 
-    private var adapterCategories: MutableList<Category?> = mutableListOf()
     private var adapterSize: Int = 0
+    private var adapterCategories: MutableList<Category?> = mutableListOf()
+
+    private var lastSign: String? = null
+    private var hands: Array<Hand> = emptyArray()
+    private val textSpeaker = TextSpeaker(context)
+
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateResults(categories: List<Category>?) {
@@ -47,18 +55,17 @@ class GestureRecognizerResultsAdapter : RecyclerView.Adapter<GestureRecognizerRe
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setResults(hands: Array<Hand>) {
-
+        this.hands = hands
+        notifyDataSetChanged()
     }
 
     fun updateAdapterSize(size: Int) {
         adapterSize = size
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemGestureRecognizerResultBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -68,14 +75,34 @@ class GestureRecognizerResultsAdapter : RecyclerView.Adapter<GestureRecognizerRe
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        adapterCategories[position].let { category ->
-            holder.bind(category?.categoryName(), category?.score())
-        }
+//        adapterCategories[position].let { category ->
+//            holder.bind(category?.categoryName(), category?.score())
+//        }
+        holder.bind(hands[position])
     }
 
-    override fun getItemCount(): Int = adapterCategories.size
+    override fun getItemCount(): Int = hands.size
 
     inner class ViewHolder(private val binding: ItemGestureRecognizerResultBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(hand: Hand) {
+            with(binding) {
+                tvLeftHandSignLabel.text = hand.sign?.label ?: NO_VALUE
+                tvLeftHandSignScore.text = String.format(
+                    Locale.US,
+                    "%.2f",
+                    hand.sign?.score ?: NO_VALUE
+                )
+            }
+            // Speak the sign
+            if (hands.size >= 2) return
+            hand.sign?.label?.let {
+                if (lastSign != hand.sign?.label && hand.sign?.label != "None") {
+                    textSpeaker.speak(it)
+                    lastSign = hand.sign?.label
+                }
+            }
+        }
 
         fun bind(label: String?, score: Float?) {
 //            with(binding) {
