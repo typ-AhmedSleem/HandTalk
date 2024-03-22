@@ -16,14 +16,16 @@
 package com.typ.handtalk
 
 import androidx.lifecycle.ViewModel
+import com.google.mediapipe.tasks.core.Delegate
+import com.typ.handtalk.core.recognizer.HandSignRecognizer
 
 class MainViewModel : ViewModel() {
-    private var _delegate: Int = GestureRecognizerHelper.DELEGATE_GPU
-    private var _minHandDetectionConfidence: Float = GestureRecognizerHelper.DEFAULT_HAND_DETECTION_CONFIDENCE
-    private var _minHandTrackingConfidence: Float = GestureRecognizerHelper.DEFAULT_HAND_TRACKING_CONFIDENCE
-    private var _minHandPresenceConfidence: Float = GestureRecognizerHelper.DEFAULT_HAND_PRESENCE_CONFIDENCE
+    private var _delegate: Delegate = Delegate.GPU
+    private var _minHandDetectionConfidence: Float = HandSignRecognizer.DEFAULT_HAND_DETECTION_CONFIDENCE
+    private var _minHandTrackingConfidence: Float = HandSignRecognizer.DEFAULT_HAND_TRACKING_CONFIDENCE
+    private var _minHandPresenceConfidence: Float = HandSignRecognizer.DEFAULT_HAND_PRESENCE_CONFIDENCE
 
-    val currentDelegate: Int
+    val currentDelegate: Delegate
         get() = _delegate
     val currentMinHandDetectionConfidence: Float
         get() = _minHandDetectionConfidence
@@ -32,7 +34,7 @@ class MainViewModel : ViewModel() {
     val currentMinHandPresenceConfidence: Float
         get() = _minHandPresenceConfidence
 
-    fun setDelegate(delegate: Int) {
+    fun setDelegate(delegate: Delegate) {
         _delegate = delegate
     }
 

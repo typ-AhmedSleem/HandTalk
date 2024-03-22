@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activities.SignToTextTranslatorActivity">
+    tools:context=".ui.activities.LiveSignTranslatorActivity">
 
     <androidx.camera.view.PreviewView
         android:id="@+id/view_finder"
@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         app:scaleType="fillStart" />
 
-    <com.typ.handtalk.OverlayView
+    <com.typ.handtalk.ui.overlay.OverlayView
         android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -36,12 +36,15 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_marginTop="?actionBarSize"
+        android:layout_marginEnd="20dp"
         android:id="@+id/fab_hand_talk_normal_ui"
-        app:backgroundTint="#66FFFFFF"
+        android:importantForAccessibility="no"
+        app:backgroundTint="#33FFFFFF"
         app:elevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white"
         app:srcCompat="@drawable/icn_chevron_up" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
