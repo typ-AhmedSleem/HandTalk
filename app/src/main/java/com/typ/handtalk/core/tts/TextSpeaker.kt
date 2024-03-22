@@ -62,7 +62,7 @@ class TextSpeaker(context: Context) {
             engine.speak(sentence, TextToSpeech.QUEUE_FLUSH, null, null)
         } else {
             // Can't speak text because of error or failed to init
-            Log.w(TAG, "Can't speak due to error or failed to initialize engine.")
+            Log.w(TAG, "Can't speak due to error or failed to initialize engine. EngineStatus= $status")
         }
     }
 

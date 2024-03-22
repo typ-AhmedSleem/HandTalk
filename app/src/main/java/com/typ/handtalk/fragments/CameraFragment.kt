@@ -40,8 +40,7 @@ import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.typ.handtalk.GestureRecognizerHelper
 import com.typ.handtalk.MainViewModel
 import com.typ.handtalk.R
-import com.typ.handtalk.core.models.Hand
-import com.typ.handtalk.core.resolvers.RecognizerResultResolver
+import com.typ.handtalk.core.resolvers.FrameResultResolver
 import com.typ.handtalk.databinding.FragmentCameraBinding
 import java.util.Locale
 import java.util.concurrent.ExecutorService
@@ -367,15 +366,14 @@ class CameraFragment : Fragment(),
             if (_fragmentCameraBinding != null) {
                 // Show result of recognized gesture
                 with(resultBundle.results) {
-                    if (isEmpty()) {
-                        // Results is empty
-                        gestureRecognizerResultAdapter.setResults(emptyArray())
-                    } else {
+                    if (isEmpty()) gestureRecognizerResultAdapter.setResults(emptyArray()) else {
                         // Found at least one result
-                        val resolvedResult = RecognizerResultResolver.resolveResults(first())
-                        gestureRecognizerResultAdapter.setResults(resolvedResult)
+                        val resolvedResult = FrameResultResolver.resolve(first())
+//                        gestureRecognizerResultAdapter.setResults(resolvedResult)
                     }
                 }
+
+                // ** GOOGLE CODE **
                 val gestureCategories = resultBundle.results.first().gestures()
                 if (gestureCategories.isNotEmpty()) {
                     gestureRecognizerResultAdapter.updateResults(gestureCategories.first())
