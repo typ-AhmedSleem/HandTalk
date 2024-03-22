@@ -42,8 +42,12 @@ class HandSignRecognizer(
     val closed: Boolean
         get() = gestureRecognizer == null
 
+    val running: Boolean
+        get() = !closed
+
     init {
         setupGestureRecognizer()
+        Log.i(TAG, "HandSignRecognizer is now fully initialized.")
     }
 
     fun clearGestureRecognizer() {
@@ -87,7 +91,7 @@ class HandSignRecognizer(
     }
 
     // Convert the ImageProxy to MP Image and feed it to GestureRecognizer.
-    fun preprocessCameraFrame(imageProxy: ImageProxy): Pair<Long, MPImage> {
+    private fun preprocessCameraFrame(imageProxy: ImageProxy): Pair<Long, MPImage> {
         val frameTime = SystemClock.uptimeMillis()
 
         // Copy out RGB bits from the frame to a bitmap buffer

@@ -20,12 +20,12 @@ object FrameResultResolver {
         val rightHandSign = obtainRightHandSign(combined)
         val leftHandSign = obtainLeftHandSign(combined)
         // Region: Start Log
-        Log.i(
-            TAG, """FrameResultResolver::resolve
-            rightHandSign => $rightHandSign
-            leftHandSign => $leftHandSign
-        """.trimIndent()
-        )
+//        Log.i(
+//            TAG, """FrameResultResolver::resolve
+//            rightHandSign => $rightHandSign
+//            leftHandSign => $leftHandSign
+//        """.trimIndent()
+//        )
         // Region: End Log
         // * Return new FrameResult instance
         return FrameResult(leftHandSign, rightHandSign)
