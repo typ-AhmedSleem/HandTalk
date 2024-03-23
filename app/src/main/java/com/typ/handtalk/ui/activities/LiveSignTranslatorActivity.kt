@@ -1,6 +1,7 @@
 package com.typ.handtalk.ui.activities
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -138,6 +139,11 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
         // Setup Camera instance
         binding.viewFinder.post {
             setupCamera()
+        }
+
+        // Listeners
+        binding.fabHandTalkNormalUi.setOnClickListener {
+            startActivity(Intent(this, HomeActivity::class.java))
         }
     }
 
