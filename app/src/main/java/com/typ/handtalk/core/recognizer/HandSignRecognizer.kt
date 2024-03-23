@@ -135,7 +135,7 @@ class HandSignRecognizer(
         val inferenceTime = finishTimeMs - result.timestampMs()
         listener?.onRecognizerResult(
             ResultBundle(
-                listOf(result),
+                result,
                 inferenceTime,
                 input.height,
                 input.width

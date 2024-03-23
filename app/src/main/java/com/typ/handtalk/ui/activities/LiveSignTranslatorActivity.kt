@@ -184,7 +184,7 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
     override fun onRecognizerResult(resultBundle: ResultBundle) {
         runOnUiThread {
             // Show result of recognized gesture
-            val rawResult = resultBundle.results.first()
+            val rawResult = resultBundle.rawResult
             val frameResult = FrameResultResolver.resolve(rawResult)
 
             if (frameResult != lastResult) {
