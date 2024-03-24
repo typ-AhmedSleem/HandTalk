@@ -11,11 +11,14 @@ activity = "1.8.2"
 constraintlayout = "2.1.4"
 navigation = "2.7.7"
 camera = "1.3.2"
-androidLibrary = "8.3.0"
+androidLibrary = "8.3.1"
 deUndercouchDownload = "4.1.2"
 mediapipe = "0.10.11"
+kotlinxCoroutines = "1.7.3"
+easyrecyclerview = "4.4.2"
 
 [libraries]
+kotlinx-corotines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -32,7 +35,7 @@ androidx-camera-view = { group = "androidx.camera", name = "camera-view", versio
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation"}
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation"}
 mediapipe-tasks-vision = { group = "com.google.mediapipe", name = "tasks-vision", version.ref = "mediapipe"}
-
+easy-recyclerview = { group = "com.jude", name = "easyrecyclerview", version.ref = "easyrecyclerview" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

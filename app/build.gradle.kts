@@ -40,6 +40,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.kotlinx.corotines)
+
     implementation(libs.material)
 
     implementation(libs.androidx.window)
@@ -55,4 +57,5 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
 
     implementation(libs.mediapipe.tasks.vision)
+    implementation(libs.easy.recyclerview)
 }
