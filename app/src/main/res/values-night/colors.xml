@@ -32,8 +32,8 @@
     <!-- HandTalk colors -->
     <color name="colorLauncherBackground">#000000</color>
     <color name="colorLauncherForeground">#FFFFFF</color>
-    <color name="colorParent">#1C1B20</color>
-    <color name="colorSurface">#000000</color>
+    <color name="colorParent">#000000</color>
+    <color name="colorSurface">#1C1B20</color>
     <color name="colorPrimary">#E6FFFFFF</color>
     <color name="colorOnPrimary">#000000</color>
     <color name="colorTextTitle">#FFFFFF</color>
