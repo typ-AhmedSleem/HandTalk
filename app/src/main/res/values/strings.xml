@@ -50,6 +50,8 @@
     <string name="handtalk_goal_desc">Now deaf can communicate in their native language</string>
     <string name="start_using_handtalk">Start using HandTalk</string>
     <string name="categories">Categories</string>
+    <string name="start_a_new_translation">Start a new translation</string>
+    <string name="msg_no_a2s_translation_history">You haven\'t made any translation so far.\nStart a new one using the (+) button below</string>
 
     <string-array name="delegate_spinner_titles">
         <item>CPU</item>

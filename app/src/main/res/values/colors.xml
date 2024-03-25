@@ -39,4 +39,5 @@
     <color name="colorTextTitle">#0A0A0A</color>
     <color name="colorTextSubtitle">#80000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

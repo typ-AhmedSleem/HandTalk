@@ -19,8 +19,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
-        android:theme="@style/Theme.HandTalk"
+        android:theme="@style/Theme.HandTalk.HomeActivity"
         tools:targetApi="31">
+
         <activity
             android:name=".ui.activities.WelcomeActivity"
             android:exported="true">
@@ -30,9 +31,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.activities.LiveSignTranslatorActivity"
+            android:theme="@style/Theme.HandTalk"
             android:exported="true" />
+
+        <activity
+            android:name=".ui.activities.HomeActivity"
+            android:exported="true" />
+
+        <activity
+            android:name=".ui.activities.Arabic2SignTranslatorActivity"
+            android:exported="true" />
+
     </application>
 
 </manifest>
