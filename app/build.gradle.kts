@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
@@ -57,5 +58,5 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
 
     implementation(libs.mediapipe.tasks.vision)
-    implementation(libs.easy.recyclerview)
+    implementation(libs.kiel)
 }

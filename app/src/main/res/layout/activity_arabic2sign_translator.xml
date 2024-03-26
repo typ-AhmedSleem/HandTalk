@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorSurface">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -17,8 +18,8 @@
         app:title="Arabic to Sign"
         app:titleCentered="true" />
 
-    <com.jude.easyrecyclerview.EasyRecyclerView
-        android:id="@+id/erv_arabic2sign_translation_history"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_arabic2sign_translation_history"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="#00FFFFFF"
