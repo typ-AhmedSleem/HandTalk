@@ -42,7 +42,7 @@
             android:exported="true" />
 
         <activity
-            android:name=".ui.activities.Arabic2SignTranslatorActivity"
+            android:name=".ui.a2s.Arabic2SignTranslatorActivity"
             android:exported="true" />
 
     </application>
