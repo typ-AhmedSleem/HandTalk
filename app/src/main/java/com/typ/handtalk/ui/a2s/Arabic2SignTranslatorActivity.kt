@@ -1,7 +1,6 @@
 package com.typ.handtalk.ui.a2s
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.typ.handtalk.core.a2s.A2STranslationHistoryRecord
 import com.typ.handtalk.databinding.ActivityArabic2signTranslatorBinding
@@ -30,8 +29,6 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
             layoutChangeCallback = { state ->
                 if (state == A2STranslationHistoryView.LayoutState.EMPTY) binding.fabA2sNewTranslation.hide()
                 else binding.fabA2sNewTranslation.show()
-
-                Log.i(TAG, "layoutChangeCallback: $state")
             }
             btnEmptyLayoutPlus.setOnClickListener {
                 // Request new translation

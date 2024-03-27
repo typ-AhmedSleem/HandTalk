@@ -93,7 +93,6 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
             .build()
             // The analyzer can then be assigned to the instance
             .also {
-                Log.i(TAG, "Setting analyzer. Recognizer initialized = ${this::recognizer.isInitialized}")
                 it.setAnalyzer(backgroundExecutor, recognizer::recognizeSignsInFrame)
             }
 
@@ -198,10 +197,7 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
                 lastResult?.let {
                     Log.i(
                         TAG,
-                        """FrameResult changed
-                        LEFT: ${it.leftHandSign?.label} -> ${frameResult.leftHandSign?.label}
-                        RIGHT: ${it.rightHandSign?.label} -> ${frameResult.rightHandSign?.label}
-                        """.trimIndent()
+                        "FrameResult (LEFT: ${it.leftHandSign?.label} -> ${frameResult.leftHandSign?.label} | RIGHT: ${it.rightHandSign?.label} -> ${frameResult.rightHandSign?.label})"
                     )
                 }
                 lastResult = frameResult
