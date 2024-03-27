@@ -9,7 +9,7 @@ object Signs {
         label = "OPEN_PALM",
         score = 0.5f,
         distance = 5,
-        direction = MovingDirection.LEFT,
+        direction = MovingDirection.RIGHT_TO_LEFT,
     )
 
 }

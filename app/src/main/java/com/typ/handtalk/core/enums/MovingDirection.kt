@@ -1,6 +1,8 @@
 package com.typ.handtalk.core.enums
 
 enum class MovingDirection {
-    UP, DOWN,
-    LEFT, RIGHT
+    UP_TO_DOWN,
+    DOWN_TO_TOP,
+    LEFT_TO_RIGHT,
+    RIGHT_TO_LEFT
 }
