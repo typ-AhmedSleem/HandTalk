@@ -4,7 +4,7 @@ import com.typ.handtalk.core.a2s.playables.A2SignPlayable
 
 data class A2STranslationHistoryRecord(
     val sentence: String,
-    val signs: Array<A2SignPlayable>
+    val signs: Array<A2SignPlayable> = emptyArray()
 ) {
     override fun equals(other: Any?): Boolean {
         if (other == null) return false
