@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorSurface"
+    android:background="@color/colorParent"
     android:theme="@style/Theme.HandTalk.HomeActivity"
     tools:context=".ui.activities.HomeActivity">
 
@@ -12,7 +12,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorSurface"
+        android:background="@color/colorParent"
         android:elevation="1dp"
         app:layout_constraintTop_toTopOf="parent">
 
