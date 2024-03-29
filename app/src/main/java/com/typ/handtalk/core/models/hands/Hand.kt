@@ -1,7 +1,7 @@
-package com.typ.handtalk.core.models
+package com.typ.handtalk.core.models.hand
 
-import com.google.mediapipe.formats.proto.LandmarkProto.Landmark
 import com.google.mediapipe.tasks.components.containers.NormalizedLandmark
+import com.typ.handtalk.core.models.signs.HandSign
 
 open class Hand(
     val idx: Int,
