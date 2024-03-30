@@ -14,7 +14,7 @@ class WelcomeActivity : AppCompatActivity() {
             setContentView(root)
             btnStartApp.setOnClickListener {
                 startActivity(Intent(this@WelcomeActivity, LiveSignTranslatorActivity::class.java))
-                finish()
+//                finish()
             }
             btnStartApp.setOnLongClickListener {
                 startActivity(Intent(this@WelcomeActivity, Arabic2SignTranslatorActivity::class.java))
