@@ -1,4 +1,4 @@
-package com.typ.handtalk.core.models
+package com.typ.handtalk.core.models.signs
 
 import com.typ.handtalk.core.enums.MovingDirection
 

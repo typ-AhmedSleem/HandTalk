@@ -1,7 +1,7 @@
 package com.typ.handtalk.core.resolvers.models
 
-import com.typ.handtalk.core.models.HandSign
-import com.typ.handtalk.core.models.MovingSign
+import com.typ.handtalk.core.models.signs.HandSign
+import com.typ.handtalk.core.models.signs.MovingSign
 import com.typ.handtalk.core.repository.Signs
 
 data class FrameResult(

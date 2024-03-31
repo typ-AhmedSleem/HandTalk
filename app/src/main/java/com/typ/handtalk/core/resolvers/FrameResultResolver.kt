@@ -1,16 +1,15 @@
 package com.typ.handtalk.core.resolvers
 
-import android.util.Log
 import com.google.mediapipe.tasks.components.containers.Category
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizerResult
-import com.typ.handtalk.core.models.HandSign
+import com.typ.handtalk.core.models.signs.HandSign
 import com.typ.handtalk.core.resolvers.models.FrameResult
 
 object FrameResultResolver {
 
     private const val TAG = "FrameResultResolver"
-    private const val RIGHT_HAND_INDEX = 1
-    private const val LEFT_HAND_INDEX = 0
+    const val RIGHT_HAND_INDEX = 1
+    const val LEFT_HAND_INDEX = 0
 
     @JvmStatic
     fun resolve(raw: GestureRecognizerResult): FrameResult {

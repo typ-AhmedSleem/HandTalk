@@ -1,7 +1,7 @@
 package com.typ.handtalk.core.repository
 
 import com.typ.handtalk.core.enums.MovingDirection
-import com.typ.handtalk.core.models.MovingSign
+import com.typ.handtalk.core.models.signs.MovingSign
 
 object Signs {
 

@@ -1,4 +1,4 @@
-package com.typ.handtalk.core.models
+package com.typ.handtalk.core.models.signs
 
 open class HandSign(
     val label: String,

@@ -1,6 +1,6 @@
 package com.typ.handtalk.core.repository
 
-import com.typ.handtalk.core.models.HandSign
+import com.typ.handtalk.core.models.signs.HandSign
 
 object Numbers {
 
