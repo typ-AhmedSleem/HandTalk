@@ -6,7 +6,7 @@ open class HandSign(
 ) {
 
     override fun toString(): String {
-        return "HandSign('$label' -> $score)"
+        return "HandSign('$label' @ %.2f)".format(score)
     }
 
     override fun equals(other: Any?): Boolean {

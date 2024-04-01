@@ -1,28 +1,46 @@
 package com.typ.handtalk.core.resolvers.models
 
+import com.typ.handtalk.core.models.hands.Hand
 import com.typ.handtalk.core.models.signs.HandSign
 import com.typ.handtalk.core.models.signs.MovingSign
 import com.typ.handtalk.core.repository.Signs
 
 data class FrameResult(
-    val leftHandSign: HandSign? = null,
-    val rightHandSign: HandSign? = null
+    val leftHand: Hand? = null,
+    val rightHand: Hand? = null,
+    val timestamp: Long = System.currentTimeMillis(),
 ) {
 
+    val rhs by lazy {
+        rightHand?.sign
+    }
+
+    val lhs by lazy {
+        leftHand?.sign
+    }
+
+    val rhsLabel by lazy {
+        rhs?.label
+    }
+
+    val lhsLabel by lazy {
+        lhs?.label
+    }
+
     fun isSeparator(): Boolean {
-        if (rightHandSign == null) return false
-        if ((rightHandSign is MovingSign).not()) return false
-        return ((leftHandSign?.label ?: "None") == "None") &&
-                ((rightHandSign as MovingSign).isSeparator())
+        if (rightHand == null) return false
+        if ((rightHand is MovingSign).not()) return false
+        return false
+//        return ((leftHand?.label ?: "None") == "None") && ((rightHand as MovingSign).isSeparator())
     }
 
     override fun toString(): String {
-        return "FrameResult(leftHandSign=$leftHandSign, rightHandSign=$rightHandSign)"
+        return "FrameResult(timestamp=$timestamp, leftHand=$leftHand, rightHand=$rightHand)"
     }
 
     override fun hashCode(): Int {
-        var result = leftHandSign?.hashCode() ?: 0
-        result = 31 * result + (rightHandSign?.hashCode() ?: 0)
+        var result = leftHand?.hashCode() ?: 0
+        result = 31 * result + (rightHand?.hashCode() ?: 0)
         return result
     }
 
@@ -30,10 +48,32 @@ data class FrameResult(
         if (this === other) return true
         if (other !is FrameResult) return false
 
-        if (leftHandSign?.label != other.leftHandSign?.label) return false
-        if (rightHandSign?.label != other.rightHandSign?.label) return false
-        return true
+//        return lhs == other.lhs && rhs == other.rhs
+        return hasSameRightSignAs(other.rhs)
     }
+
+    fun hasSameRightSignAs(prevRHS: HandSign?): Boolean {
+        if (rightHand == null || prevRHS == null) return false
+        return rightHand.hasSameSignAs(prevRHS)
+    }
+
+    fun hasSameLeftSignAs(prevSign: Hand?): Boolean {
+        if (leftHand == null || prevSign == null) return false
+        return leftHand.hasSameSignAs(prevSign.sign)
+    }
+
+    fun isRightNullOrNone(): Boolean {
+        return rhsLabel == null || rhsLabel == "None"
+    }
+
+    fun isLeftNullOrNone(): Boolean {
+        return lhsLabel == null || lhsLabel == "None"
+    }
+
+    fun areAllNullsOrNones(): Boolean {
+        return isRightNullOrNone() && isLeftNullOrNone()
+    }
+
 }
 
 private fun MovingSign.isSeparator(): Boolean {
