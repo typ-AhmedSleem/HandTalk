@@ -6,7 +6,7 @@ import com.typ.handtalk.core.models.signs.HandSign
 open class Hand(
     val idx: Int,
     var sign: HandSign?,
-    var landmarks: List<List<NormalizedLandmark>>
+    var landmarks: List<NormalizedLandmark>
 ) {
     fun hasSameSignAs(other: HandSign?): Boolean {
         return sign == other
