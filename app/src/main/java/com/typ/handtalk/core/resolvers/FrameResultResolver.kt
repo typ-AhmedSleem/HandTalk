@@ -1,7 +1,8 @@
 package com.typ.handtalk.core.resolvers
 
-import com.google.mediapipe.tasks.components.containers.Category
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizerResult
+import com.typ.handtalk.core.models.hands.LeftHand
+import com.typ.handtalk.core.models.hands.RightHand
 import com.typ.handtalk.core.models.signs.HandSign
 import com.typ.handtalk.core.resolvers.models.FrameResult
 
@@ -12,58 +13,46 @@ object FrameResultResolver {
     const val LEFT_HAND_INDEX = 0
 
     @JvmStatic
-    fun resolve(raw: GestureRecognizerResult): FrameResult {
-        // * Combine hand results with gesture results
-        val combined = raw.handedness().zip(raw.gestures())
+    fun resolve(rawResult: GestureRecognizerResult): FrameResult {
         // * Obtain hands and its gestures
-        val rightHandSign = obtainRightHandSign(combined)
-        val leftHandSign = obtainLeftHandSign(combined)
-        // Region: Start Log
-//        Log.i(
-//            TAG, """FrameResultResolver::resolve
-//            rightHandSign => $rightHandSign
-//            leftHandSign => $leftHandSign
-//        """.trimIndent()
-//        )
-        // Region: End Log
+        val (rightHand, leftHand) = identifyHands(rawResult)
         // * Return new FrameResult instance
-        return FrameResult(leftHandSign, rightHandSign)
+        return FrameResult(leftHand, rightHand)
     }
 
-    private fun obtainLeftHandSign(combined: List<Pair<List<Category>, List<Category>>>): HandSign? {
-        for ((rHand, rGesture) in combined) {
-            val hand = rHand.first()
-            val gesture = rGesture.first()
-            if (hand.index() != LEFT_HAND_INDEX) {
-                // * Not the LEFT hand. Pass this iteration
-                continue
-            }
-            // This is the LEFT hand we are looking for
-            return HandSign(
-                gesture.categoryName(),
-                gesture.score()
-            )
-        }
-        // LEFT hand wasn't found
-        return null
-    }
+    private fun identifyHands(raw: GestureRecognizerResult): Pair<RightHand?, LeftHand?> {
+        var rightHand: RightHand? = null
+        var leftHand: LeftHand? = null
 
-    private fun obtainRightHandSign(combined: List<Pair<List<Category>, List<Category>>>): HandSign? {
-        for ((rHand, rGesture) in combined) {
-            val hand = rHand.first()
-            val gesture = rGesture.first()
-            if (hand.index() != RIGHT_HAND_INDEX) {
-                // * Not the RIGHT hand. Pass this iteration
+        for (i in 0..<raw.handedness().size) {
+            val hand = raw.handedness()[i].first()
+            val gesture = raw.gestures()[i].first()
+
+            if (hand.index() == RIGHT_HAND_INDEX) {
+                // * Found RIGHT hand
+                rightHand = RightHand(
+                    sign = HandSign(
+                        gesture.categoryName(),
+                        gesture.score()
+                    ),
+                    landmarks = raw.landmarks()[i]
+                )
+                // Pass the iteration to avoid unnecessary left hand checking
                 continue
             }
-            // This is the RIGHT hand we are looking for
-            return HandSign(
-                gesture.categoryName(),
-                gesture.score()
-            )
+            if (hand.index() == LEFT_HAND_INDEX) {
+                // * Found LEFT hand
+                leftHand = LeftHand(
+                    sign = HandSign(
+                        gesture.categoryName(),
+                        gesture.score()
+                    ),
+                    landmarks = raw.landmarks()[i]
+                )
+            }
         }
-        // RIGHT hand wasn't found
-        return null
+        // No hands are detected at all
+        return rightHand to leftHand
     }
 
 }
