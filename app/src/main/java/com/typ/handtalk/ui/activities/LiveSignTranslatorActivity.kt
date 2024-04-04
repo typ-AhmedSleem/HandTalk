@@ -23,7 +23,6 @@ import com.typ.handtalk.core.recognizer.GestureRecognizerListener
 import com.typ.handtalk.core.recognizer.HandSignRecognizer
 import com.typ.handtalk.core.recognizer.RecognizerError
 import com.typ.handtalk.core.recognizer.ResultBundle
-import com.typ.handtalk.core.resolvers.FrameResultResolver
 import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.databinding.ActivitySignToTextTranslatorBinding
 import java.util.concurrent.ExecutorService
@@ -190,21 +189,6 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
         runOnUiThread {
             // Show result of recognized gesture
             val rawResult = resultBundle.rawResult
-            val frameResult = FrameResultResolver.resolve(rawResult)
-
-            if (frameResult != lastResult) {
-                // * Different results. Do checks first
-                lastResult?.let {
-                    Log.i(
-                        TAG,
-                        "FrameResult (LEFT: ${it.leftHandSign?.label} -> ${frameResult.leftHandSign?.label} | RIGHT: ${it.rightHandSign?.label} -> ${frameResult.rightHandSign?.label})"
-                    )
-                }
-                lastResult = frameResult
-            } else {
-                // * Same frame. Check for movement using OpticalFlow algorithm
-            }
-
             // Pass necessary information to OverlayView for drawing on the canvas
             binding.overlay.setResults(
                 rawResult,

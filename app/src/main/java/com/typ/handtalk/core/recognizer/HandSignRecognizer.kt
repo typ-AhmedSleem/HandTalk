@@ -28,6 +28,8 @@ import com.google.mediapipe.tasks.core.Delegate
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizer
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizerResult
+import com.typ.handtalk.core.resolvers.FrameResultResolver
+import com.typ.handtalk.core.resolvers.models.FrameResult
 
 class HandSignRecognizer(
     val context: Context,
@@ -45,9 +47,12 @@ class HandSignRecognizer(
     val running: Boolean
         get() = !closed
 
+    // Recognizer runtime
+    private var prevResult: FrameResult? = null
+
     init {
         setupGestureRecognizer()
-        Log.i(TAG, "HandSignRecognizer is now fully initialized.")
+        logi("HandSignRecognizer is now fully initialized.")
     }
 
     fun clearGestureRecognizer() {
@@ -130,12 +135,51 @@ class HandSignRecognizer(
     }
 
     // Return the recognition result to the GestureRecognizerHelper's caller
-    private fun returnLivestreamResult(result: GestureRecognizerResult, input: MPImage) {
+    private fun returnLivestreamResult(rawResult: GestureRecognizerResult, input: MPImage) {
         val finishTimeMs = SystemClock.uptimeMillis()
-        val inferenceTime = finishTimeMs - result.timestampMs()
+        val inferenceTime = finishTimeMs - rawResult.timestampMs()
+
+        val newResult = FrameResultResolver.resolve(rawResult)
+        if (prevResult == null) {
+            // No previous result
+            prevResult = newResult
+            return
+        }
+        // Found a previous result
+        prevResult?.let prev@{ prev ->
+            // Check if newResult is same as lastResult
+            if (newResult == prev) {
+                // * OpticalFlow algorithm will handle the movement for both hands
+                return@prev
+            }
+            // Check if RHS has changed
+            if (newResult.isRightNullOrNone()) {
+                // RHS is either null or None. Check larger timeout...
+                if (newResult.timestamp - prev.timestamp < EMPTY_HAND_SIGN_CHANGE_TIMEOUT) {
+                    // * Timeout hasn't yet been exceeded
+                    return@prev
+                }
+            } else {
+                // * Handle the right hand
+                newResult.rightHand?.sign?.let rhs@{ rhs ->
+                    // Return immediately if RHS hasn't changed
+                    if (rhs == prev.rightHand?.sign) return@prev
+                    // Sign has actually changed. Check the timeout...
+                    if (newResult.timestamp - prev.timestamp < HAND_SIGN_CHANGE_TIMEOUT) {
+                        // * Timeout hasn't yet been exceeded
+                        return@prev
+                    }
+                }
+                logi("RHS has changed: ${prev.rhsLabel} -> ${newResult.rhsLabel}. Took ${newResult.timestamp - prev.timestamp} ms to change.\n")
+            }
+            // * Update runtime
+            prevResult = newResult
+        }
+
+        // * Fire the listener
         listener?.onRecognizerResult(
             ResultBundle(
-                result,
+                rawResult,
                 inferenceTime,
                 input.height,
                 input.width
@@ -148,13 +192,21 @@ class HandSignRecognizer(
     }
 
     companion object {
-        val TAG = "HandSignRecognizer ${this.hashCode()}"
+        val TAG = "HandSignRecognizer-${this.hashCode()}"
         private const val MP_RECOGNIZER_TASK = "model/gesture_recognizer.task"
 
         const val NUM_HANDS = 2
         const val DEFAULT_HAND_DETECTION_CONFIDENCE = 0.5F
         const val DEFAULT_HAND_TRACKING_CONFIDENCE = 0.5F
         const val DEFAULT_HAND_PRESENCE_CONFIDENCE = 0.5F
+
+        const val HAND_SIGN_CHANGE_TIMEOUT = 100 // in millis
+        const val EMPTY_HAND_SIGN_CHANGE_TIMEOUT = 2500 // in millis
+
+        @JvmStatic
+        fun logi(msg: Any) {
+            Log.i(TAG, "$msg")
+        }
     }
 
 }
