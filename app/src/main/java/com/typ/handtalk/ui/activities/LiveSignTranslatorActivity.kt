@@ -128,7 +128,16 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
             minHandPresenceConfidence = viewModel.currentMinHandPresenceConfidence,
             currentDelegate = viewModel.currentDelegate,
             listener = this
-        )
+        ) { label ->
+            runOnUiThread {
+                label?.let {
+                    val lbl = binding.tvInterpretedText.text.toString() + it + "\n"
+                    binding.tvInterpretedText.text = lbl
+
+                    binding.tvCurrentGesture.text = it
+                }
+            }
+        }
 
         if (recognizer.closed) {
             backgroundExecutor.execute(recognizer::setupGestureRecognizer)

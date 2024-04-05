@@ -38,6 +38,7 @@ class HandSignRecognizer(
     var minHandTrackingConfidence: Float = DEFAULT_HAND_TRACKING_CONFIDENCE,
     var minHandPresenceConfidence: Float = DEFAULT_HAND_PRESENCE_CONFIDENCE,
     val listener: GestureRecognizerListener? = null,
+    private val callback: (String?) -> Unit
 ) {
 
     private var gestureRecognizer: GestureRecognizer? = null
@@ -170,6 +171,9 @@ class HandSignRecognizer(
                         return@prev
                     }
                 }
+                // Invoke callback to update UI
+                callback.invoke(newResult.rhsLabel)
+
                 logi("RHS has changed: ${prev.rhsLabel} -> ${newResult.rhsLabel}. Took ${newResult.timestamp - prev.timestamp} ms to change.\n")
             }
             // * Update runtime
