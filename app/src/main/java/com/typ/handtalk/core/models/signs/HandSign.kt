@@ -14,7 +14,6 @@ open class HandSign(
         if (other !is HandSign) return false
 
         if (label != other.label) return false
-        if (score != other.score) return false
 
         return true
     }

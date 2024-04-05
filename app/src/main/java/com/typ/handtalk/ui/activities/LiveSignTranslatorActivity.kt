@@ -23,7 +23,6 @@ import com.typ.handtalk.core.recognizer.GestureRecognizerListener
 import com.typ.handtalk.core.recognizer.HandSignRecognizer
 import com.typ.handtalk.core.recognizer.RecognizerError
 import com.typ.handtalk.core.recognizer.ResultBundle
-import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.databinding.ActivitySignToTextTranslatorBinding
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -193,7 +192,6 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
         imageAnalyzer?.targetRotation = binding.viewFinder.display.rotation
     }
 
-    private var lastResult: FrameResult? = null
     override fun onRecognizerResult(resultBundle: ResultBundle) {
         runOnUiThread {
             // Show result of recognized gesture
