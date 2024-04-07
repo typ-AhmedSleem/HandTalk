@@ -28,6 +28,7 @@ import com.google.mediapipe.tasks.core.Delegate
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizer
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizerResult
+import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerAlgorithm
 import com.typ.handtalk.core.resolvers.FrameResultResolver
 import com.typ.handtalk.core.resolvers.models.FrameResult
 
@@ -50,6 +51,9 @@ class HandSignRecognizer(
 
     // Recognizer runtime
     private var prevResult: FrameResult? = null
+
+    // Algorithms
+    private val gestureSequencerAlgorithm = GestureSequencerAlgorithm()
 
     init {
         setupGestureRecognizer()
@@ -160,6 +164,7 @@ class HandSignRecognizer(
                     // * Timeout hasn't yet been exceeded
                     return@prev
                 }
+                gestureSequencerAlgorithm.createNewRun()
             } else {
                 // * Handle the right hand
                 newResult.rightHand?.sign?.let rhs@{ rhs ->
@@ -173,6 +178,8 @@ class HandSignRecognizer(
                 }
                 // Invoke callback to update UI
                 callback.invoke(newResult.rhsLabel)
+                // Feed frame to the
+                gestureSequencerAlgorithm.feed(newResult)
 
                 logi("RHS has changed: ${prev.rhsLabel} -> ${newResult.rhsLabel}. Took ${newResult.timestamp - prev.timestamp} ms to change.\n")
             }
