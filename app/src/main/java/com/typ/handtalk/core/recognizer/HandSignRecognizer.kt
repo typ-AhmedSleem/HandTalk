@@ -53,7 +53,7 @@ class HandSignRecognizer(
     private var prevResult: FrameResult? = null
 
     // Algorithms
-    private val gestureSequencerAlgorithm = GestureSequencerAlgorithm()
+    private val sequencer = GestureSequencerAlgorithm()
 
     init {
         setupGestureRecognizer()
@@ -164,7 +164,9 @@ class HandSignRecognizer(
                     // * Timeout hasn't yet been exceeded
                     return@prev
                 }
-                gestureSequencerAlgorithm.createNewRun()
+//                // * Obtain the current sequence and create a new run
+//                val sequence = sequencer.obtainResult(thenCreateNewRun = true)
+//                logi("Obtained sequence: $sequence")
             } else {
                 // * Handle the right hand
                 newResult.rightHand?.sign?.let rhs@{ rhs ->
@@ -179,9 +181,16 @@ class HandSignRecognizer(
                 // Invoke callback to update UI
                 callback.invoke(newResult.rhsLabel)
                 // Feed frame to the
-                gestureSequencerAlgorithm.feed(newResult)
-
+                sequencer.feed(newResult)
                 logi("RHS has changed: ${prev.rhsLabel} -> ${newResult.rhsLabel}. Took ${newResult.timestamp - prev.timestamp} ms to change.\n")
+
+//                val timeout = newResult.timestamp - prev.timestamp
+//                logi("Timeout is $timeout")
+//                if (timeout >= 1500) {
+//                    // * Obtain the current sequence and create a new run
+//                    val sequence = sequencer.obtainResult(thenCreateNewRun = true)
+//                    logi("Obtained sequence: $sequence")
+//                }
             }
             // * Update runtime
             prevResult = newResult
