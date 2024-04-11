@@ -2,8 +2,8 @@ package com.typ.handtalk.core.repository
 
 import com.typ.handtalk.core.models.Word
 import com.typ.handtalk.core.models.signs.HandSign
-import com.typ.handtalk.frameResult
-import com.typ.handtalk.sequenceOfGestures
+import com.typ.handtalk.utils.frameResult
+import com.typ.handtalk.utils.sequenceOfGestures
 
 object Words {
 

@@ -3,7 +3,7 @@ package com.typ.handtalk.core.algorithms.sequencer
 import android.util.Log
 import com.typ.handtalk.core.algorithms.AbstractAlgorithm
 import com.typ.handtalk.core.resolvers.models.FrameResult
-import com.typ.handtalk.sequenceOfGestures
+import com.typ.handtalk.utils.sequenceOfGestures
 
 class GestureSequencerAlgorithm : AbstractAlgorithm<FrameResult, GestureSequence>() {
 

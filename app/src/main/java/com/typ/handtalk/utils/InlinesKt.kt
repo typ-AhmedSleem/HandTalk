@@ -1,4 +1,4 @@
-package com.typ.handtalk
+package com.typ.handtalk.utils
 
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequence
 import com.typ.handtalk.core.models.hands.LeftHand
