@@ -57,4 +57,22 @@
         <item>CPU</item>
         <item>GPU</item>
     </string-array>
+
+    <!-- * Articles feature strings go here -->
+    <string name="topics">المواضيع</string>
+    <string name="map">الخريطة</string>
+    <string name="cat1">مين هم الصم و ضعاف السمع؟</string>
+    <string name="cat2">إزاي اتواصل معاهم؟</string>
+    <string name="cat3">طرق التأهيل و الرعاية</string>
+    <string name="cat4">المعينات السمعية و أنواعها</string>
+    <string name="cat5">عملية زراعة القوقعة</string>
+    <string name="cat6">مؤسسات تأهيل الصم</string>
+    <string name="cat7">مترجمين لغة الإشارة</string>
+    <string name="transition_title_to_title">TransitionTitleToTitle</string>
+    <string name="transition_cat_to_topic">TransitionCatToTopic</string>
+    <string name="video">فيديو</string>
+    <string name="show_fnd_on_map">عرض الموقع علي الخرائط</string>
+    <string name="copy_fnd_number">نسخ رقم الهاتف</string>
+    <string name="sub_cat_34">مواضيع توعوية</string>
+
 </resources>

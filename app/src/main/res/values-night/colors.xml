@@ -29,7 +29,7 @@
     <color name="icFocused">#DDFFFFFF</color>
     <color name="icPressed">#AAFFFFFF</color>
 
-    <!-- HandTalk colors -->
+    <!-- * HandTalk colors -->
     <color name="colorLauncherBackground">#000000</color>
     <color name="colorLauncherForeground">#FFFFFF</color>
     <color name="colorParent">#000000</color>
@@ -39,4 +39,14 @@
     <color name="rippleForColorPrimary">#40000000</color>
     <color name="colorTextTitle">#FFFFFF</color>
     <color name="colorTextSubtitle">#A6FFFFFF</color>
+
+    <!-- * Articles feature colors go here -->
+    <color name="color_bg">#121212</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="toolbar_color">#0E0E0E</color>
+    <color name="color_adaptive_on_surface">#FFF</color>
+    <color name="color_adaptive_cat_icon_bg">#33FFFFFF</color>
+    <color name="color_scrim_article_card">#4D000000</color>
+    <color name="color_question">#00B0FF</color>
+
 </resources>
