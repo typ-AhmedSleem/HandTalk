@@ -27,6 +27,26 @@ object Categories {
                     Articles.Article_23
                 )
             ),
+            Category(
+                3,
+                R.string.cat3,
+                R.drawable.ic_category3,
+                articles = arrayOf(
+                    Articles.Article_31,
+                    Articles.Article_32,
+                    Articles.Article_33,
+                    Articles.Article_34
+                )
+            ),
+            Category(
+                4,
+                R.string.cat4,
+                R.drawable.ic_category4,
+                articles = arrayOf(
+                    Articles.Article_41,
+                    Articles.Article_42
+                )
+            ),
         )
     }
 
