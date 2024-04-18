@@ -24,4 +24,21 @@
     </style>
 
     <style name="DefaultMaterialButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton" />
+
+    <style name="Theme.Articles.TopicViewer" parent="Theme.HandTalk.HomeActivity">
+        <item name="android:windowTranslucentStatus">false</item>
+    </style>
+
+    <style name="TextAppearance.MyTitle" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">@font/font_title</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.MyTitle.Articles" parent="TextAppearance.AppCompat">
+        <item name="fontFamily">@font/font_title</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

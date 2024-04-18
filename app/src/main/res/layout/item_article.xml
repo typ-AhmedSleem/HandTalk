@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:layout_marginStart="15dp"
+    android:id="@+id/card_topic"
+    android:layout_marginEnd="15dp"
+    android:transitionGroup="true"
+    android:layout_marginBottom="15dp"
+    android:transitionName="trans_card_to_activity"
+    app:cardBackgroundColor="#26FFFFFF"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="5dp"
+    app:strokeWidth="0dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_topic_thumb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/thumb" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_scrim_article_card" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_article_has_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:enabled="false"
+            android:text="@string/video"
+            android:textAlignment="viewStart"
+            android:textColor="@color/color_adaptive_on_surface"
+            android:textSize="11sp"
+            app:chipCornerRadius="10dp"
+            app:chipBackgroundColor="@color/transparent"
+            app:chipIcon="@drawable/ic_video"
+            app:chipIconSize="14dp"
+            app:chipIconTint="@color/color_adaptive_on_surface"
+            app:chipStartPadding="10dp"
+            app:layout_constraintEnd_toEndOf="@id/tv_topic_title"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_topic_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:maxLines="2"
+            android:text="العنوان هيبقي هنا...\nو كمان ممكن يكون سطرين أو اكتر"
+            android:textAlignment="textStart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="HardcodedText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

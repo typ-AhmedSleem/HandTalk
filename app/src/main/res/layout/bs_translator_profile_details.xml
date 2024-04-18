@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:paddingBottom="20dp">
+
+    <androidx.constraintlayout.utils.widget.ImageFilterView
+        android:id="@+id/ifv_translator_avatar"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="25dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:round="20dp"
+        app:srcCompat="@drawable/thumb4" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_translator_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:padding="0dp"
+        android:text="@string/cat7"
+        android:textColor="@color/color_adaptive_on_surface"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/ifv_translator_avatar" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_translator_loc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:justificationMode="inter_word"
+        android:padding="2dp"
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp"
+        android:text="الزقازيق"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_translator_name"
+        tools:ignore="HardcodedText" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_translator_bio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:alpha="0.8"
+        android:gravity="center"
+        android:justificationMode="inter_word"
+        android:padding="5dp"
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp"
+        android:textColor="@color/color_adaptive_on_surface"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_translator_loc"
+        tools:text="@string/app_name" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/div"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="30dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_translator_bio" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_copy_translator_num"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="25dp"
+        android:importantForAccessibility="no"
+        android:text="@string/copy_fnd_number"
+        app:cornerRadius="5dp"
+        app:layout_constraintTop_toBottomOf="@id/div"
+        app:strokeColor="@color/color_primary" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

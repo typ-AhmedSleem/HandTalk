@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_category"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:transitionGroup="true"
+    android:transitionName="@string/transition_cat_to_topic"
+    app:cardBackgroundColor="#00FFFFFF"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp"
+    app:contentPadding="00dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:padding="20dp">
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/ifv_translator_avatar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:roundPercent="0.3"
+            app:srcCompat="@drawable/thumb4" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_translator_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:text="@string/cat7"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            android:textColor="@color/color_adaptive_on_surface"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ifv_translator_avatar"
+            app:lineHeight="25dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
