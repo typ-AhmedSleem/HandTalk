@@ -24,6 +24,7 @@
     </style>
 
     <style name="DefaultMaterialButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton" />
+    <style name="OutlinedMaterialButtonStyle" parent="Widget.MaterialComponents.Button.OutlinedButton" />
 
     <style name="Theme.Articles.TopicViewer" parent="Theme.HandTalk.HomeActivity">
         <item name="android:windowTranslucentStatus">false</item>
