@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.typ.handtalk.databinding.ActivityWelcomeBinding
-import com.typ.handtalk.ui.a2s.Arabic2SignTranslatorActivity
+import com.typ.handtalk.ui.articles.ArticlesHubActivity
 
 class WelcomeActivity : AppCompatActivity() {
 
@@ -17,7 +17,7 @@ class WelcomeActivity : AppCompatActivity() {
 //                finish()
             }
             btnStartApp.setOnLongClickListener {
-                startActivity(Intent(this@WelcomeActivity, Arabic2SignTranslatorActivity::class.java))
+                startActivity(Intent(this@WelcomeActivity, ArticlesHubActivity::class.java))
                 true
             }
         }
