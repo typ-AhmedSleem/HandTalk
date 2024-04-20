@@ -18,7 +18,7 @@
             android:layout_height="?actionBarSize"
             android:background="@color/toolbar_color"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:textColor="@color/color_primary"
+            android:textColor="@color/colorPrimary"
             android:textSize="22sp"
             android:textStyle="bold"
             android:transitionName="trans_title_to_title"
