@@ -4,4 +4,5 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid) apply false
     alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.deUndercouchDownload) apply false
+    alias(libs.plugins.ksp) apply false
 }

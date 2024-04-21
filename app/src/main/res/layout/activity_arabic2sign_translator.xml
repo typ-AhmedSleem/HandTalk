@@ -16,7 +16,7 @@
         app:navigationIcon="@drawable/ic_arrow_to_left"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIconTint="@color/colorPrimary"
-        app:title="Arabic to Sign translator"
+        app:title="@string/arabic_to_sign_translator"
         app:titleTextColor="@color/colorPrimary" />
 
     <com.typ.handtalk.ui.a2s.views.A2STranslationHistoryView
@@ -45,6 +45,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="30dp"
         android:importantForAccessibility="no"
+        tools:visibility="invisible"
         android:src="@drawable/ic_plus"
         app:rippleColor="@color/rippleForColorPrimary"
         app:backgroundTint="@color/colorPrimary"
