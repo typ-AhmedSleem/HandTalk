@@ -48,13 +48,6 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
     /** Blocking ML operations are performed using this executor */
     private lateinit var backgroundExecutor: ExecutorService
 
-    private fun requestRequiredPermissions() {
-        PermissionHelper.requestPermissionLauncher(this) { isGranted ->
-            assert(PermissionHelper.hasPermissions(this)) { "Required permissions aren't all satisfied." }
-            Toast.makeText(this, "Permissions are granted.", Toast.LENGTH_SHORT).show()
-        }
-    }
-
     // Initialize CameraX, and prepare to bind the camera use cases
     private fun setupCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
@@ -113,9 +106,7 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
         binding = ActivitySignToTextTranslatorBinding.inflate(layoutInflater)
         setContentView(binding.root)
         // * Check required permissions
-        if (!PermissionHelper.hasPermissions(this)) {
-            this.requestRequiredPermissions()
-        }
+        ensurePermissionsGranted()
         // Setup background executor instance
         backgroundExecutor = Executors.newSingleThreadExecutor()
 
@@ -153,13 +144,18 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
         }
     }
 
+    private fun ensurePermissionsGranted() {
+        if (!PermissionHelper.requiredPermissionsGranted(this)) {
+            Toast.makeText(this, "Camera permission is required to continue.", Toast.LENGTH_SHORT).show()
+            finish()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         // Make sure that all permissions are still present, since the
         // user could have removed them while the app was in paused state.
-        if (!PermissionHelper.hasPermissions(this)) {
-            this.requestRequiredPermissions()
-        }
+        ensurePermissionsGranted()
         // Start the recognizer again when users come back to foreground.
         backgroundExecutor.execute {
             if (recognizer.closed) recognizer.setupGestureRecognizer()

@@ -17,7 +17,7 @@ object PermissionHelper {
     }
 
     @JvmStatic
-    fun hasPermissions(context: Context) = REQUIRED_PERMISSIONS.all {
+    fun requiredPermissionsGranted(context: Context) = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
     }
 
