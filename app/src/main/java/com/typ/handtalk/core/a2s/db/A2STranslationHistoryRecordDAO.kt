@@ -14,4 +14,7 @@ interface A2STranslationHistoryRecordDAO {
     @Query("SELECT DISTINCT * FROM a2s_history ORDER BY timestamp DESC")
     fun getAllTranslations(): Array<A2STranslationHistoryRecord>
 
+    @Query("DELETE FROM a2s_history")
+    fun clearHistory()
+
 }

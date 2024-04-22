@@ -2,7 +2,6 @@ package com.typ.handtalk.ui.a2s.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -14,9 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.typ.handtalk.R
 import com.typ.handtalk.core.a2s.A2STranslationHistoryRecord
+import com.typ.handtalk.core.a2s.A2STranslationsHistory
 import com.typ.handtalk.databinding.ItemA2sTranslationHistoryRecordBinding
 import com.typ.handtalk.databinding.LayoutA2sEmptyHistoryBinding
-import com.typ.handtalk.ui.a2s.Arabic2SignTranslatorActivity
 import me.ibrahimyilmaz.kiel.adapterOf
 import me.ibrahimyilmaz.kiel.core.RecyclerViewHolder
 
@@ -52,7 +51,11 @@ class A2STranslationHistoryView @JvmOverloads constructor(
         emptyLayoutBinding = bindEmptyLayout().also {
             addView(it.root, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         }
-        clearHistory()
+        // Populate view with saved records
+        records.clear()
+        records.addAll(A2STranslationsHistory.getAllRecords(context))
+        getAdapter().submitList(records)
+        switchLayout()
     }
 
     private fun createRecyclerView(): RecyclerView {
@@ -92,14 +95,14 @@ class A2STranslationHistoryView @JvmOverloads constructor(
         // Add records to records list
         if (records.isEmpty()) return
         // Submit list
-        Log.i(Arabic2SignTranslatorActivity.TAG, "addRecords: ${this.records.size}")
         getAdapter().submitList(this.records + records)
-        this.records.addAll(records)
+        this.records.addAll(0, records.toList())
         if (records.isNotEmpty() && state == LayoutState.EMPTY) showHistory()
         else if (records.isEmpty() && state == LayoutState.RECYCLER) showEmpty()
     }
 
     fun clearHistory() {
+        A2STranslationsHistory.clearHistory(context)
         records.clear()
         getAdapter().submitList(emptyList())
         showEmpty()
@@ -117,6 +120,11 @@ class A2STranslationHistoryView @JvmOverloads constructor(
         rvHistory.visibility = VISIBLE
         state = LayoutState.RECYCLER
         layoutChangeCallback?.invoke(LayoutState.RECYCLER)
+    }
+
+    private fun switchLayout() {
+        if (records.isEmpty()) showEmpty()
+        else showHistory()
     }
 
     private class VH(view: View) : RecyclerViewHolder<A2STranslationHistoryRecord>(view) {

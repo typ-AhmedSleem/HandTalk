@@ -1,8 +1,10 @@
 package com.typ.handtalk.ui.a2s
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.typ.handtalk.core.a2s.A2STranslationHistoryRecord
+import com.typ.handtalk.core.a2s.A2STranslationsHistory
 import com.typ.handtalk.databinding.ActivityArabic2signTranslatorBinding
 import com.typ.handtalk.ui.a2s.views.A2STranslationHistoryView
 
@@ -30,16 +32,10 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
                 if (state == A2STranslationHistoryView.LayoutState.EMPTY) binding.fabA2sNewTranslation.hide()
                 else binding.fabA2sNewTranslation.show()
             }
-            btnEmptyLayoutPlus.setOnClickListener {
-                // Request new translation
-                requestNewTranslation()
-            }
+            btnEmptyLayoutPlus.setOnClickListener(requestTranslationClickListener)
         }
 
-        binding.fabA2sNewTranslation.setOnClickListener {
-            // Request new translation
-            requestNewTranslation()
-        }
+        binding.fabA2sNewTranslation.setOnClickListener(requestTranslationClickListener)
 
         binding.fabA2sNewTranslation.setOnLongClickListener {
             binding.thvA2sTranslationHistory.clearHistory()
@@ -47,9 +43,16 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
         }
     }
 
+    private val requestTranslationClickListener: (View) -> Unit by lazy {
+        {
+            requestNewTranslation()
+        }
+    }
+
     private fun requestNewTranslation() {
-        binding.thvA2sTranslationHistory.addRecords(
-            A2STranslationHistoryRecord((1..100).random().toString())
-        )
+        // todo: Start a new translation
+        val translation = A2STranslationHistoryRecord((1..100).random().toString())
+        A2STranslationsHistory.saveTranslation(this, translation)
+        binding.thvA2sTranslationHistory.addRecords(translation)
     }
 }

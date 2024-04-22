@@ -2,17 +2,15 @@ package com.typ.handtalk.core.a2s
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.typ.handtalk.core.a2s.playables.A2SignPlayable
 
 @Entity(tableName = "a2s_history")
 class A2STranslationHistoryRecord(
-    @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo val sentence: String,
-    @Ignore val signs: Array<A2SignPlayable> = emptyArray(),
-    @ColumnInfo val timestamp: Long = System.currentTimeMillis()
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo val timestamp: Long = System.currentTimeMillis(),
 ) {
+
     override fun equals(other: Any?): Boolean {
         if (other == null) return false
         if (this === other) return true
@@ -25,7 +23,8 @@ class A2STranslationHistoryRecord(
 
     override fun hashCode(): Int {
         var result = sentence.hashCode()
-        result = 31 * result + signs.contentHashCode()
+        result = 31 * result + id
+        result = 31 * result + timestamp.hashCode()
         return result
     }
 }

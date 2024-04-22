@@ -13,4 +13,8 @@ object A2STranslationsHistory {
         A2STranslationsHistoryDatabase.getInstance(ctx).dao.saveTranslation(record)
     }
 
+    fun clearHistory(ctx: Context) {
+        A2STranslationsHistoryDatabase.getInstance(ctx).dao.clearHistory()
+    }
+
 }
