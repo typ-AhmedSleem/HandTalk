@@ -66,6 +66,10 @@
             android:name="com.typ.handtalk.ui.articles.TranslatorsActivity"
             android:exported="true" />
 
+        <activity
+            android:name="com.typ.handtalk.ui.activities.RequestPermissionsActivity"
+            android:exported="true" />
+
     </application>
 
 </manifest>

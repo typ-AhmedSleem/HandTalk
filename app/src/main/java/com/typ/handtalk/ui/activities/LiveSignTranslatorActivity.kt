@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat
 import com.google.mediapipe.tasks.core.Delegate
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.typ.handtalk.MainViewModel
-import com.typ.handtalk.core.PermissionHelper
+import com.typ.handtalk.core.perms.PermissionHelper
 import com.typ.handtalk.core.recognizer.GestureRecognizerListener
 import com.typ.handtalk.core.recognizer.HandSignRecognizer
 import com.typ.handtalk.core.recognizer.RecognizerError
@@ -146,7 +146,7 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
 
     private fun ensurePermissionsGranted() {
         if (!PermissionHelper.requiredPermissionsGranted(this)) {
-            Toast.makeText(this, "Camera permission is required to continue.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "S2A: Camera permission is required to continue.", Toast.LENGTH_SHORT).show()
             finish()
         }
     }

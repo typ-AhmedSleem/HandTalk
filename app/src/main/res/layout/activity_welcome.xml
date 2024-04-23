@@ -56,7 +56,6 @@
         android:text="Arabic to Sign Translator"
         app:cornerRadius="@dimen/defaultButtonCornerRadius"
         app:layout_constraintBottom_toTopOf="@id/btn_start_app"
-        app:strokeColor="@color/colorPrimary"
         app:strokeWidth="2dp" />
 
     <com.google.android.material.button.MaterialButton
