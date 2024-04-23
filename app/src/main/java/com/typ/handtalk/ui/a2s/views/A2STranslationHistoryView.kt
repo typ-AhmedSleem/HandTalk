@@ -53,8 +53,10 @@ class A2STranslationHistoryView @JvmOverloads constructor(
         }
         // Populate view with saved records
         records.clear()
-        records.addAll(A2STranslationsHistory.getAllRecords(context))
-        getAdapter().submitList(records)
+        if (!isInEditMode) {
+            records.addAll(A2STranslationsHistory.getAllRecords(context))
+            getAdapter().submitList(records)
+        }
         switchLayout()
     }
 

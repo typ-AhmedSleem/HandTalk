@@ -74,7 +74,7 @@
     <string name="show_fnd_on_map">عرض الموقع علي الخرائط</string>
     <string name="copy_fnd_number">نسخ رقم الهاتف</string>
     <string name="sub_cat_34">مواضيع توعوية</string>
-    <string name="arabic_to_sign_translator">Arabic to Sign translator</string>
+    <string name="arabic_to_sign_translator">Arabic to Sign</string>
     <string name="allow_camera_access">Allow Access To Camera</string>
     <string name="camera_permission_desc">HandTalk app needs access to Camera inorder to function properly</string>
     <string name="allow">Allow</string>

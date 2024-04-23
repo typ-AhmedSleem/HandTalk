@@ -71,6 +71,7 @@
         android:importantForAccessibility="no"
         app:backgroundTint="#66FFFFFF"
         app:elevation="0dp"
+        app:pressedTranslationZ="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/white"
