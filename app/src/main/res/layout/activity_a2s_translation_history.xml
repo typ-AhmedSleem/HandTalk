@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorParent"
-    tools:context=".ui.a2s.Arabic2SignTranslatorActivity">
+    tools:context=".ui.a2s.Arabic2SignTranslationHistoryActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:background="@color/colorParent"
         android:layout_height="?attr/actionBarSize"
-        app:titleCentered="true"
+        android:background="@color/colorParent"
         android:elevation="2dp"
-        app:navigationIcon="@drawable/ic_arrow_to_left"
         app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_to_left"
         app:navigationIconTint="@color/colorPrimary"
         app:title="@string/arabic_to_sign_translator"
+        app:titleCentered="true"
         app:titleTextColor="@color/colorPrimary" />
 
     <com.typ.handtalk.ui.a2s.views.A2STranslationHistoryView
         android:id="@+id/thv_a2s_translation_history"
         android:layout_width="match_parent"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
         android:layout_height="0dp"
         android:background="#00FFFFFF"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
@@ -46,12 +46,12 @@
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="30dp"
         android:importantForAccessibility="no"
-        tools:visibility="invisible"
         android:src="@drawable/ic_plus"
-        app:rippleColor="@color/rippleForColorPrimary"
         app:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/colorOnPrimary" />
+        app:rippleColor="@color/rippleForColorPrimary"
+        app:tint="@color/colorOnPrimary"
+        tools:visibility="invisible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -42,6 +42,10 @@
             android:exported="true" />
 
         <activity
+            android:name=".ui.a2s.Arabic2SignTranslationHistoryActivity"
+            android:exported="true" />
+
+        <activity
             android:name=".ui.a2s.Arabic2SignTranslatorActivity"
             android:exported="true" />
 

@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.typ.handtalk.core.perms.PermissionHelper
 import com.typ.handtalk.core.perms.RequestRequiredPermissionsContract
 import com.typ.handtalk.databinding.ActivityWelcomeBinding
-import com.typ.handtalk.ui.a2s.Arabic2SignTranslatorActivity
+import com.typ.handtalk.ui.a2s.Arabic2SignTranslationHistoryActivity
 import com.typ.handtalk.ui.articles.ArticlesHubActivity
 
 class WelcomeActivity : AppCompatActivity() {
@@ -33,7 +33,7 @@ class WelcomeActivity : AppCompatActivity() {
                 reqPermsLauncher.launch(Unit)
             }
             btnArabic2Sign.setOnClickListener {
-                startActivity(Intent(this@WelcomeActivity, Arabic2SignTranslatorActivity::class.java))
+                startActivity(Intent(this@WelcomeActivity, Arabic2SignTranslationHistoryActivity::class.java))
             }
             btnArticles.setOnClickListener {
                 startActivity(Intent(this@WelcomeActivity, ArticlesHubActivity::class.java))
