@@ -5,6 +5,7 @@ import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
@@ -13,6 +14,8 @@ class A2SignPlayableVideo(filename: String) : A2SignPlayable(filename) {
 
     override val filePath: String
         get() = "A2S/Videos/${filename}"
+
+    fun getVideoPath(cacheDir: File): String = asFile(cacheDir).path
 
     suspend fun copyToCache(context: Context) {
         // todo: Needs to be tested
