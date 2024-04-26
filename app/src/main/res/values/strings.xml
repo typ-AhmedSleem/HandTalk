@@ -81,5 +81,6 @@
     <string name="permissions_granted">Camera permission granted</string>
     <string name="permissions_denied">Camera permission denied</string>
     <string name="prompt_a2s">Type your Arabic…</string>
+    <string name="translate">Translate</string>
 
 </resources>

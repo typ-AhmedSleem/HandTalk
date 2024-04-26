@@ -3,9 +3,13 @@ package com.typ.handtalk.ui.a2s
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.typ.handtalk.core.a2s.Arabic2SignTranslator
-import com.typ.handtalk.core.a2s.playables.A2SignPlayableImage
-import com.typ.handtalk.core.a2s.playables.A2SignPlayableVideo
 import com.typ.handtalk.databinding.ActivityA2sTranslatorBinding
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class Arabic2SignTranslatorActivity : AppCompatActivity() {
 
@@ -15,26 +19,30 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
     private lateinit var binding: ActivityA2sTranslatorBinding
     private lateinit var translator: Arabic2SignTranslator
 
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
         binding = ActivityA2sTranslatorBinding.inflate(layoutInflater)
         binding.toolbar.setNavigationOnClickListener { finish() }
-        binding.fabTranslateA2s.setOnClickListener {
+        binding.btnTranslateA2s.setOnClickListener {
             if (prompt.isEmpty()) return@setOnClickListener
             val translation = translator.translate(prompt)
-            translation.values.forEach { playable ->
-                if (playable == null) return@forEach
-                when (playable) {
-                    is A2SignPlayableImage -> {
-                        // TODO: Show image in the A2SPlayableView
-                    }
-
-                    is A2SignPlayableVideo -> {
-                        // TODO: Show video in the A2SPlayableView
+            GlobalScope.launch(Dispatchers.IO) {
+                translation.values.forEach { playable ->
+                    if (playable != null) {
+                        withContext(Dispatchers.Main) {
+                            binding.a2sTranslationPlayerView.display(playable)
+                        }
+                        delay(DELAY_TIME)
                     }
                 }
             }
         }
     }
+
+    companion object {
+        const val DELAY_TIME = 1000L
+    }
+
 }
