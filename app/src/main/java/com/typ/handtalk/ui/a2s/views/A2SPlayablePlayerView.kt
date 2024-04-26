@@ -28,17 +28,25 @@ class A2SPlayablePlayerView @JvmOverloads constructor(
     attrs: AttributeSet? = null
 ) : FrameLayout(context, attrs) {
 
-    private val binding: LayoutA2sPlayablePlayerViewBinding
+    private val binding = LayoutA2sPlayablePlayerViewBinding.bind(
+        inflate(
+            context,
+            R.layout.layout_a2s_playable_player_view,
+            this
+        )
+    )
 
     init {
-        inflate(context, R.layout.layout_a2s_playable_player_view, this)
-        binding = LayoutA2sPlayablePlayerViewBinding.bind(this)
         // Initially, hide both of the views
         binding.ivPlayable.visibility = INVISIBLE
         binding.videoPlayable.visibility = INVISIBLE
-        // Reset both of the views
-        binding.ivPlayable.setImageDrawable(null)
-        binding.videoPlayable.setVideoURI(null)
+        // Show the imageview if inEditMode
+        if (isInEditMode) binding.ivPlayable.visibility = VISIBLE
+        else {
+            // Reset both of the views
+            binding.ivPlayable.setImageDrawable(null)
+            binding.videoPlayable.setVideoURI(null)
+        }
     }
 
     fun display(playable: A2SignPlayable) {

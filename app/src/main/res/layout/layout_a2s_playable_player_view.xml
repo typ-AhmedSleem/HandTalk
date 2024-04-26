@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="300dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/transparent">
 
     <VideoView
@@ -18,6 +18,6 @@
         android:background="@color/transparent"
         android:importantForAccessibility="no"
         android:scaleType="centerInside"
-        tools:src="@tools:sample/backgrounds/scenic[5]" />
+        android:src="@drawable/thumb3" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
