@@ -1,6 +1,9 @@
 package com.typ.handtalk.ui.a2s
 
+import android.graphics.Color
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.typ.handtalk.core.a2s.A2STranslationHistoryRecord
@@ -19,6 +22,7 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
     private lateinit var binding: ActivityA2sTranslatorBinding
 
     // * Runtime
+    private var lastPrompt: String? = null
     private lateinit var translator: Arabic2SignTranslator
     private val prompt: String
         get() = (binding.tilA2sPrompt.editText?.text ?: "").toString()
@@ -43,10 +47,15 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
                     return@setOnClickListener
                 }
                 // * Save the translation
-                A2STranslationsHistory.saveTranslation(
-                    this@Arabic2SignTranslatorActivity,
-                    A2STranslationHistoryRecord(sentence = prompt)
-                )
+                if (prompt != lastPrompt) {
+                    lastPrompt = prompt
+                    A2STranslationsHistory.saveTranslation(
+                        this@Arabic2SignTranslatorActivity,
+                        A2STranslationHistoryRecord(sentence = prompt)
+                    )
+                }
+                // * Display the stylized prompt on its own Textview
+                binding.tvA2sTranslationSentence.text = stylizePrompt(prompt, translation)
                 // * Display the translation
                 GlobalScope.launch(Dispatchers.IO) {
                     translation.values.forEach { playable ->
@@ -62,11 +71,34 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
         }
         // * Get passed prompt from intent (if any)
         intent.getStringExtra(EXTRA_PROMPT)?.let { sentence ->
+            lastPrompt = sentence
             binding.tilA2sPrompt.editText?.setText(sentence)
+            binding.btnTranslateA2s.performClick()
         }
     }
 
+    private fun stylizePrompt(prompt: String, values: Map<String, Any?>): SpannableString {
+        val styledPrompt = SpannableString(prompt)
+        val words = prompt.split(SPACE)
+        for (word in words) {
+            if (values.containsKey(word)) {
+                val value = values[word]
+                val color = if (value != null) Color.GREEN else Color.RED
+                styledPrompt.setSpan(
+                    ForegroundColorSpan(color),
+                    prompt.indexOf(word),
+                    prompt.indexOf(word) + word.length,
+                    SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+        }
+
+        return styledPrompt
+    }
+
+
     companion object {
+        const val SPACE = ' '
         const val DELAY_TIME = 1000L
         const val TAG = "actA2S_TRANSLATOR"
         const val EXTRA_PROMPT = "EXTRA_PROMPT"

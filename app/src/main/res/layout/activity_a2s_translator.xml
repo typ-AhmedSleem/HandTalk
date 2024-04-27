@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorParent">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -25,6 +26,20 @@
         android:layout_margin="25dp"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_a2s_translation_sentence"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="@color/colorTextTitle"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@id/a2s_translation_player_view"
+        app:layout_constraintStart_toStartOf="@id/a2s_translation_player_view"
+        app:layout_constraintTop_toBottomOf="@id/a2s_translation_player_view"
+        tools:text="This will hold the sentence with found and not found words" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_a2s_prompt"
         android:layout_width="match_parent"
@@ -32,13 +47,14 @@
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="10dp"
-        app:boxBackgroundColor="@color/transparent"
         android:hint="@string/prompt_a2s"
         android:textAlignment="viewStart"
+        app:boxBackgroundColor="@color/transparent"
         app:boxBackgroundMode="outline"
         app:boxCornerRadiusBottomEnd="@dimen/defaultButtonCornerRadius"
         app:boxCornerRadiusBottomStart="@dimen/defaultButtonCornerRadius"
         app:boxCornerRadiusTopEnd="@dimen/defaultButtonCornerRadius"
+        app:endIconMode="clear_text"
         app:boxCornerRadiusTopStart="@dimen/defaultButtonCornerRadius"
         app:expandedHintEnabled="true"
         app:layout_constraintBottom_toTopOf="@id/btn_translate_a2s"
@@ -48,8 +64,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="start"
-            android:maxLength="100"
             android:inputType="text"
+            android:maxLength="100"
             android:textAlignment="viewStart"
             android:textColor="@color/colorTextTitle" />
 
@@ -61,12 +77,12 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/defaultButtonHeight"
         android:layout_marginStart="25dp"
-        android:layout_marginEnd="20dp"
         android:layout_marginTop="50dp"
-        android:importantForAccessibility="no"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="25dp"
-        app:backgroundTint="@color/colorPrimary"
+        android:importantForAccessibility="no"
         android:text="@string/translate"
+        app:backgroundTint="@color/colorPrimary"
         app:cornerRadius="@dimen/defaultButtonCornerRadius"
         app:layout_constraintBottom_toBottomOf="parent"
         app:rippleColor="@color/rippleForColorPrimary"
