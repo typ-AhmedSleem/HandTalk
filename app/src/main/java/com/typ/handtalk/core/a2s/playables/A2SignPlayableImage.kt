@@ -19,4 +19,9 @@ class A2SignPlayableImage(filename: String) : A2SignPlayable(filename) {
         }
     }
 
+    override fun toString(): String {
+        return "A2SignPlayableImage('$filePath')"
+    }
+
+
 }

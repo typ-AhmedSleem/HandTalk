@@ -47,6 +47,7 @@
 
         <activity
             android:name=".ui.a2s.Arabic2SignTranslatorActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true" />
 
         <activity

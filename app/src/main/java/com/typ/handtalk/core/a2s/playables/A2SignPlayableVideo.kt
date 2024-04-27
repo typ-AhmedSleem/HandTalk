@@ -54,4 +54,9 @@ class A2SignPlayableVideo(filename: String) : A2SignPlayable(filename) {
         }
     }
 
+    override fun toString(): String {
+        return "A2SignPlayableVideo($filePath')"
+    }
+
+
 }
