@@ -1,11 +1,11 @@
 package com.typ.handtalk.ui.a2s.views
 
 import android.content.Context
+import android.content.Intent
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
@@ -16,6 +16,7 @@ import com.typ.handtalk.core.a2s.A2STranslationHistoryRecord
 import com.typ.handtalk.core.a2s.A2STranslationsHistory
 import com.typ.handtalk.databinding.ItemA2sTranslationHistoryRecordBinding
 import com.typ.handtalk.databinding.LayoutA2sEmptyHistoryBinding
+import com.typ.handtalk.ui.a2s.Arabic2SignTranslatorActivity
 import me.ibrahimyilmaz.kiel.adapterOf
 import me.ibrahimyilmaz.kiel.core.RecyclerViewHolder
 
@@ -80,8 +81,12 @@ class A2STranslationHistoryView @JvmOverloads constructor(
                 onBindViewHolder = { vh, _, record ->
                     vh.binding.root.text = record.sentence
                     vh.binding.root.setOnClickListener {
-                        // todo: Start A2STranslatorActivity with the record passed
-                        Toast.makeText(context, record.sentence, Toast.LENGTH_SHORT).show()
+                        // Pass the record sentence within the intent then start Arabic2SignTranslatorActivity
+                        context.startActivity(
+                            Intent(context, Arabic2SignTranslatorActivity::class.java).apply {
+                                putExtra(Arabic2SignTranslatorActivity.EXTRA_PROMPT, record.sentence)
+                            }
+                        )
                     }
                 }
             )
@@ -127,6 +132,15 @@ class A2STranslationHistoryView @JvmOverloads constructor(
     private fun switchLayout() {
         if (records.isEmpty()) showEmpty()
         else showHistory()
+    }
+
+    fun setHistory(records: Array<A2STranslationHistoryRecord>) {
+        val asList = records.toMutableList()
+        if (this.records == asList) return
+        this.records.clear()
+        this.records.addAll(asList)
+        getAdapter().submitList(asList)
+        switchLayout()
     }
 
     private class VH(view: View) : RecyclerViewHolder<A2STranslationHistoryRecord>(view) {

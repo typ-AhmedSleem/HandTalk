@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.typ.handtalk.core.a2s.A2STranslationsHistory
 import com.typ.handtalk.databinding.ActivityA2sTranslationHistoryBinding
 import com.typ.handtalk.ui.a2s.views.A2STranslationHistoryView
 
@@ -52,4 +53,10 @@ class Arabic2SignTranslationHistoryActivity : AppCompatActivity() {
         // Start Arabic2SignTranslatorActivity
         startActivity(Intent(this, Arabic2SignTranslatorActivity::class.java))
     }
+
+    override fun onResume() {
+        super.onResume()
+        binding.thvA2sTranslationHistory.setHistory(A2STranslationsHistory.getAllRecords(this))
+    }
+
 }
