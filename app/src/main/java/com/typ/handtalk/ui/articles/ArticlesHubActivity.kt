@@ -14,6 +14,7 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
 import com.google.android.material.transition.platform.MaterialArcMotion
@@ -46,6 +47,7 @@ class ArticlesHubActivity : AppCompatActivity() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
+        findViewById<MaterialToolbar>(R.id.toolbar).setNavigationOnClickListener { finish() }
         setContentView(R.layout.activity_categories)
         findViewById<RecyclerView>(R.id.rv_categories).apply {
             itemAnimator = DefaultItemAnimator()
