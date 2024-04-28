@@ -82,5 +82,7 @@
     <string name="permissions_denied">Camera permission denied</string>
     <string name="prompt_a2s">Type your Arabic…</string>
     <string name="translate">Translate</string>
+    <string name="empty_translation_prompt">Can\'t translate empty sentence</string>
+    <string name="translation_has_missing_words">"Sentence translated and has missing words. Check the RED words again "</string>
 
 </resources>

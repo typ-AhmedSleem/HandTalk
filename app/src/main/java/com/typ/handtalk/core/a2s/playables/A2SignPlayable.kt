@@ -1,6 +1,7 @@
 package com.typ.handtalk.core.a2s.playables
 
 import android.content.res.AssetManager
+import com.typ.handtalk.ui.a2s.Arabic2SignTranslatorActivity.Companion.PLAYABLE_SWITCH_DEFAULT_DELAY_TIME
 import java.io.File
 import java.io.IOException
 
@@ -12,7 +13,10 @@ import java.io.IOException
  * @param filename Filename of the target file. NOTE: filename includes
  * the extension of the target file (e.g: filename.ext) not just its name.
  */
-abstract class A2SignPlayable(val filename: String) {
+abstract class A2SignPlayable(
+    val filename: String,
+    val delay: Long = PLAYABLE_SWITCH_DEFAULT_DELAY_TIME
+) {
 
     //  ? Maybe I better use raw res folder to store
     //  ? videos and images for A2S. -\_(^_^)/_-

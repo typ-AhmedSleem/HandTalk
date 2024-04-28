@@ -4,8 +4,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.typ.handtalk.R
 import com.typ.handtalk.core.a2s.A2STranslationHistoryRecord
 import com.typ.handtalk.core.a2s.A2STranslationsHistory
 import com.typ.handtalk.core.a2s.Arabic2SignTranslator
@@ -19,6 +20,7 @@ import kotlinx.coroutines.withContext
 
 class Arabic2SignTranslatorActivity : AppCompatActivity() {
 
+    private var lastToast: Toast? = null
     private lateinit var binding: ActivityA2sTranslatorBinding
 
     // * Runtime
@@ -34,18 +36,27 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
         translator = Arabic2SignTranslator()
         // * Initialize UI
         supportActionBar?.hide()
+
         binding = ActivityA2sTranslatorBinding.inflate(layoutInflater).apply {
             setContentView(root)
             toolbar.setNavigationOnClickListener { finish() }
             btnTranslateA2s.setOnClickListener {
-                if (prompt.isEmpty()) return@setOnClickListener
-                // * Translate the prompt
-                val translation = translator.translate(prompt)
-                // * Quit if the translation contains only nulls
-                if (translation.values.all { it == null }) {
-                    Log.i(TAG, "Translation has no playables.")
+                if (prompt.isEmpty()) {
+                    toast(R.string.empty_translation_prompt)
                     return@setOnClickListener
                 }
+                // * Translate the prompt
+                val translation = translator.translate(prompt)
+                // * Display the stylized prompt on its own Textview
+                binding.tvA2sTranslationSentence.text = stylizePrompt(prompt, translation)
+                if (translation.values.any { it == null }) {
+                    toast(R.string.translation_has_missing_words)
+                }
+                // Quit if the translation contains only nulls
+//                if (translation.values.all { it == null }) {
+//                    Log.i(TAG, "Translation has no playables.")
+//                    return@setOnClickListener
+//                }
                 // * Save the translation
                 if (prompt != lastPrompt) {
                     lastPrompt = prompt
@@ -54,8 +65,6 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
                         A2STranslationHistoryRecord(sentence = prompt)
                     )
                 }
-                // * Display the stylized prompt on its own Textview
-                binding.tvA2sTranslationSentence.text = stylizePrompt(prompt, translation)
                 // * Display the translation
                 GlobalScope.launch(Dispatchers.IO) {
                     translation.values.forEach { playable ->
@@ -63,7 +72,7 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
                             withContext(Dispatchers.Main) {
                                 binding.a2sTranslationPlayerView.display(playable)
                             }
-                            delay(DELAY_TIME)
+                            delay(playable.delay)
                         }
                     }
                 }
@@ -96,10 +105,16 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
         return styledPrompt
     }
 
+    private fun toast(resId: Int) {
+        lastToast?.cancel()
+        lastToast = Toast.makeText(this@Arabic2SignTranslatorActivity, resId, Toast.LENGTH_SHORT)
+        lastToast?.show()
+    }
+
 
     companion object {
         const val SPACE = ' '
-        const val DELAY_TIME = 1000L
+        const val PLAYABLE_SWITCH_DEFAULT_DELAY_TIME = 1000L
         const val TAG = "actA2S_TRANSLATOR"
         const val EXTRA_PROMPT = "EXTRA_PROMPT"
     }

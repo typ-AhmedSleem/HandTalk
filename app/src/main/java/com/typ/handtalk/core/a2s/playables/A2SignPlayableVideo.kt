@@ -2,6 +2,7 @@ package com.typ.handtalk.core.a2s.playables
 
 import android.content.Context
 import android.util.Log
+import com.typ.handtalk.ui.a2s.Arabic2SignTranslatorActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -10,7 +11,10 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 
-class A2SignPlayableVideo(filename: String) : A2SignPlayable(filename) {
+class A2SignPlayableVideo(
+    filename: String,
+    delay: Long = Arabic2SignTranslatorActivity.PLAYABLE_SWITCH_DEFAULT_DELAY_TIME
+) : A2SignPlayable(filename, delay) {
 
     override val filePath: String
         get() = "A2S/Videos/${filename}"
