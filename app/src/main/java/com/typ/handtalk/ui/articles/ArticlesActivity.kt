@@ -17,7 +17,6 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.google.android.material.textview.MaterialTextView
@@ -28,6 +27,7 @@ import com.typ.handtalk.R
 import com.typ.handtalk.articles.data.Articles
 import com.typ.handtalk.articles.models.Article
 import com.typ.handtalk.articles.models.Category
+import com.typ.handtalk.databinding.ActivityArticlesBinding
 import com.typ.handtalk.utils.Utils
 
 class ArticlesActivity : AppCompatActivity() {
@@ -54,54 +54,57 @@ class ArticlesActivity : AppCompatActivity() {
         setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         super.onCreate(savedInstanceState)
-        // Hide default actionBar
-        supportActionBar?.hide()
-        setContentView(R.layout.activity_articles)
-        // Init UI
+        // * Get category from intent bundle
         category = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getSerializableExtra(Utils.EXTRA_CATEGORY, Category::class.java) as Category
         } else intent.getSerializableExtra(Utils.EXTRA_CATEGORY) as Category
-        findViewById<MaterialToolbar>(R.id.toolbar).apply {
-            title = getString(category.name)
-            setNavigationOnClickListener { finish() }
-        }
-        findViewById<RecyclerView>(R.id.rv_topics).apply {
-            itemAnimator = DefaultItemAnimator()
-            layoutManager = LinearLayoutManager(this@ArticlesActivity)
-            adapter = ArticlesAdapter(this@ArticlesActivity) { article, card ->
-                // Create activity transition
-                val opt = ActivityOptionsCompat.makeClipRevealAnimation(
-                    card,
-                    card.width - card.width / 2,
-                    card.height - card.height / 2,
-                    250,
-                    250
-                )
-                // View the clicked article
-                startActivity(
-                    if (article.id == 34) {
-                        Intent(this@ArticlesActivity, ArticlesActivity::class.java).apply {
-                            putExtra(
-                                Utils.EXTRA_CATEGORY, Category(
-                                    id = 34,
-                                    name = R.string.sub_cat_34,
-                                    icon = R.drawable.ic_category3,
-                                    articles = arrayOf(
-                                        Articles.Article_341,
+        // * Bind UI
+        with(ActivityArticlesBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            supportActionBar?.hide()
+
+            toolbar.apply {
+                title = getString(category.name)
+                setNavigationOnClickListener { finish() }
+            }
+            rvTopics.apply {
+                itemAnimator = DefaultItemAnimator()
+                layoutManager = LinearLayoutManager(this@ArticlesActivity)
+                adapter = ArticlesAdapter(this@ArticlesActivity) { article, card ->
+                    // Create activity transition
+                    val opt = ActivityOptionsCompat.makeClipRevealAnimation(
+                        card,
+                        card.width - card.width / 2,
+                        card.height - card.height / 2,
+                        250,
+                        250
+                    )
+                    // View the clicked article
+                    startActivity(
+                        if (article.id == 34) {
+                            Intent(this@ArticlesActivity, ArticlesActivity::class.java).apply {
+                                putExtra(
+                                    Utils.EXTRA_CATEGORY, Category(
+                                        id = 34,
+                                        name = R.string.sub_cat_34,
+                                        icon = R.drawable.ic_category3,
+                                        articles = arrayOf(
+                                            Articles.Article_341,
 //                                        Articles.Article_342,
-                                        Articles.Article_343,
+                                            Articles.Article_343,
 //                                        Articles.Article_344,
-                                        Articles.Article_345
+                                            Articles.Article_345
+                                        )
                                     )
                                 )
-                            )
-                        }
-                    } else {
-                        Intent(this@ArticlesActivity, ArticleViewerActivity::class.java).apply {
-                            putExtra(Utils.EXTRA_ARTICLE, article)
-                        }
-                    }, opt.toBundle()
-                )
+                            }
+                        } else {
+                            Intent(this@ArticlesActivity, ArticleViewerActivity::class.java).apply {
+                                putExtra(Utils.EXTRA_ARTICLE, article)
+                            }
+                        }, opt.toBundle()
+                    )
+                }
             }
         }
     }
@@ -142,17 +145,10 @@ class ArticlesActivity : AppCompatActivity() {
 
     private inner class ArticleViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val chipHasVideo: Chip
-        val card: MaterialCardView
-        val tvTopicTitle: MaterialTextView
-        val ivTopicThumb: AppCompatImageView
-
-        init {
-            card = view.findViewById(R.id.card_topic)
-            ivTopicThumb = view.findViewById(R.id.iv_topic_thumb)
-            tvTopicTitle = view.findViewById(R.id.tv_topic_title)
-            chipHasVideo = view.findViewById(R.id.chip_article_has_video)
-        }
+        val chipHasVideo: Chip = view.findViewById(R.id.chip_article_has_video)
+        val card: MaterialCardView = view.findViewById(R.id.card_topic)
+        val tvTopicTitle: MaterialTextView = view.findViewById(R.id.tv_topic_title)
+        val ivTopicThumb: AppCompatImageView = view.findViewById(R.id.iv_topic_thumb)
     }
 
 }

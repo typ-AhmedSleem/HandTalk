@@ -14,7 +14,6 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textview.MaterialTextView
 import com.google.android.material.transition.platform.MaterialArcMotion
@@ -23,6 +22,7 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import com.google.android.material.transition.platform.MaterialElevationScale
 import com.typ.handtalk.R
 import com.typ.handtalk.articles.data.Categories
+import com.typ.handtalk.databinding.ActivityCategoriesBinding
 import com.typ.handtalk.utils.Utils
 
 class ArticlesHubActivity : AppCompatActivity() {
@@ -45,14 +45,18 @@ class ArticlesHubActivity : AppCompatActivity() {
         }
         setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
-        findViewById<MaterialToolbar>(R.id.toolbar).setNavigationOnClickListener { finish() }
-        setContentView(R.layout.activity_categories)
-        findViewById<RecyclerView>(R.id.rv_categories).apply {
-            itemAnimator = DefaultItemAnimator()
-            adapter = CategoriesAdapter(this@ArticlesHubActivity)
-            layoutManager = GridLayoutManager(this@ArticlesHubActivity, 2)
+
+        with(ActivityCategoriesBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            toolbar.setNavigationOnClickListener { finish() }
+            rvCategories.apply {
+                itemAnimator = DefaultItemAnimator()
+                adapter = CategoriesAdapter(this@ArticlesHubActivity)
+                layoutManager = GridLayoutManager(this@ArticlesHubActivity, 2)
+            }
         }
     }
 

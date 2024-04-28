@@ -15,13 +15,13 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 import com.typ.handtalk.R
 import com.typ.handtalk.articles.data.Foundations
 import com.typ.handtalk.articles.models.Foundation
+import com.typ.handtalk.databinding.ActivityFoundationsBinding
+import com.typ.handtalk.databinding.BsFoundationDetailsBinding
 
 class FoundationsActivity : AppCompatActivity() {
 
@@ -34,37 +34,34 @@ class FoundationsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // Init UI
         supportActionBar?.hide()
-        setContentView(R.layout.activity_foundations)
-        findViewById<MaterialToolbar>(R.id.toolbar).apply { setNavigationOnClickListener { finish() } }
-        findViewById<RecyclerView>(R.id.rv_foundations).apply {
-            adapter = FoundationsAdapter()
-            itemAnimator = DefaultItemAnimator()
-            layoutManager = LinearLayoutManager(this@FoundationsActivity)
-            addItemDecoration(DividerItemDecoration(this@FoundationsActivity, VERTICAL))
+        with(ActivityFoundationsBinding.inflate(layoutInflater)) {
+            setContentView(root)
+            toolbar.apply { setNavigationOnClickListener { finish() } }
+            rvFoundations.apply {
+                adapter = FoundationsAdapter()
+                itemAnimator = DefaultItemAnimator()
+                layoutManager = LinearLayoutManager(this@FoundationsActivity)
+                addItemDecoration(DividerItemDecoration(this@FoundationsActivity, VERTICAL))
+            }
         }
     }
 
     private fun showFoundationDetails(fnd: Foundation) {
         BottomSheetDialog(this).apply {
-            setContentView(R.layout.bs_foundation_details)
-            findViewById<MaterialTextView>(R.id.tv_fnd_name)?.text = fnd.name
-            findViewById<MaterialTextView>(R.id.tv_fnd_bio)?.text = fnd.bio
-            findViewById<MaterialButton>(R.id.btn_show_fnd_on_map)?.setOnClickListener {
-                val mapUri = Uri.parse("geo:${fnd.loc.latitude},${fnd.loc.longitude}")
-                val mapsIntent = Intent(Intent.ACTION_VIEW, mapUri)
-                mapsIntent.resolveActivity(packageManager)?.let {
-                    startActivity(mapsIntent)
-                } ?: Toast.makeText(context, "تطبيق الخرائط غير مثبت", Toast.LENGTH_SHORT).show()
+            with(BsFoundationDetailsBinding.bind(View.inflate(context, R.layout.bs_foundation_details, null))) {
+                setContentView(root)
+                tvFndName.text = fnd.name
+                tvFndBio.text = fnd.bio
+                btnShowFndOnMap.setOnClickListener {
+                    val mapUri = Uri.parse("geo:${fnd.loc.latitude},${fnd.loc.longitude}")
+                    val mapsIntent = Intent(Intent.ACTION_VIEW, mapUri)
+                    // ! Double check [mapsIntent.resolveActivity] again ensuring if it requires <queries> in manifest or not.
+                    mapsIntent.resolveActivity(packageManager)?.let {
+                        startActivity(mapsIntent)
+                    } ?: Toast.makeText(context, "تطبيق الخرائط غير مثبت", Toast.LENGTH_SHORT).show()
+                }
+                show()
             }
-            show()
-//            findViewById<MaterialButton>(R.id.btn_copy_fnd_num)?.apply {
-//                text = String.format(Locale("ar"), "%s '%s'", "نسخ", fnd.phoneNumber)
-//                setOnClickListener {
-//                    clipboard.setPrimaryClip(ClipData.newPlainText(fnd.name, fnd.phoneNumber))
-//                    Toast.makeText(context, "تم نسخ رقم الهاتف", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//            findViewById<ImageFilterView>(R.id.ifv_fnd_logo)?.setImageDrawable(Drawable.createFromStream(this@FoundationsActivity.assets.open("foundations/${fnd.logo}"), null))
         }
     }
 

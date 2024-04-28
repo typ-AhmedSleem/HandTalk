@@ -70,9 +70,9 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_show_fnd_on_map"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        style="@style/DefaultMaterialButtonStyle"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="65dp"
         android:layout_marginTop="20dp"
         android:importantForAccessibility="no"
         android:text="@string/show_fnd_on_map"

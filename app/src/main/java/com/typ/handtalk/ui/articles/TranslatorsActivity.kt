@@ -15,13 +15,13 @@ import androidx.constraintlayout.utils.widget.ImageFilterView
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 import com.typ.handtalk.R
 import com.typ.handtalk.articles.data.Translators
 import com.typ.handtalk.articles.models.TranslatorProfile
+import com.typ.handtalk.databinding.ActivityTranslatorsBinding
+import com.typ.handtalk.databinding.BsTranslatorProfileDetailsBinding
 import java.util.Locale
 
 class TranslatorsActivity : AppCompatActivity() {
@@ -31,36 +31,38 @@ class TranslatorsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         window.statusBarColor = getColor(R.color.toolbar_color)
         window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
-        // Init UI
-        supportActionBar?.hide()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_translators)
-        findViewById<MaterialToolbar>(R.id.toolbar).setNavigationOnClickListener { finishAfterTransition() }
-        findViewById<RecyclerView>(R.id.rv_translators).apply {
-            adapter = TranslatorsAdapter()
-            itemAnimator = DefaultItemAnimator()
-            layoutManager = GridLayoutManager(this@TranslatorsActivity, 2)
+        with(ActivityTranslatorsBinding.inflate(layoutInflater)) {
+            // * Bind UI
+            setContentView(root)
+            supportActionBar?.hide()
+            toolbar.setNavigationOnClickListener { finishAfterTransition() }
+            rvTranslators.apply {
+                adapter = TranslatorsAdapter()
+                itemAnimator = DefaultItemAnimator()
+                layoutManager = GridLayoutManager(this@TranslatorsActivity, 2)
+            }
         }
     }
 
     private fun showTranslatorProfile(translator: TranslatorProfile) {
         BottomSheetDialog(this).apply {
             val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            setContentView(R.layout.bs_translator_profile_details)
-            findViewById<MaterialTextView>(R.id.tv_translator_name)?.text = translator.name
-            findViewById<MaterialTextView>(R.id.tv_translator_bio)?.text = translator.bio
-            findViewById<MaterialTextView>(R.id.tv_translator_loc)?.text = translator.homeCity
-            findViewById<MaterialButton>(R.id.btn_copy_translator_num)?.apply {
-                text = String.format(Locale("ar"), "%s '%s'", "نسخ", translator.phoneNumber)
-                setOnClickListener {
-                    clipboard.setPrimaryClip(ClipData.newPlainText(translator.name, translator.phoneNumber))
-                    Toast.makeText(context, "تم نسخ رقم الهاتف", Toast.LENGTH_SHORT).show()
+            with(BsTranslatorProfileDetailsBinding.bind(View.inflate(context, R.layout.bs_translator_profile_details, null))) {
+                setContentView(root)
+                tvTranslatorName.text = translator.name
+                tvTranslatorBio.text = translator.bio
+                tvTranslatorLoc.text = translator.homeCity
+                btnCopyTranslatorNum.apply {
+                    text = String.format(Locale("ar"), "%s '%s'", "نسخ", translator.phoneNumber)
+                    setOnClickListener {
+                        clipboard.setPrimaryClip(ClipData.newPlainText(translator.name, translator.phoneNumber))
+                        Toast.makeText(context, "تم نسخ رقم الهاتف", Toast.LENGTH_SHORT).show()
+                    }
                 }
+                ifvTranslatorAvatar.setImageDrawable(Drawable.createFromStream(this@TranslatorsActivity.assets.open(translator.photoPath), null))
+                show()
             }
-            findViewById<ImageFilterView>(R.id.ifv_translator_avatar)?.apply {
-                setImageDrawable(Drawable.createFromStream(this@TranslatorsActivity.assets.open(translator.photoPath), null))
-            }
-            show()
         }
     }
 
