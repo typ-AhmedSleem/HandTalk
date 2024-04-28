@@ -15,7 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_to_left"
         app:navigationIconTint="@color/color_adaptive_on_surface"
-        app:title="@string/app_name"
+        app:title="@string/articles"
         app:titleCentered="true"
         app:titleMarginTop="15dp"
         app:titleTextAppearance="@style/TextAppearance.MyTitle.Articles"

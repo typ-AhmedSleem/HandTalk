@@ -71,4 +71,23 @@ object Categories {
         )
     }
 
+    @JvmStatic
+    fun getCombinedCategory(): Category {
+        return Category(
+            0,
+            R.string.cat1,
+            R.drawable.ic_category1,
+            articles = arrayOf(
+                Articles.Article_11,
+                Articles.Article_12,
+                Articles.Article_21,
+                Articles.Article_22,
+                Articles.Article_23,
+                Articles.Article_31,
+                Articles.Article_32,
+                Articles.Article_33,
+            )
+        )
+    }
+
 }

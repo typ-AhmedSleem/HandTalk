@@ -2,20 +2,18 @@ package com.typ.handtalk.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.typ.handtalk.core.perms.PermissionHelper
 import com.typ.handtalk.core.perms.RequestRequiredPermissionsContract
 import com.typ.handtalk.databinding.ActivityWelcomeBinding
 import com.typ.handtalk.ui.a2s.Arabic2SignTranslationHistoryActivity
-import com.typ.handtalk.ui.articles.ArticlesHubActivity
+import com.typ.handtalk.ui.articles.ArticlesActivity
 
 class WelcomeActivity : AppCompatActivity() {
 
-    private var lastToast: Toast? = null
-    private lateinit var permissionsBS: RequestPermissionsActivity
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
         // * Initialize the contract
@@ -36,7 +34,7 @@ class WelcomeActivity : AppCompatActivity() {
                 startActivity(Intent(this@WelcomeActivity, Arabic2SignTranslationHistoryActivity::class.java))
             }
             btnArticles.setOnClickListener {
-                startActivity(Intent(this@WelcomeActivity, ArticlesHubActivity::class.java))
+                startActivity(Intent(this@WelcomeActivity, ArticlesActivity::class.java))
             }
         }
     }

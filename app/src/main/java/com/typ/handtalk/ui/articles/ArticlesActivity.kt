@@ -3,7 +3,6 @@ package com.typ.handtalk.ui.articles
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -25,6 +24,7 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import com.google.android.material.transition.platform.MaterialElevationScale
 import com.typ.handtalk.R
 import com.typ.handtalk.articles.data.Articles
+import com.typ.handtalk.articles.data.Categories
 import com.typ.handtalk.articles.models.Article
 import com.typ.handtalk.articles.models.Category
 import com.typ.handtalk.databinding.ActivityArticlesBinding
@@ -33,7 +33,7 @@ import com.typ.handtalk.utils.Utils
 class ArticlesActivity : AppCompatActivity() {
 
     // Runtime
-    private lateinit var category: Category
+    private val category = Categories.getCombinedCategory()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         with(window) {
@@ -54,17 +54,12 @@ class ArticlesActivity : AppCompatActivity() {
         setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         super.onCreate(savedInstanceState)
-        // * Get category from intent bundle
-        category = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getSerializableExtra(Utils.EXTRA_CATEGORY, Category::class.java) as Category
-        } else intent.getSerializableExtra(Utils.EXTRA_CATEGORY) as Category
         // * Bind UI
         with(ActivityArticlesBinding.inflate(layoutInflater)) {
             setContentView(root)
             supportActionBar?.hide()
 
             toolbar.apply {
-                title = getString(category.name)
                 setNavigationOnClickListener { finish() }
             }
             rvTopics.apply {
