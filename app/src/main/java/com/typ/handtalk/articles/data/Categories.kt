@@ -35,40 +35,39 @@ object Categories {
                     Articles.Article_31,
                     Articles.Article_32,
                     Articles.Article_33,
-                    Articles.Article_34
                 )
             ),
-            Category(
-                4,
-                R.string.cat4,
-                R.drawable.ic_category4,
-                articles = arrayOf(
-                    Articles.Article_41,
-                    Articles.Article_42
-                )
-            ),
-            Category(
-                5,
-                R.string.cat5,
-                R.drawable.ic_category5,
-                articles = arrayOf(
-                    Articles.Article_51,
-                    Articles.Article_52,
-                    Articles.Article_53,
-                    Articles.Article_54,
-                    Articles.Article_55,
-                )
-            ),
-            Category(
-                6,
-                R.string.cat6,
-                R.drawable.ic_foundation
-            ),
-            Category(
-                7,
-                R.string.cat7,
-                R.drawable.ic_translate
-            )
+//            Category(
+//                4,
+//                R.string.cat4,
+//                R.drawable.ic_category4,
+//                articles = arrayOf(
+//                    Articles.Article_41,
+//                    Articles.Article_42
+//                )
+//            ),
+//            Category(
+//                5,
+//                R.string.cat5,
+//                R.drawable.ic_category5,
+//                articles = arrayOf(
+//                    Articles.Article_51,
+//                    Articles.Article_52,
+//                    Articles.Article_53,
+//                    Articles.Article_54,
+//                    Articles.Article_55,
+//                )
+//            ),
+//            Category(
+//                6,
+//                R.string.cat6,
+//                R.drawable.ic_foundation
+//            ),
+//            Category(
+//                7,
+//                R.string.cat7,
+//                R.drawable.ic_translate
+//            )
         )
     }
 

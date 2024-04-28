@@ -84,17 +84,17 @@ class ArticlesHubActivity : AppCompatActivity() {
                                 )
                             }
 
-                            6 -> {
-                                // Start FoundationsActivity
-                                val opt = ActivityOptionsCompat.makeClipRevealAnimation(
-                                    card,
-                                    card.width / 2,
-                                    card.height / 2,
-                                    250,
-                                    250
-                                )
-                                startActivity(Intent(this@ArticlesHubActivity, FoundationsActivity::class.java), opt.toBundle())
-                            }
+//                            6 -> {
+//                                // Start FoundationsActivity
+//                                val opt = ActivityOptionsCompat.makeClipRevealAnimation(
+//                                    card,
+//                                    card.width / 2,
+//                                    card.height / 2,
+//                                    250,
+//                                    250
+//                                )
+//                                startActivity(Intent(this@ArticlesHubActivity, FoundationsActivity::class.java), opt.toBundle())
+//                            }
 
                             7 -> {
                                 // Start TranslatorsActivity
@@ -119,15 +119,9 @@ class ArticlesHubActivity : AppCompatActivity() {
 
     private inner class CategoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val card: MaterialCardView
-        val ifvCatIcon: ImageFilterView
-        val tvCatName: MaterialTextView
-
-        init {
-            card = view.findViewById(R.id.card_category)
-            ifvCatIcon = view.findViewById(R.id.ifv_category_icon)
-            tvCatName = view.findViewById(R.id.tv_category_name)
-        }
+        val card: MaterialCardView = view.findViewById(R.id.card_category)
+        val ifvCatIcon: ImageFilterView = view.findViewById(R.id.ifv_category_icon)
+        val tvCatName: MaterialTextView = view.findViewById(R.id.tv_category_name)
 
     }
 }

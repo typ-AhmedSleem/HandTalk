@@ -88,9 +88,9 @@ class ArticlesActivity : AppCompatActivity() {
                                     icon = R.drawable.ic_category3,
                                     articles = arrayOf(
                                         Articles.Article_341,
-                                        Articles.Article_342,
+//                                        Articles.Article_342,
                                         Articles.Article_343,
-                                        Articles.Article_344,
+//                                        Articles.Article_344,
                                         Articles.Article_345
                                     )
                                 )
