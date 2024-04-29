@@ -86,5 +86,11 @@
     <string name="translation_has_missing_words">"Sentence translated and has missing words. Check the RED words again "</string>
     <string name="articles">مواضيع توعوية</string>
     <string name="stop_translating">Stop translating</string>
+    <string name="camera_perm_required">S2A: Camera permission is required to continue.</string>
+    <string name="browse_articles">Browse articles</string>
+    <string name="a2s_translator">Arabic to Sign Translator</string>
+    <string name="sign_to_arabic_translator">Sign to Arabic Translator</string>
+    <string name="normal_user">Normal user (🗣️)</string>
+    <string name="deaf_user">Deaf user (🧏🏻)</string>
 
 </resources>

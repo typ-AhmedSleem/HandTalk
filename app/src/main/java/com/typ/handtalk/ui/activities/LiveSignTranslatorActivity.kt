@@ -1,7 +1,6 @@
 package com.typ.handtalk.ui.activities
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +17,7 @@ import androidx.core.content.ContextCompat
 import com.google.mediapipe.tasks.core.Delegate
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.typ.handtalk.MainViewModel
+import com.typ.handtalk.R
 import com.typ.handtalk.core.perms.PermissionHelper
 import com.typ.handtalk.core.recognizer.GestureRecognizerListener
 import com.typ.handtalk.core.recognizer.HandSignRecognizer
@@ -138,15 +138,11 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
             setupCamera()
         }
 
-        // Listeners
-        binding.fabHandTalkNormalUi.setOnClickListener {
-            startActivity(Intent(this, HomeActivity::class.java))
-        }
     }
 
     private fun ensurePermissionsGranted() {
         if (!PermissionHelper.requiredPermissionsGranted(this)) {
-            Toast.makeText(this, "S2A: Camera permission is required to continue.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.camera_perm_required), Toast.LENGTH_SHORT).show()
             finish()
         }
     }
