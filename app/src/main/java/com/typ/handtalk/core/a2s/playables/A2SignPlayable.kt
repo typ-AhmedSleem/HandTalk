@@ -30,6 +30,8 @@ abstract class A2SignPlayable(
      */
     abstract val filePath: String
 
+    fun getVideosPath(cacheDir: File) = File(cacheDir, "A2S/Videos/")
+
     fun asFile(cacheDir: File) = File(cacheDir, filePath)
 
     fun existsInCache(cacheDir: File) = asFile(cacheDir).exists()
@@ -39,7 +41,8 @@ abstract class A2SignPlayable(
         return try {
             assets.open(filePath).close()
             true
-        } catch (_: IOException) {
+        } catch (e: IOException) {
+            e.printStackTrace()
             false
         }
     }

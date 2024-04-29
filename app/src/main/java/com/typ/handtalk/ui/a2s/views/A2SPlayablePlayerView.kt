@@ -2,6 +2,7 @@ package com.typ.handtalk.ui.a2s.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.widget.FrameLayout
 import com.typ.handtalk.R
 import com.typ.handtalk.core.a2s.playables.A2SignPlayable
@@ -36,20 +37,30 @@ class A2SPlayablePlayerView @JvmOverloads constructor(
         )
     )
 
+//    private var currentlyActiveJob: Job? = null
+
+    var playing: Boolean = false
+        private set
+
     init {
-        // Initially, hide both of the views
+        // Show sample imageview if inEditMode
+        if (isInEditMode) binding.ivPlayable.visibility = VISIBLE
+        else reset() // Reset the player
+    }
+
+    fun reset() {
         binding.ivPlayable.visibility = INVISIBLE
         binding.videoPlayable.visibility = INVISIBLE
-        // Show the imageview if inEditMode
-        if (isInEditMode) binding.ivPlayable.visibility = VISIBLE
-        else {
-            // Reset both of the views
-            binding.ivPlayable.setImageDrawable(null)
-            binding.videoPlayable.setVideoURI(null)
-        }
+
+        binding.ivPlayable.setImageDrawable(null)
+        binding.videoPlayable.setVideoURI(null)
+
+//        currentlyActiveJob?.cancel()
+        playing = false
     }
 
     fun display(playable: A2SignPlayable) {
+        playing = true
         when (playable) {
             is A2SignPlayableImage -> {
                 playable.loadInto(binding.ivPlayable)
@@ -65,19 +76,35 @@ class A2SPlayablePlayerView @JvmOverloads constructor(
     private fun displayVideo(video: A2SignPlayableVideo) {
         GlobalScope.launch {
             // Return the function if the video doesn't exist in Assets
-            if (!video.existsInAssets(context.assets)) return@launch
+            if (!video.existsInAssets(context.assets)) {
+                return@launch
+            }
+            Log.i(TAG, "displayVideo: Video at path '${video.getVideoPath(context.cacheDir)}' exists in assets folder.")
             // Save video file from Assets to cache if not exist in cache
             if (!video.existsInCache(context.cacheDir)) {
-                video.copyToCache(context)
+                Log.i(TAG, "displayVideo: Video doesn't exist in cache folder. Caching it...")
+                val cached = video.copyToCache(context)
+                if (!cached) {
+                    Log.i(TAG, "displayVideo: Video can't be cached.")
+                    return@launch
+                }
+                Log.i(TAG, "displayVideo: Video has been cached.")
             }
+            Log.i(TAG, "displayVideo: Video at path '${video.filePath}' exists in cache folder.")
             // Display the video from its file path and hide the ImageView
             withContext(Dispatchers.Main) {
-                binding.videoPlayable.setVideoPath(video.getVideoPath(context.cacheDir))
                 binding.ivPlayable.visibility = INVISIBLE
-                binding.videoPlayable.visibility = VISIBLE
+                binding.videoPlayable.apply {
+                    visibility = VISIBLE
+                    setVideoPath(video.getVideoPath(context.cacheDir))
+                    start()
+                }
             }
         }
     }
 
+    companion object {
+        const val TAG = "A2SPlayablePlayerView"
+    }
 
 }

@@ -1,11 +1,11 @@
 package com.typ.handtalk.ui.a2s
 
-import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import com.typ.handtalk.R
 import com.typ.handtalk.core.a2s.A2STranslationHistoryRecord
 import com.typ.handtalk.core.a2s.A2STranslationsHistory
@@ -14,6 +14,7 @@ import com.typ.handtalk.databinding.ActivityA2sTranslatorBinding
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -29,6 +30,8 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
     private val prompt: String
         get() = (binding.tilA2sPrompt.editText?.text ?: "").toString()
 
+    private var currentlyActiveJob: Job? = null
+
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,15 +39,25 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
         translator = Arabic2SignTranslator()
         // * Initialize UI
         supportActionBar?.hide()
-
         binding = ActivityA2sTranslatorBinding.inflate(layoutInflater).apply {
             setContentView(root)
             toolbar.setNavigationOnClickListener { finish() }
             btnTranslateA2s.setOnClickListener {
+                if (binding.a2sTranslationPlayerView.playing) {
+                    // * Cancel the current translation player and reset UI
+                    currentlyActiveJob?.cancel()
+                    binding.a2sTranslationPlayerView.reset()
+                    binding.tilA2sPrompt.isEnabled = true
+                    changeButtonState(R.string.translate, R.color.colorPrimary)
+                    return@setOnClickListener
+                }
+                // * * Perform translation
                 if (prompt.isEmpty()) {
                     toast(R.string.empty_translation_prompt)
                     return@setOnClickListener
                 }
+                binding.tilA2sPrompt.isEnabled = false
+                changeButtonState(R.string.stop_translating, R.color.colorErrorContainer)
                 // * Translate the prompt
                 val translation = translator.translate(prompt)
                 // * Display the stylized prompt on its own Textview
@@ -66,7 +79,7 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
                     )
                 }
                 // * Display the translation
-                GlobalScope.launch(Dispatchers.IO) {
+                currentlyActiveJob = GlobalScope.launch(Dispatchers.IO) {
                     translation.values.forEach { playable ->
                         if (playable != null) {
                             withContext(Dispatchers.Main) {
@@ -74,6 +87,12 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
                             }
                             delay(playable.delay)
                         }
+                    }
+                    delay(2500L)
+                    withContext(Dispatchers.Main) {
+                        binding.a2sTranslationPlayerView.reset()
+                        binding.tilA2sPrompt.isEnabled = true
+                        changeButtonState(R.string.translate, R.color.colorPrimary)
                     }
                 }
             }
@@ -86,13 +105,29 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
         }
     }
 
+    private fun changeButtonState(text: Int, bgColor: Int) {
+        binding.btnTranslateA2s.apply {
+            setText(text)
+            setBackgroundColor(ResourcesCompat.getColor(resources, bgColor, null))
+        }
+    }
+
+
+    private val colorRed: Int by lazy {
+        ResourcesCompat.getColor(resources, R.color.colorErrorContainer, null)
+    }
+
+    private val colorGreen: Int by lazy {
+        ResourcesCompat.getColor(resources, R.color.colorSuccessContainer, null)
+    }
+
     private fun stylizePrompt(prompt: String, values: Map<String, Any?>): SpannableString {
         val styledPrompt = SpannableString(prompt)
         val words = prompt.split(SPACE)
         for (word in words) {
             if (values.containsKey(word)) {
                 val value = values[word]
-                val color = if (value != null) Color.GREEN else Color.RED
+                val color = if (value != null) colorGreen else colorRed
                 styledPrompt.setSpan(
                     ForegroundColorSpan(color),
                     prompt.indexOf(word),
@@ -106,9 +141,7 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
     }
 
     private fun toast(resId: Int) {
-        lastToast?.cancel()
-        lastToast = Toast.makeText(this@Arabic2SignTranslatorActivity, resId, Toast.LENGTH_SHORT)
-        lastToast?.show()
+        Toast.makeText(this@Arabic2SignTranslatorActivity, resId, Toast.LENGTH_SHORT).show()
     }
 
 

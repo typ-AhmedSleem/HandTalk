@@ -8,12 +8,14 @@
     <VideoView
         android:id="@+id/video_playable"
         android:layout_width="match_parent"
+        android:layout_gravity="center"
         android:layout_height="match_parent"
         tools:visibility="invisible" />
 
     <ImageView
         android:id="@+id/iv_playable"
         android:layout_width="match_parent"
+        android:layout_gravity="center"
         android:layout_height="match_parent"
         android:background="@color/transparent"
         android:importantForAccessibility="no"
