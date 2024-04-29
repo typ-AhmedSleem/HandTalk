@@ -10,7 +10,7 @@ object Articles {
 
     internal val Article_11 = Article(
         id = 11,
-        title = "الصُم",
+        title = "من هم الصُم و ضعاف السمع",
         sections = arrayOf(
             TextSection(
                 "",
@@ -149,7 +149,7 @@ object Articles {
 
     internal val Article_12 = Article(
         id = 12,
-        title = "ضعاف السمع",
+        title = "ذوي السمع الضعيف او الاطفال ذوي الاحتياجات السمعي",
         sections = arrayOf(
             TextSection(
                 "",
@@ -250,7 +250,7 @@ object Articles {
 
     internal val Article_21 = Article(
         id = 21,
-        title = "التواصل الكلي",
+        title = "إزاي اتواصل معاهم؟",
         sections = arrayOf(
 //            ImageSection("2/1/1.jpg"),
             TextSection(
@@ -290,7 +290,7 @@ object Articles {
     )
     internal val Article_22 = Article(
         id = 22,
-        title = "قراءة الشفاه",
+        title = "اللغه الحركيه او التواصل بالإيماءات",
         sections = arrayOf(
             TextSection(
                 "ما هي مهارة قراءة الشفاة؟",

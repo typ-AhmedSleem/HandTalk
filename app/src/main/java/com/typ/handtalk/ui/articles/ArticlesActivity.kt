@@ -18,10 +18,8 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.google.android.material.textview.MaterialTextView
 import com.typ.handtalk.R
-import com.typ.handtalk.articles.data.Articles
 import com.typ.handtalk.articles.data.Categories
 import com.typ.handtalk.articles.models.Article
-import com.typ.handtalk.articles.models.Category
 import com.typ.handtalk.databinding.ActivityArticlesBinding
 import com.typ.handtalk.utils.Utils
 
@@ -54,28 +52,10 @@ class ArticlesActivity : AppCompatActivity() {
                     )
                     // View the clicked article
                     startActivity(
-                        if (article.id == 34) {
-                            Intent(this@ArticlesActivity, ArticlesActivity::class.java).apply {
-                                putExtra(
-                                    Utils.EXTRA_CATEGORY, Category(
-                                        id = 34,
-                                        name = R.string.sub_cat_34,
-                                        icon = R.drawable.ic_category3,
-                                        articles = arrayOf(
-                                            Articles.Article_341,
-//                                        Articles.Article_342,
-                                            Articles.Article_343,
-//                                        Articles.Article_344,
-                                            Articles.Article_345
-                                        )
-                                    )
-                                )
-                            }
-                        } else {
-                            Intent(this@ArticlesActivity, ArticleViewerActivity::class.java).apply {
-                                putExtra(Utils.EXTRA_ARTICLE, article)
-                            }
-                        }, opt.toBundle()
+                        Intent(this@ArticlesActivity, ArticleViewerActivity::class.java).apply {
+                            putExtra(Utils.EXTRA_ARTICLE, article)
+                        },
+                        opt.toBundle()
                     )
                 }
             }

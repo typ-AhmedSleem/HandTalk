@@ -80,12 +80,17 @@ object Categories {
             articles = arrayOf(
                 Articles.Article_11,
                 Articles.Article_12,
-                Articles.Article_21,
-                Articles.Article_22,
-                Articles.Article_23,
+                Articles.Article_344,
+                Articles.Article_343,
                 Articles.Article_31,
-                Articles.Article_32,
+                Articles.Article_341,
+                Articles.Article_21,
+                Articles.Article_345,
                 Articles.Article_33,
+                Articles.Article_23,
+                Articles.Article_22,
+                Articles.Article_342,
+                Articles.Article_32,
             )
         )
     }
