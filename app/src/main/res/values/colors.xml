@@ -41,6 +41,8 @@
     <color name="rippleForColorPrimary">#40FFFFFF</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="colorErrorContainer">#F44336</color>
+    <color name="colorSuccessContainer">#4CAF50</color>
 
     <!-- * Articles feature colors go here -->
     <color name="color_bg">#FBFAFA</color>

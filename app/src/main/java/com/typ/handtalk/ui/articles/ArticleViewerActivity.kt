@@ -15,6 +15,7 @@ import com.typ.handtalk.articles.models.Section
 import com.typ.handtalk.databinding.ActivityArticleViewerBinding
 import com.typ.handtalk.ui.articles.views.ImageSectionView
 import com.typ.handtalk.ui.articles.views.TextSectionView
+import com.typ.handtalk.ui.articles.views.TitleSectionView
 import com.typ.handtalk.utils.Utils
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +46,7 @@ class ArticleViewerActivity : AppCompatActivity() {
         with(ActivityArticleViewerBinding.inflate(layoutInflater)) {
             setContentView(root)
             toolbar.apply {
-                title = article.title
+                title = "" // article.title
                 setNavigationOnClickListener {
                     finishAfterTransition()
                 }
@@ -115,6 +116,11 @@ class ArticleViewerActivity : AppCompatActivity() {
                 }
             }
             // * Sections
+            llSections.addView(
+                TitleSectionView(context, article.title),
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
             for (section in article.sections) {
                 when (section) {
                     is Section.TextSection -> {

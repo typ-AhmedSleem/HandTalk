@@ -8,7 +8,7 @@ import androidx.constraintlayout.utils.widget.ImageFilterView
 import java.io.IOException
 
 @SuppressLint("ViewConstructor")
-class ImageSectionView constructor(
+class ImageSectionView(
     context: Context,
     src: String
 ) : ImageFilterView(context) {

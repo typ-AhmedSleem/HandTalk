@@ -10,7 +10,7 @@ import com.typ.handtalk.R
 import com.typ.handtalk.articles.models.Section
 
 @SuppressLint("ViewConstructor")
-class TextSectionView constructor(
+class TextSectionView(
     context: Context,
     section: Section.TextSection
 ) : LinearLayout(context) {
