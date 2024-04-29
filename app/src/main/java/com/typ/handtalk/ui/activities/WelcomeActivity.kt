@@ -7,13 +7,13 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
-import com.typ.handtalk.ui.s2a.LiveSignTranslatorActivity
 import com.typ.handtalk.R
 import com.typ.handtalk.core.perms.PermissionHelper
 import com.typ.handtalk.core.perms.RequestRequiredPermissionsContract
 import com.typ.handtalk.databinding.ActivityWelcomeBinding
 import com.typ.handtalk.ui.a2s.Arabic2SignTranslationHistoryActivity
 import com.typ.handtalk.ui.articles.ArticlesActivity
+import com.typ.handtalk.ui.s2a.LiveSignTranslatorActivity
 
 class WelcomeActivity : AppCompatActivity() {
 
@@ -25,7 +25,7 @@ class WelcomeActivity : AppCompatActivity() {
             if (isShowingNormalLayout) {
                 isShowingNormalLayout = false
                 showNormalOrDeafLayout()
-            }
+            } else finishAffinity()
         }
     }
 
