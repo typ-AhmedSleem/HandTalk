@@ -1,4 +1,4 @@
-package com.typ.handtalk.ui.activities
+package com.typ.handtalk.ui.s2a
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration

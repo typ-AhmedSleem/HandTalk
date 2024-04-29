@@ -7,6 +7,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
+import com.typ.handtalk.ui.s2a.LiveSignTranslatorActivity
 import com.typ.handtalk.R
 import com.typ.handtalk.core.perms.PermissionHelper
 import com.typ.handtalk.core.perms.RequestRequiredPermissionsContract

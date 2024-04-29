@@ -33,7 +33,7 @@
         </activity>
 
         <activity
-            android:name=".ui.activities.LiveSignTranslatorActivity"
+            android:name=".ui.s2a.LiveSignTranslatorActivity"
             android:theme="@style/Theme.HandTalk"
             android:exported="true" />
 
