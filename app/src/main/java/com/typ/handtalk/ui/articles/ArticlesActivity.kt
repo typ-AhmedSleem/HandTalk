@@ -8,9 +8,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -19,9 +17,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.google.android.material.textview.MaterialTextView
-import com.google.android.material.transition.platform.MaterialContainerTransform
-import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
-import com.google.android.material.transition.platform.MaterialElevationScale
 import com.typ.handtalk.R
 import com.typ.handtalk.articles.data.Articles
 import com.typ.handtalk.articles.data.Categories
@@ -36,23 +31,6 @@ class ArticlesActivity : AppCompatActivity() {
     private val category = Categories.getCombinedCategory()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        with(window) {
-            statusBarColor = getColor(R.color.toolbar_color)
-            requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
-            findViewById<View>(android.R.id.content).transitionName = getString(R.string.transition_cat_to_topic)
-            val transition = MaterialContainerTransform().apply {
-                duration = 1500L
-                isDrawDebugEnabled = true
-                addTarget(android.R.id.content)
-                scrimColor = getColor(R.color.color_bg)
-            }
-//            sharedElementEnterTransition = transition
-//            sharedElementReenterTransition = transition
-            enterTransition = MaterialElevationScale(true)
-            reenterTransition = MaterialElevationScale(false)
-        }
-        setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         super.onCreate(savedInstanceState)
         // * Bind UI
         with(ActivityArticlesBinding.inflate(layoutInflater)) {

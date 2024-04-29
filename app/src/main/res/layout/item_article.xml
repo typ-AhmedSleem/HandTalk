@@ -2,30 +2,32 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:layout_marginStart="15dp"
     android:id="@+id/card_topic"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="15dp"
     android:layout_marginEnd="15dp"
-    android:transitionGroup="true"
     android:layout_marginBottom="15dp"
+    android:transitionGroup="true"
     android:transitionName="trans_card_to_activity"
-    app:cardBackgroundColor="#26FFFFFF"
+    app:cardBackgroundColor="@color/colorSurface"
     app:cardCornerRadius="15dp"
-    app:cardElevation="5dp"
+    app:cardElevation="0dp"
     app:strokeWidth="0dp">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_topic_thumb"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="150dp"
+        android:visibility="visible"
         android:scaleType="centerCrop"
         android:src="@drawable/thumb" />
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_scrim_article_card" />
+        android:background="@color/color_scrim_article_card"
+        android:visibility="visible" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -42,6 +44,7 @@
             android:textAlignment="viewStart"
             android:textColor="@color/color_adaptive_on_surface"
             android:textSize="11sp"
+            android:visibility="gone"
             app:chipCornerRadius="10dp"
             app:chipBackgroundColor="@color/transparent"
             app:chipIcon="@drawable/ic_video"
@@ -53,20 +56,20 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_topic_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|start"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginBottom="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="20dp"
             android:maxLines="2"
-            android:text="العنوان هيبقي هنا...\nو كمان ممكن يكون سطرين أو اكتر"
-            android:textAlignment="textStart"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="العنوان هيبقي هنا...\nو كمان ممكن يكون سطرين أو اكتر"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:fontFamily="@font/font_content"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:ignore="HardcodedText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

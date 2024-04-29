@@ -7,14 +7,9 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
-import android.view.Window
 import android.widget.LinearLayout
 import android.widget.MediaController
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import com.google.android.material.transition.platform.MaterialContainerTransform
-import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
-import com.typ.handtalk.R
 import com.typ.handtalk.articles.models.Article
 import com.typ.handtalk.articles.models.Section
 import com.typ.handtalk.databinding.ActivityArticleViewerBinding
@@ -41,27 +36,11 @@ class ArticleViewerActivity : AppCompatActivity() {
 
     @DelicateCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
-        window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
-        window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
-        findViewById<View>(android.R.id.content).transitionName = Utils.TRANS_CARD2ACT
-        // Setup activity transition
-        val transition = MaterialContainerTransform().apply {
-            addTarget(android.R.id.content)
-            scrimColor = getColor(R.color.color_bg)
-        }
-        supportActionBar?.hide()
-        window.sharedElementEnterTransition = transition
-        window.sharedElementReenterTransition = transition
-        window.statusBarColor = getColor(R.color.toolbar_color)
-        setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         super.onCreate(savedInstanceState)
         // Get topic from intent
         val article = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getSerializableExtra(Utils.EXTRA_ARTICLE, Article::class.java) as Article
         } else intent.getSerializableExtra(Utils.EXTRA_ARTICLE) as Article
-
-
         // * Bind UI
         with(ActivityArticleViewerBinding.inflate(layoutInflater)) {
             setContentView(root)
