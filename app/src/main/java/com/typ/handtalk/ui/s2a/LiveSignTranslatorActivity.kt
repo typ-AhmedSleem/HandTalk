@@ -19,10 +19,10 @@ import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.typ.handtalk.MainViewModel
 import com.typ.handtalk.R
 import com.typ.handtalk.core.perms.PermissionHelper
-import com.typ.handtalk.core.recognizer.GestureRecognizerListener
 import com.typ.handtalk.core.recognizer.HandSignRecognizer
 import com.typ.handtalk.core.recognizer.RecognizerError
 import com.typ.handtalk.core.recognizer.ResultBundle
+import com.typ.handtalk.core.recognizer.interfaces.GestureRecognizerListener
 import com.typ.handtalk.databinding.ActivitySignToTextTranslatorBinding
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -120,11 +120,14 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
             listener = this
         ) { label ->
             runOnUiThread {
-                label?.let {
-                    val lbl = binding.tvInterpretedText.text.toString() + it + "\n"
-                    binding.tvInterpretedText.text = lbl
+                label.let {
+                    var interpretedText = binding.tvInterpretedText.text.toString()
+
+                    interpretedText += it ?: "===SEPARATOR===\n"
+                    interpretedText += "\n"
 
                     binding.tvCurrentGesture.text = it
+                    binding.tvInterpretedText.text = interpretedText
                 }
             }
         }

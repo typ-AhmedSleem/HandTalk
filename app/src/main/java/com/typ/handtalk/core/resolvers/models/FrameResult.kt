@@ -27,6 +27,14 @@ data class FrameResult(
         lhs?.label
     }
 
+    val isRhsNone by lazy {
+        rhsLabel == "None"
+    }
+
+    val isRhsNull by lazy {
+        rhsLabel == null
+    }
+
     fun isSeparator(): Boolean {
         if (rightHand == null) return false
         if ((rightHand is MovingSign).not()) return false
@@ -63,7 +71,7 @@ data class FrameResult(
     }
 
     fun isRightNullOrNone(): Boolean {
-        return rhsLabel == null || rhsLabel == "None"
+        return rhsLabel == null || isRhsNone
     }
 
     fun isLeftNullOrNone(): Boolean {
