@@ -29,6 +29,8 @@ import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizer
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizerResult
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerAlgorithm
+import com.typ.handtalk.core.recognizer.interfaces.GestureRecognizerListener
+import com.typ.handtalk.core.recognizer.interfaces.HandRecognizerInternalCallback
 import com.typ.handtalk.core.resolvers.FrameResultResolver
 import com.typ.handtalk.core.resolvers.models.FrameResult
 
@@ -40,7 +42,7 @@ class HandSignRecognizer(
     var minHandPresenceConfidence: Float = DEFAULT_HAND_PRESENCE_CONFIDENCE,
     val listener: GestureRecognizerListener? = null,
     private val callback: (String?) -> Unit
-) {
+) : HandRecognizerInternalCallback {
 
     private var gestureRecognizer: GestureRecognizer? = null
     val closed: Boolean
@@ -65,10 +67,12 @@ class HandSignRecognizer(
         gestureRecognizer = null
     }
 
-    // Initialize the gesture recognizer using current settings on the
-    // thread that is using it. CPU can be used with recognizers
-    // that are created on the main thread and used on a background thread, but
-    // the GPU delegate needs to be used on the thread that initialized the recognizer
+    /**
+    Initialize the gesture recognizer using current settings on the
+    thread that is using it. CPU can be used with recognizers
+    that are created on the main thread and used on a background thread, but
+    the GPU delegate needs to be used on the thread that initialized the recognizer
+     */
     fun setupGestureRecognizer() {
         // Set general recognition options, including number of used threads
         val baseOptionBuilder = BaseOptions.builder()
@@ -100,7 +104,7 @@ class HandSignRecognizer(
         }
     }
 
-    // Convert the ImageProxy to MP Image and feed it to GestureRecognizer.
+    /** Convert the ImageProxy to MP Image and feed it to GestureRecognizer. */
     private fun preprocessCameraFrame(imageProxy: ImageProxy): Pair<Long, MPImage> {
         val frameTime = SystemClock.uptimeMillis()
 
@@ -133,18 +137,23 @@ class HandSignRecognizer(
         return frameTime to mpImage
     }
 
-    // Run hand gesture recognition using MediaPipe Gesture Recognition API
+    /** Run hand gesture recognition using MediaPipe Gesture Recognition API */
     fun recognizeSignsInFrame(imageProxy: ImageProxy) {
         val (frameTime, mpImage) = preprocessCameraFrame(imageProxy)
         gestureRecognizer?.recognizeAsync(mpImage, frameTime)
     }
 
-    // Return the recognition result to the GestureRecognizerHelper's caller
+    private fun returnLivestreamError(error: RuntimeException) {
+        listener?.onRecognizerError(RecognizerError.UnknownError(error.message))
+    }
+
+    /** Return the recognition result to the GestureRecognizerHelper's caller */
     private fun returnLivestreamResult(rawResult: GestureRecognizerResult, input: MPImage) {
         val finishTimeMs = SystemClock.uptimeMillis()
         val inferenceTime = finishTimeMs - rawResult.timestampMs()
 
         val newResult = FrameResultResolver.resolve(rawResult)
+
         if (prevResult == null) {
             // No previous result
             prevResult = newResult
@@ -152,21 +161,25 @@ class HandSignRecognizer(
         }
         // Found a previous result
         prevResult?.let prev@{ prev ->
+            if (newResult.isRhsNone) return@prev
             // Check if newResult is same as lastResult
             if (newResult == prev) {
-                // * OpticalFlow algorithm will handle the movement for both hands
+                // * Fire onSameSignRecognized
+                this.onSameSignRecognized(newResult)
                 return@prev
             }
             // Check if RHS has changed
-            if (newResult.isRightNullOrNone()) {
-                // RHS is either null or None. Check larger timeout...
-                if (newResult.timestamp - prev.timestamp < EMPTY_HAND_SIGN_CHANGE_TIMEOUT) {
-                    // * Timeout hasn't yet been exceeded
+            if (newResult.isRhsNull) {
+                // * Fire onReachNoResultTimeout
+                val timeout = newResult.timestamp - prev.timestamp
+                val timeoutReached = timeout >= HAND_SIGN_CHANGE_TIMEOUT
+                val disappeared = !prev.isRhsNull
+                if (timeoutReached && disappeared) {
+                    // * Timeout has been exceeded
+                    logi("onHandDisappeared: Right hand has disappeared.")
+                    this.onHandDisappeared()
                     return@prev
                 }
-//                // * Obtain the current sequence and create a new run
-//                val sequence = sequencer.obtainResult(thenCreateNewRun = true)
-//                logi("Obtained sequence: $sequence")
             } else {
                 // * Handle the right hand
                 newResult.rightHand?.sign?.let rhs@{ rhs ->
@@ -175,22 +188,14 @@ class HandSignRecognizer(
                     // Sign has actually changed. Check the timeout...
                     if (newResult.timestamp - prev.timestamp < HAND_SIGN_CHANGE_TIMEOUT) {
                         // * Timeout hasn't yet been exceeded
+                        logi("onHandSignChanged: Timeout hasn't yet been exceeded. Timeout is ${newResult.timestamp - prev.timestamp}")
                         return@prev
                     }
                 }
                 // Invoke callback to update UI
                 callback.invoke(newResult.rhsLabel)
-                // Feed frame to the
-                sequencer.feed(newResult)
-                logi("RHS has changed: ${prev.rhsLabel} -> ${newResult.rhsLabel}. Took ${newResult.timestamp - prev.timestamp} ms to change.\n")
-
-//                val timeout = newResult.timestamp - prev.timestamp
-//                logi("Timeout is $timeout")
-//                if (timeout >= 1500) {
-//                    // * Obtain the current sequence and create a new run
-//                    val sequence = sequencer.obtainResult(thenCreateNewRun = true)
-//                    logi("Obtained sequence: $sequence")
-//                }
+                // * Fire onHandSignChanged
+                this.onHandSignChanged(prev, newResult)
             }
             // * Update runtime
             prevResult = newResult
@@ -207,8 +212,20 @@ class HandSignRecognizer(
         )
     }
 
-    private fun returnLivestreamError(error: RuntimeException) {
-        listener?.onRecognizerError(RecognizerError.UnknownError(error.message))
+    override fun onHandDisappeared() {
+        prevResult = null
+        callback.invoke(null)
+    }
+
+    override fun onHandSignChanged(oldResult: FrameResult, newResult: FrameResult) {
+        // * Feed frame to the sequencer
+        sequencer.feed(newResult)
+        logi("RHS has changed: ${oldResult.rhsLabel} -> ${newResult.rhsLabel}. Took ${newResult.timestamp - oldResult.timestamp} ms to change.\n")
+    }
+
+    override fun onSameSignRecognized(result: FrameResult) {
+        // todo: Feed frame to the MotionEstimation algorithm
+        // todo: Check the motion estimation algorithm if the hand has moved the distance threshold
     }
 
     companion object {
@@ -221,7 +238,7 @@ class HandSignRecognizer(
         const val DEFAULT_HAND_PRESENCE_CONFIDENCE = 0.5F
 
         const val HAND_SIGN_CHANGE_TIMEOUT = 100 // in millis
-        const val EMPTY_HAND_SIGN_CHANGE_TIMEOUT = 2500 // in millis
+        const val EMPTY_HAND_SIGN_CHANGE_TIMEOUT = 1500 // in millis
 
         @JvmStatic
         fun logi(msg: Any) {
