@@ -237,7 +237,7 @@ class HandSignRecognizer(
         const val DEFAULT_HAND_TRACKING_CONFIDENCE = 0.5F
         const val DEFAULT_HAND_PRESENCE_CONFIDENCE = 0.5F
 
-        const val HAND_SIGN_CHANGE_TIMEOUT = 100 // in millis
+        const val HAND_SIGN_CHANGE_TIMEOUT = 50 // in millis
         const val EMPTY_HAND_SIGN_CHANGE_TIMEOUT = 1500 // in millis
 
         @JvmStatic

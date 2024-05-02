@@ -111,6 +111,7 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
         backgroundExecutor = Executors.newSingleThreadExecutor()
 
         // Setup GestureRecognizer instance
+        var interpretedText = ""
         recognizer = HandSignRecognizer(
             context = this,
             minHandDetectionConfidence = viewModel.currentMinHandDetectionConfidence,
@@ -121,13 +122,16 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
         ) { label ->
             runOnUiThread {
                 label.let {
-                    var interpretedText = binding.tvInterpretedText.text.toString()
-
-                    interpretedText += it ?: "===SEPARATOR===\n"
-                    interpretedText += "\n"
+                    if (it == null) {
+                        interpretedText += "===SEPARATOR===\n"
+                        Log.i(TAG, "yield sequence: $interpretedText")
+                        interpretedText = ""
+                    } else {
+                        interpretedText += ("\n" + it)
+                    }
 
                     binding.tvCurrentGesture.text = it
-                    binding.tvInterpretedText.text = interpretedText
+//                    binding.tvInterpretedText.text = interpretedText
                 }
             }
         }

@@ -37,8 +37,9 @@
             android:background="@drawable/bg_interpreted_text"
             android:padding="10dp"
             android:textColor="@color/white"
+            android:backgroundTint="#000"
             android:textAlignment="textStart"
-            android:textSize="14sp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="Hello, My name is Ahmed Sleem." />
 
