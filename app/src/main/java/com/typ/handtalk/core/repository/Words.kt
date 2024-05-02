@@ -1,8 +1,9 @@
 package com.typ.handtalk.core.repository
 
 import com.typ.handtalk.core.models.Word
-import com.typ.handtalk.core.models.signs.HandSign
 import com.typ.handtalk.utils.frameResult
+import com.typ.handtalk.utils.handSign
+import com.typ.handtalk.utils.rhResult
 import com.typ.handtalk.utils.sequenceOfGestures
 
 object Words {
@@ -10,37 +11,40 @@ object Words {
     internal val WORDS = arrayOf(
         Word(
             1,
-            "Hello", sequenceOfGestures(
-                frameResult(
-                    HandSign("OPEN_PALM"),
-                )
+            "hello", sequenceOfGestures(
+                rhResult(handSign("OPEN_PALM"))
             )
         ),
         Word(
             2,
-            "My",
+            "my",
             sequenceOfGestures(
-                frameResult(
-                    HandSign("CLOSED_FIST"),
-                ),
+                rhResult(handSign(label = "CLOSED_FIST")),
             )
         ),
         Word(
             3,
-            "Name",
+            "name",
             sequenceOfGestures(
-                frameResult(
-                    HandSign("THUMB_UP"),
-                )
+                rhResult(handSign("THUMB_UP"))
             )
         ),
         Word(
             4,
             "is",
             sequenceOfGestures(
-                frameResult(
-                    HandSign("THUMB_DOWN"),
-                )
+                rhResult(handSign("THUMB_DOWN"))
+            )
+        ),
+        Word(
+            4,
+            "ahmed",
+            sequenceOfGestures(
+                frameResult(handSign("Pointing_Up")),
+                frameResult(handSign("Victory")),
+                frameResult(handSign("Thumb_Up")),
+                frameResult(handSign("Open_Palm")),
+                frameResult(handSign("ILoveYou")),
             )
         )
     )

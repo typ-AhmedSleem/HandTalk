@@ -13,3 +13,11 @@ fun sequenceOfGestures(vararg results: FrameResult): GestureSequence {
 fun frameResult(rhs: HandSign?, lhs: HandSign? = null): FrameResult {
     return FrameResult(LeftHand(lhs, emptyList()), RightHand(rhs, emptyList()))
 }
+
+fun rhResult(rhs: HandSign?): FrameResult {
+    return frameResult(rhs)
+}
+
+fun handSign(label: String): HandSign {
+    return HandSign(label)
+}

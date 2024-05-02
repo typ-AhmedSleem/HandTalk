@@ -175,7 +175,7 @@ class HandSignRecognizer(
                 val timeoutReached = timeout >= HAND_SIGN_CHANGE_TIMEOUT
                 val disappeared = !prev.isRhsNull
                 if (timeoutReached && disappeared) {
-                    // * Timeout has been exceeded
+                    // Timeout has been exceeded
                     logi("onHandDisappeared: Right hand has disappeared.")
                     this.onHandDisappeared()
                     return@prev
@@ -187,7 +187,7 @@ class HandSignRecognizer(
                     if (rhs == prev.rightHand?.sign) return@prev
                     // Sign has actually changed. Check the timeout...
                     if (newResult.timestamp - prev.timestamp < HAND_SIGN_CHANGE_TIMEOUT) {
-                        // * Timeout hasn't yet been exceeded
+                        // Timeout hasn't yet been exceeded
                         logi("onHandSignChanged: Timeout hasn't yet been exceeded. Timeout is ${newResult.timestamp - prev.timestamp}")
                         return@prev
                     }
