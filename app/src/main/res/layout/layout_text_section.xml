@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="10dp"
+    android:background="@color/transparent"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="15dp"
+        android:justificationMode="none"
+        android:textColor="@color/mp_color_primary"
+        android:text="ماذا يعني التدخل المبكر ؟؟"
+        app:fontFamily="@font/font_content"
+        android:textSize="22sp"
+        android:textAlignment="textStart"
+        android:textStyle="bold"
+        tools:ignore="HardcodedText" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_answer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:autoLink="all"
+        android:textAlignment="textStart"
+        android:layout_marginTop="5dp"
+        android:justificationMode="none"
+        android:layout_marginEnd="15dp"
+        android:textSize="20sp"
+        android:text="التدخل المبكر هو تصميم وتنفيذ برامج تربويه خاصه لمرحله الطفوله المبكره وبرامج تدريبيه وارشاديه لاسر الاطفال وخدمات مسانده عديده كالتدريب واستثمار القدرات المتبقيه والمعينات السمعيه"
+        android:textColor="@color/color_adaptive_on_surface"
+        app:fontFamily="@font/madmi_one_regular"
+        tools:ignore="HardcodedText" />
+
+</LinearLayout>

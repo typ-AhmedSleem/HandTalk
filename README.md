@@ -1,2 +1,2 @@
 # HandTalk
-## Now deaf can communicate in their native language
+## Giving deaf 🧏‍ the ability to communicate in their native language

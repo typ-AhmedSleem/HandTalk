@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorParent">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/_t1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/welcome_to_handtalk"
+        android:textColor="@color/colorTextTitle"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="100dp"
+        app:fontFamily="@font/madmi_one_regular"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/_t2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:text="@string/handtalk_goal_desc"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="50dp"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="@color/colorTextSubtitle"
+        app:layout_constraintTop_toBottomOf="@id/_t1" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_articles"
+        style="@style/OutlinedMaterialButtonStyle"
+        android:text="@string/browse_articles"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/defaultButtonHeight"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        app:rippleColor="@color/rippleForColorPrimary"
+        app:cornerRadius="@dimen/defaultButtonCornerRadius"
+        app:layout_constraintBottom_toTopOf="@id/btn_arabic_2_sign"
+        app:strokeWidth="2dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_arabic_2_sign"
+        style="@style/OutlinedMaterialButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/defaultButtonHeight"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:text="@string/a2s_translator"
+        app:cornerRadius="@dimen/defaultButtonCornerRadius"
+        app:layout_constraintBottom_toTopOf="@id/btn_sign_2_arabic"
+        app:rippleColor="@color/rippleForColorPrimary"
+        app:strokeWidth="2dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_sign_2_arabic"
+        style="@style/DefaultMaterialButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/defaultButtonHeight"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:text="@string/sign_to_arabic_translator"
+        app:strokeColor="@color/colorPrimary"
+        app:cornerRadius="@dimen/defaultButtonCornerRadius"
+        app:rippleColor="@color/rippleForColorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:strokeWidth="2dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

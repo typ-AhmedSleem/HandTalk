@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:dist="http://schemas.android.com/apk/distribution"
+    android:installLocation="preferExternal">
+
+    <!-- Enable instant app support -->
+    <dist:module dist:instant="true" />
+
+    <!-- Features -->
+    <uses-feature android:name="android.hardware.camera" />
+
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.HandTalk"
+        android:supportsRtl="false"
+        android:theme="@style/Theme.HandTalk.HomeActivity"
         tools:targetApi="31">
+
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activities.WelcomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,6 +31,46 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.s2a.LiveSignTranslatorActivity"
+            android:theme="@style/Theme.HandTalk"
+            android:exported="true" />
+
+        <activity
+            android:name=".ui.a2s.Arabic2SignTranslationHistoryActivity"
+            android:exported="true" />
+
+        <activity
+            android:name=".ui.a2s.Arabic2SignTranslatorActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true" />
+
+        <activity
+            android:name="com.typ.handtalk.ui.articles.ArticlesHubActivity"
+            android:exported="true" />
+
+        <activity
+            android:name="com.typ.handtalk.ui.articles.ArticlesActivity"
+            android:exported="true" />
+
+        <activity
+            android:name="com.typ.handtalk.ui.articles.ArticleViewerActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Articles.TopicViewer" />
+
+        <activity
+            android:name="com.typ.handtalk.ui.articles.FoundationsActivity"
+            android:exported="true" />
+
+        <activity
+            android:name="com.typ.handtalk.ui.articles.TranslatorsActivity"
+            android:exported="true" />
+
+        <activity
+            android:name="com.typ.handtalk.ui.activities.RequestPermissionsActivity"
+            android:exported="true" />
+
     </application>
 
 </manifest>

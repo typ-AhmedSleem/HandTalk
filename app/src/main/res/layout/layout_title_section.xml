@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:orientation="vertical"
+    android:paddingStart="5dp"
+    android:paddingTop="0dp"
+    android:paddingEnd="5dp">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:justificationMode="none"
+        android:layout_marginEnd="5dp"
+        android:gravity="center"
+        android:text="ماذا يعني التدخل المبكر ؟؟"
+        app:lineHeight="40sp"
+        android:textAlignment="center"
+        android:textColor="#4CAF50"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:fontFamily="@font/font_title"
+        app:autoSizeTextType="uniform"
+        tools:ignore="HardcodedText" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="25dp" />
+
+</LinearLayout>

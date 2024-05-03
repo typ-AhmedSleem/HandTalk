@@ -1,3 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ~ Copyright 2022 The TensorFlow Authors. All Rights Reserved.
+    ~
+    ~ Licensed under the Apache License, Version 2.0 (the "License");
+    ~ you may not use this file except in compliance with the License.
+    ~ You may obtain a copy of the License at
+    ~
+    ~       http://www.apache.org/licenses/LICENSE-2.0
+    ~
+    ~ Unless required by applicable law or agreed to in writing, software
+    ~ distributed under the License is distributed on an "AS IS" BASIS,
+    ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    ~ See the License for the specific language governing permissions and
+    ~ limitations under the License.
+-->
 <resources>
-    <string name="app_name">HandTalk</string>
+    <string name="app_name">Hand Talk</string>
+
+    <string name="media_pipe">MediaPipe</string>
+
+    <string name="alt_bottom_sheet_chevron">Bottom sheet expandable indicator</string>
+
+    <string name="alt_bottom_sheet_max_results_button_minus">Decreasing
+        maximum recognized results button</string>
+    <string name="alt_bottom_sheet_max_results_button_plus">Increasing maximum recognized results
+        button</string>
+    <string name="alt_bottom_sheet_threshold_button_minus">Decreasing
+        threshold of recognized hand gesture results button</string>
+    <string name="alt_bottom_sheet_threshold_button_plus">Increasing
+        threshold of recognized hand gesture results button</string>
+    <string name="alt_bottom_sheet_thread_button_minus">Decrease the number of threads used</string>
+    <string name="alt_bottom_sheet_thread_button_plus">Increase the number of threads used</string>
+    <string name="menu_camera">Camera</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="tv_gallery_placeholder">Click + to add an image or a video
+        to begin running the gesture recognizer.</string>
+
+    <string name="label_inference_time">Inference Time</string>
+    <string name="label_fps">Frames per Second</string>
+    <string name="label_hand_detection_confidence_threshold">Detection
+        Threshold</string>
+    <string name="label_hand_tracking_confidence_threshold">Tracking
+        Threshold</string>
+    <string name="label_hand_presence_confidence_threshold">Presence
+        Threshold</string>
+    <string name="label_delegate">Delegate</string>
+    <string name="i_m_not_deaf">I\'m not deaf</string>
+    <string name="welcome_to_handtalk">Welcome to HandTalk!</string>
+    <string name="handtalk_goal_desc">Now deaf can communicate in their native language</string>
+    <string name="start_using_handtalk">Start using HandTalk</string>
+    <string name="categories">Categories</string>
+    <string name="start_a_new_translation">Start a new translation</string>
+    <string name="msg_no_a2s_translation_history">You haven\'t made any translation so far.\nStart a new one using the (+) button below</string>
+
+    <string-array name="delegate_spinner_titles">
+        <item>CPU</item>
+        <item>GPU</item>
+    </string-array>
+
+    <!-- * Articles feature strings go here -->
+    <string name="topics">المواضيع</string>
+    <string name="map">الخريطة</string>
+    <string name="cat1">مين هم الصم و ضعاف السمع؟</string>
+    <string name="cat2">إزاي اتواصل معاهم؟</string>
+    <string name="cat3">طرق التأهيل و الرعاية</string>
+    <string name="cat4">المعينات السمعية و أنواعها</string>
+    <string name="cat5">عملية زراعة القوقعة</string>
+    <string name="cat6">مؤسسات تأهيل الصم</string>
+    <string name="cat7">مترجمين لغة الإشارة</string>
+    <string name="transition_title_to_title">TransitionTitleToTitle</string>
+    <string name="transition_cat_to_topic">TransitionCatToTopic</string>
+    <string name="video">فيديو</string>
+    <string name="show_fnd_on_map">عرض الموقع علي الخرائط</string>
+    <string name="copy_fnd_number">نسخ رقم الهاتف</string>
+    <string name="sub_cat_34">مواضيع توعوية</string>
+    <string name="arabic_to_sign_translator">Arabic to Sign</string>
+    <string name="allow_camera_access">Allow Access To Camera</string>
+    <string name="camera_permission_desc">HandTalk app needs access to Camera inorder to function properly</string>
+    <string name="allow">Allow</string>
+    <string name="permissions_granted">Camera permission granted</string>
+    <string name="permissions_denied">Camera permission denied</string>
+    <string name="prompt_a2s">Type your Arabic…</string>
+    <string name="translate">Translate</string>
+    <string name="empty_translation_prompt">Can\'t translate empty sentence</string>
+    <string name="translation_has_missing_words">"Sentence translated and has missing words. Check the RED words again "</string>
+    <string name="articles">مواضيع توعوية</string>
+    <string name="stop_translating">Stop translating</string>
+    <string name="camera_perm_required">S2A: Camera permission is required to continue.</string>
+    <string name="browse_articles">Browse articles</string>
+    <string name="a2s_translator">Arabic to Sign Translator</string>
+    <string name="sign_to_arabic_translator">Sign to Arabic Translator</string>
+    <string name="normal_user">Normal user (🗣️)</string>
+    <string name="deaf_user">Deaf user (🧏🏻)</string>
+
 </resources>
