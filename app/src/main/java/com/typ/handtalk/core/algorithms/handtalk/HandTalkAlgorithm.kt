@@ -3,6 +3,7 @@ package com.typ.handtalk.core.algorithms.handtalk
 import android.content.Context
 import android.util.Log
 import androidx.camera.core.ImageProxy
+import com.typ.handtalk.core.algorithms.identifier.WordIdentifier
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequence
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequencer
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerCallback
@@ -104,9 +105,11 @@ class HandTalkAlgorithm(
     }
 
     override fun onSequenceCompleted(sequence: GestureSequence): Boolean {
-        // todo: Identify the word through WordIdentifier algorithm
-        callback.onIdentifyNewWord(sequence.toString())
-        Log.i(TAG, "onSequenceCompleted: $sequence")
+        // * Identify the word through WordIdentifier algorithm
+        WordIdentifier.identifyWord(sequence)?.let {
+            callback.onIdentifyNewWord(it)
+            Log.i(TAG, "onSequenceCompleted: $sequence")
+        }
         return true
     }
 

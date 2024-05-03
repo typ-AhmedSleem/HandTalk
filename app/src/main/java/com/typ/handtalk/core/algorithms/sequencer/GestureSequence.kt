@@ -33,5 +33,11 @@ class GestureSequence(
         }"
     }
 
+    fun contains(sequence: GestureSequence): Boolean {
+        // Check whether current sequence is not shorter than the given one
+        if (sequence.length != this.length) return false
+        // Check whether current sequence is contained in the given one
+        return sequence.signs.containsAll(this.signs)
+    }
 
 }

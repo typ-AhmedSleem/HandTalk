@@ -12,28 +12,28 @@ object Words {
         Word(
             1,
             "hello", sequenceOfGestures(
-                rhResult(handSign("OPEN_PALM"))
+                rhResult(handSign("Open_Palm"))
             )
         ),
         Word(
             2,
             "my",
             sequenceOfGestures(
-                rhResult(handSign(label = "CLOSED_FIST")),
+                rhResult(handSign(label = "Closed_Fist")),
             )
         ),
         Word(
             3,
             "name",
             sequenceOfGestures(
-                rhResult(handSign("THUMB_UP"))
+                rhResult(handSign("Thumb_Up"))
             )
         ),
         Word(
             4,
             "is",
             sequenceOfGestures(
-                rhResult(handSign("THUMB_DOWN"))
+                rhResult(handSign("Thumb_Down"))
             )
         ),
         Word(
