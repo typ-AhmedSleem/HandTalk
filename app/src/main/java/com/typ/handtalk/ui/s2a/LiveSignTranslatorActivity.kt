@@ -17,30 +17,28 @@ import androidx.core.content.ContextCompat
 import com.google.mediapipe.tasks.core.Delegate
 import com.typ.handtalk.MainViewModel
 import com.typ.handtalk.R
-import com.typ.handtalk.core.algorithms.sequencer.GestureSequence
-import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerCallback
+import com.typ.handtalk.core.algorithms.handtalk.HandTalkAlgorithm
+import com.typ.handtalk.core.algorithms.handtalk.HandTalkAlgorithmCallback
+import com.typ.handtalk.core.errors.HandTalkError
 import com.typ.handtalk.core.perms.PermissionHelper
-import com.typ.handtalk.core.recognizer.HandSignRecognizer
 import com.typ.handtalk.core.recognizer.RecognizerError
-import com.typ.handtalk.core.recognizer.ResultBundle
-import com.typ.handtalk.core.recognizer.interfaces.HandSignRecognizerCallback
-import com.typ.handtalk.core.recognizer.interfaces.Height
-import com.typ.handtalk.core.recognizer.interfaces.Width
 import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.databinding.ActivitySignToTextTranslatorBinding
+import com.typ.handtalk.utils.Height
+import com.typ.handtalk.utils.Width
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class LiveSignTranslatorActivity : AppCompatActivity(), HandSignRecognizerCallback, GestureSequencerCallback {
+class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallback {
 
     companion object {
         private const val TAG = "SignLiveTranslator"
     }
 
-    private lateinit var binding: ActivitySignToTextTranslatorBinding
-    private lateinit var recognizer: HandSignRecognizer
+    private lateinit var algoHandTalk: HandTalkAlgorithm
     private val viewModel: MainViewModel by viewModels()
+    private lateinit var binding: ActivitySignToTextTranslatorBinding
 
     // * Camera runtime
     private var camera: Camera? = null
@@ -88,7 +86,7 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandSignRecognizerCallba
             .build()
             // The analyzer can then be assigned to the instance
             .also {
-                it.setAnalyzer(backgroundExecutor, recognizer::recognizeSignsInFrame)
+                it.setAnalyzer(backgroundExecutor, algoHandTalk::recognizeHandGestures)
             }
 
         // Must unbind the use-cases before rebinding them
@@ -113,20 +111,11 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandSignRecognizerCallba
         ensurePermissionsGranted()
         // Setup background executor instance
         backgroundExecutor = Executors.newSingleThreadExecutor()
+        // * Setup HandTalkAlgorithm instance
+        algoHandTalk = HandTalkAlgorithm(this, this)
 
-        // * Setup GestureRecognizer instance
-        recognizer = HandSignRecognizer(
-            context = this,
-            minHandDetectionConfidence = viewModel.currentMinHandDetectionConfidence,
-            minHandTrackingConfidence = viewModel.currentMinHandTrackingConfidence,
-            minHandPresenceConfidence = viewModel.currentMinHandPresenceConfidence,
-            currentDelegate = viewModel.currentDelegate,
-            recognizerCallback = this,
-            sequencerCallback = this
-        )
-
-        if (recognizer.closed) {
-            backgroundExecutor.execute(recognizer::setupGestureRecognizer)
+        if (!algoHandTalk.recognizerInitialized) {
+            backgroundExecutor.execute(algoHandTalk::setupGestureRecognizer)
         }
 
         // Setup Camera instance
@@ -150,20 +139,20 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandSignRecognizerCallba
         ensurePermissionsGranted()
         // Start the recognizer again when users come back to foreground.
         backgroundExecutor.execute {
-            if (recognizer.closed) recognizer.setupGestureRecognizer()
+            if (algoHandTalk.recognizer.closed) algoHandTalk.setupGestureRecognizer()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        if (this::recognizer.isInitialized) {
-            viewModel.setMinHandDetectionConfidence(recognizer.minHandDetectionConfidence)
-            viewModel.setMinHandTrackingConfidence(recognizer.minHandTrackingConfidence)
-            viewModel.setMinHandPresenceConfidence(recognizer.minHandPresenceConfidence)
-            viewModel.setDelegate(recognizer.currentDelegate)
+        if (this::algoHandTalk.isInitialized) {
+            viewModel.setDelegate(algoHandTalk.recognizer.currentDelegate)
+            viewModel.setMinHandDetectionConfidence(algoHandTalk.recognizer.minHandDetectionConfidence)
+            viewModel.setMinHandTrackingConfidence(algoHandTalk.recognizer.minHandTrackingConfidence)
+            viewModel.setMinHandPresenceConfidence(algoHandTalk.recognizer.minHandPresenceConfidence)
             // Close the HandSignRecognizer instance and release resources
             backgroundExecutor.execute {
-                recognizer.clearGestureRecognizer()
+                algoHandTalk.recognizer.clearGestureRecognizer()
             }
         }
     }
@@ -180,24 +169,7 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandSignRecognizerCallba
         imageAnalyzer?.targetRotation = binding.viewFinder.display.rotation
     }
 
-    // REGION: HandSignRecognizerCallback
-
-    override fun onRecognizerResult(resultBundle: ResultBundle) {
-    }
-
-    override fun onRecognizerReady() {
-    }
-
-    override fun onRecognizeHands(frameResult: FrameResult, inputShape: Pair<Width, Height>) {
-        runOnUiThread {
-            // Pass necessary information to OverlayView for drawing on the canvas
-            binding.overlay.setResults(
-                frameResult,
-                inputShape.first,
-                inputShape.second,
-            )
-        }
-    }
+    // REGION: HandTalkAlgorithmCallback
 
     override fun onHandsDisappear() {
         runOnUiThread {
@@ -205,16 +177,47 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandSignRecognizerCallba
         }
     }
 
-    override fun onRecognizerError(error: RecognizerError) {
+    override fun onIdentifyGesture(frameResult: FrameResult) {
+        runOnUiThread {
+            if (frameResult.isRhsNone) return@runOnUiThread
+            binding.tvCurrentGesture.text = frameResult.rhsLabel
+        }
+    }
+
+    override fun onIdentifyNewWord(word: String) {
+        runOnUiThread {
+            val sentence = binding.tvInterpretedText.text.toString() + " " + word
+            binding.tvInterpretedText.text = sentence
+        }
+    }
+
+    override fun onTranslateFullSentence(sentence: String) {
+        runOnUiThread {
+            val fullSentence = sentence + "\n"
+            binding.tvInterpretedText.text = fullSentence
+        }
+    }
+
+    override fun onReadyToDrawLandmarks(frameResult: FrameResult, inputShape: Pair<Width, Height>) {
+        runOnUiThread {
+            binding.overlay.drawLandmarks(
+                frameResult,
+                inputShape.first,
+                inputShape.second,
+            )
+        }
+    }
+
+    override fun onErrorOccurred(error: HandTalkError) {
         runOnUiThread {
             when (error) {
                 is RecognizerError.GPUError -> {
                     Log.e(TAG, "onRecognizerError::GPUError => $error")
                     viewModel.setDelegate(Delegate.CPU)
-                    recognizer.currentDelegate = viewModel.currentDelegate
-                    if (recognizer.running) {
-                        recognizer.clearGestureRecognizer()
-                        recognizer.setupGestureRecognizer()
+                    algoHandTalk.recognizer.currentDelegate = viewModel.currentDelegate
+                    if (algoHandTalk.recognizer.running) {
+                        algoHandTalk.recognizer.clearGestureRecognizer()
+                        algoHandTalk.setupGestureRecognizer()
                     }
                 }
 
@@ -231,34 +234,11 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandSignRecognizerCallba
         }
     }
 
+    // END: HandTalkAlgorithmCallback
+
     private fun errorHasOccurred() {
         Toast.makeText(this, "Error has occurred. Restart the app", Toast.LENGTH_SHORT).show()
         finish()
     }
-
-    // END: HandSignRecognizerCallback
-
-    // REGION: GestureSequencerCallback
-    override fun onSequenceFed(frame: FrameResult) {
-        runOnUiThread {
-            binding.tvCurrentGesture.text = frame.rhsLabel
-        }
-    }
-
-    override fun onSequenceCompleted(sequence: GestureSequence): Boolean {
-        Log.i(TAG, "onSequenceCompleted: $sequence")
-        return true
-    }
-
-    override fun onSequenceStarted() {
-        Log.i(TAG, "onSequenceStarted")
-    }
-
-    override fun onSequenceCancelled() {
-    }
-
-    // END: GestureSequencerCallback
-
-
 
 }

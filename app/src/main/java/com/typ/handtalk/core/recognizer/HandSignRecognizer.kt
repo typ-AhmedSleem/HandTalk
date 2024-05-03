@@ -28,8 +28,6 @@ import com.google.mediapipe.tasks.core.Delegate
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizer
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizerResult
-import com.typ.handtalk.core.algorithms.sequencer.GestureSequencer
-import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerCallback
 import com.typ.handtalk.core.recognizer.interfaces.HandRecognizerInternalCallback
 import com.typ.handtalk.core.recognizer.interfaces.HandSignRecognizerCallback
 import com.typ.handtalk.core.resolvers.FrameResultResolver
@@ -41,8 +39,7 @@ class HandSignRecognizer(
     var minHandDetectionConfidence: Float = DEFAULT_HAND_DETECTION_CONFIDENCE,
     var minHandTrackingConfidence: Float = DEFAULT_HAND_TRACKING_CONFIDENCE,
     var minHandPresenceConfidence: Float = DEFAULT_HAND_PRESENCE_CONFIDENCE,
-    val recognizerCallback: HandSignRecognizerCallback,
-    val sequencerCallback: GestureSequencerCallback,
+    private val callback: HandSignRecognizerCallback,
 ) : HandRecognizerInternalCallback {
 
     private var gestureRecognizer: GestureRecognizer? = null
@@ -54,9 +51,6 @@ class HandSignRecognizer(
 
     // Recognizer runtime
     private var prevResult: FrameResult? = null
-
-    // Algorithms
-    private val sequencer = GestureSequencer()
 
     init {
         setupGestureRecognizer()
@@ -97,10 +91,10 @@ class HandSignRecognizer(
             val options = optionsBuilder.build()
             gestureRecognizer = GestureRecognizer.createFromOptions(context, options)
         } catch (e: IllegalStateException) {
-            recognizerCallback.onRecognizerError(RecognizerError.OtherError(e.message))
+            callback.onRecognizerError(RecognizerError.OtherError(e.message))
             Log.e(TAG, "MP Task Vision failed to load the task with error: " + e.message)
         } catch (e: RuntimeException) {
-            recognizerCallback.onRecognizerError(RecognizerError.GPUError(e.message))
+            callback.onRecognizerError(RecognizerError.GPUError(e.message))
             Log.e(TAG, "MP Task Vision failed to load the task with error: " + e.message)
         }
     }
@@ -145,7 +139,7 @@ class HandSignRecognizer(
     }
 
     private fun returnLivestreamError(error: RuntimeException) {
-        recognizerCallback.onRecognizerError(RecognizerError.UnknownError(error.message))
+        callback.onRecognizerError(RecognizerError.UnknownError(error.message))
     }
 
     /** Return the recognition result to the GestureRecognizerHelper's caller */
@@ -173,7 +167,7 @@ class HandSignRecognizer(
             if (newResult.isRhsNull) {
                 // * Fire onReachNoResultTimeout
                 val timeout = newResult.timestamp - prev.timestamp
-                val timeoutReached = timeout >= HAND_SIGN_CHANGE_TIMEOUT
+                val timeoutReached = timeout >= HAND_DISAPPEAR_TIMEOUT
                 val disappeared = !prev.isRhsNull
                 if (timeoutReached && disappeared) {
                     // Timeout has been exceeded
@@ -200,34 +194,24 @@ class HandSignRecognizer(
             prevResult = newResult
         }
 
-        // * Fire the listener
-        recognizerCallback.onRecognizeHands(newResult, input.height to input.width)
+        // * Notify
+        callback.onRecognizeHands(newResult, input.height to input.width)
     }
 
     override fun onHandDisappeared() {
         prevResult = null
-        // Obtain current sequence
-        with(sequencer.obtainResult()) {
-            if (isValid && sequencerCallback.onSequenceCompleted(this)) {
-                sequencer.createNewRun()
-                sequencerCallback.onSequenceStarted()
-            }
-        }
         // Notify callback about disappeared hands
-        recognizerCallback.onHandsDisappear()
+        callback.onHandsDisappear()
     }
 
     override fun onHandSignChanged(oldResult: FrameResult, newResult: FrameResult) {
         logi("RHS has changed: ${oldResult.rhsLabel} -> ${newResult.rhsLabel}. Took ${newResult.timestamp - oldResult.timestamp} ms to change.\n")
-        // Feed frame to the sequencer
-        sequencer.feed(newResult)
         // Notify callback
-        sequencerCallback.onSequenceFed(newResult)
+        callback.onHandSignChanged(oldResult, newResult)
     }
 
     override fun onSameSignRecognized(result: FrameResult) {
-        // todo: Feed frame to the MotionEstimation algorithm
-        // todo: Check the motion estimation algorithm if the hand has moved the distance threshold
+        callback.onSameSignRecognized(result)
     }
 
     companion object {
@@ -239,8 +223,8 @@ class HandSignRecognizer(
         const val DEFAULT_HAND_TRACKING_CONFIDENCE = 0.5F
         const val DEFAULT_HAND_PRESENCE_CONFIDENCE = 0.5F
 
-        const val HAND_SIGN_CHANGE_TIMEOUT = 50 // in millis
-        const val EMPTY_HAND_SIGN_CHANGE_TIMEOUT = 1500 // in millis
+        const val HAND_SIGN_CHANGE_TIMEOUT = 100 // in millis
+        const val HAND_DISAPPEAR_TIMEOUT = 100 // in millis
 
         @JvmStatic
         fun logi(msg: Any) {

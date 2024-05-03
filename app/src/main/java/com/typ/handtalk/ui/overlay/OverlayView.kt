@@ -54,7 +54,7 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
         }
     )
 
-    fun setResults(result: FrameResult, imageHeight: Int, imageWidth: Int) {
+    fun drawLandmarks(result: FrameResult, imageHeight: Int, imageWidth: Int) {
         this.currentResult = result
         this.imageHeight = imageHeight
         this.imageWidth = imageWidth
@@ -94,12 +94,10 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
 
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
-        currentResult?.let { result ->
-            result.forEachHand { hand ->
-                // * Draw landmarks for both hands
-                drawHandPoints(canvas, hand)
-                drawHandConnections(canvas, hand)
-            }
+        currentResult?.forEachHand { hand ->
+            // * Draw landmarks for both hands
+            drawHandPoints(canvas, hand)
+            drawHandConnections(canvas, hand)
         }
     }
 
