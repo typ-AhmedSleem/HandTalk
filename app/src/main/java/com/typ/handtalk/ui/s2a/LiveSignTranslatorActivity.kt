@@ -15,7 +15,6 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import com.google.mediapipe.tasks.core.Delegate
-import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.typ.handtalk.MainViewModel
 import com.typ.handtalk.R
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequence
@@ -25,6 +24,8 @@ import com.typ.handtalk.core.recognizer.HandSignRecognizer
 import com.typ.handtalk.core.recognizer.RecognizerError
 import com.typ.handtalk.core.recognizer.ResultBundle
 import com.typ.handtalk.core.recognizer.interfaces.HandSignRecognizerCallback
+import com.typ.handtalk.core.recognizer.interfaces.Height
+import com.typ.handtalk.core.recognizer.interfaces.Width
 import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.databinding.ActivitySignToTextTranslatorBinding
 import java.util.concurrent.ExecutorService
@@ -182,17 +183,25 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandSignRecognizerCallba
     // REGION: HandSignRecognizerCallback
 
     override fun onRecognizerResult(resultBundle: ResultBundle) {
+    }
+
+    override fun onRecognizerReady() {
+    }
+
+    override fun onRecognizeHands(frameResult: FrameResult, inputShape: Pair<Width, Height>) {
         runOnUiThread {
             // Pass necessary information to OverlayView for drawing on the canvas
             binding.overlay.setResults(
-                resultBundle.rawResult,
-                resultBundle.inputImageHeight,
-                resultBundle.inputImageWidth,
-                RunningMode.LIVE_STREAM
+                frameResult,
+                inputShape.first,
+                inputShape.second,
             )
+        }
+    }
 
-            // Force a redraw
-            binding.overlay.invalidate()
+    override fun onHandsDisappear() {
+        runOnUiThread {
+            binding.tvCurrentGesture.text = null
         }
     }
 

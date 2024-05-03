@@ -4,7 +4,7 @@ import android.util.Log
 import com.typ.handtalk.core.algorithms.AbstractAlgorithm
 import com.typ.handtalk.core.resolvers.models.FrameResult
 
-class GestureSequencerAlgorithm : AbstractAlgorithm<FrameResult, GestureSequence>() {
+class GestureSequencer : AbstractAlgorithm<FrameResult, GestureSequence>() {
 
     // * Runtime
     private var currentSequence = GestureSequence()

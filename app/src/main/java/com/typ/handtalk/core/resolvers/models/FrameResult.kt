@@ -1,13 +1,15 @@
 package com.typ.handtalk.core.resolvers.models
 
 import com.typ.handtalk.core.models.hands.Hand
+import com.typ.handtalk.core.models.hands.LeftHand
+import com.typ.handtalk.core.models.hands.RightHand
 import com.typ.handtalk.core.models.signs.HandSign
 import com.typ.handtalk.core.models.signs.MovingSign
 import com.typ.handtalk.core.repository.Signs
 
 data class FrameResult(
-    val leftHand: Hand? = null,
-    val rightHand: Hand? = null,
+    val leftHand: LeftHand? = null,
+    val rightHand: RightHand? = null,
     val timestamp: Long = System.currentTimeMillis(),
 ) {
 
@@ -33,13 +35,6 @@ data class FrameResult(
 
     val isRhsNull by lazy {
         rhsLabel == null
-    }
-
-    fun isSeparator(): Boolean {
-        if (rightHand == null) return false
-        if ((rightHand is MovingSign).not()) return false
-        return false
-//        return ((leftHand?.label ?: "None") == "None") && ((rightHand as MovingSign).isSeparator())
     }
 
     override fun toString(): String {
@@ -80,6 +75,11 @@ data class FrameResult(
 
     fun areAllNullsOrNones(): Boolean {
         return isRightNullOrNone() && isLeftNullOrNone()
+    }
+
+    fun forEachHand(action: (Hand) -> Unit) {
+        leftHand?.let(action)
+        rightHand?.let(action)
     }
 
 }

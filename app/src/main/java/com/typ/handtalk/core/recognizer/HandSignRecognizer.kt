@@ -28,7 +28,7 @@ import com.google.mediapipe.tasks.core.Delegate
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizer
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizerResult
-import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerAlgorithm
+import com.typ.handtalk.core.algorithms.sequencer.GestureSequencer
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerCallback
 import com.typ.handtalk.core.recognizer.interfaces.HandRecognizerInternalCallback
 import com.typ.handtalk.core.recognizer.interfaces.HandSignRecognizerCallback
@@ -56,7 +56,7 @@ class HandSignRecognizer(
     private var prevResult: FrameResult? = null
 
     // Algorithms
-    private val sequencer = GestureSequencerAlgorithm()
+    private val sequencer = GestureSequencer()
 
     init {
         setupGestureRecognizer()
@@ -201,14 +201,7 @@ class HandSignRecognizer(
         }
 
         // * Fire the listener
-        recognizerCallback.onRecognizerResult(
-            ResultBundle(
-                rawResult,
-                inferenceTime,
-                input.height,
-                input.width
-            )
-        )
+        recognizerCallback.onRecognizeHands(newResult, input.height to input.width)
     }
 
     override fun onHandDisappeared() {
@@ -220,6 +213,8 @@ class HandSignRecognizer(
                 sequencerCallback.onSequenceStarted()
             }
         }
+        // Notify callback about disappeared hands
+        recognizerCallback.onHandsDisappear()
     }
 
     override fun onHandSignChanged(oldResult: FrameResult, newResult: FrameResult) {

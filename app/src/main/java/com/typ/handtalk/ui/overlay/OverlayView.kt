@@ -21,14 +21,14 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import com.google.mediapipe.tasks.vision.core.RunningMode
-import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizerResult
 import com.google.mediapipe.tasks.vision.handlandmarker.HandLandmarker
+import com.typ.handtalk.core.models.hands.Hand
+import com.typ.handtalk.core.resolvers.models.FrameResult
 import kotlin.math.max
 
 class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
 
-    private var results: GestureRecognizerResult? = null
+    private var currentResult: FrameResult? = null
     private var pointPaint = Paint().apply {
         color = Color.YELLOW
         style = Paint.Style.FILL
@@ -54,46 +54,8 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
         }
     )
 
-    fun clear() {
-        results = null
-        invalidate()
-    }
-
-    override fun draw(canvas: Canvas) {
-        super.draw(canvas)
-        results?.let { result ->
-            for (landmark in result.landmarks()) {
-                for (normalizedLandmark in landmark) {
-                    canvas.drawPoint(
-                        normalizedLandmark.x() * imageWidth * scaleFactor,
-                        normalizedLandmark.y() * imageHeight * scaleFactor,
-                        pointPaint
-                    )
-                }
-
-                result.handedness().forEachIndexed { idx, hand ->
-                    HandLandmarker.HAND_CONNECTIONS.forEach {
-                        canvas.drawLine(
-                            result.landmarks()[idx][it!!.start()].x() * imageWidth * scaleFactor,
-                            result.landmarks()[idx][it.start()].y() * imageHeight * scaleFactor,
-                            result.landmarks()[idx][it.end()].x() * imageWidth * scaleFactor,
-                            result.landmarks()[idx][it.end()].y() * imageHeight * scaleFactor,
-                            linePaints[hand.first().index()]
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    fun setResults(
-        gestureRecognizerResult: GestureRecognizerResult,
-        imageHeight: Int,
-        imageWidth: Int,
-        runningMode: RunningMode = RunningMode.IMAGE
-    ) {
-        results = gestureRecognizerResult
-
+    fun setResults(result: FrameResult, imageHeight: Int, imageWidth: Int) {
+        this.currentResult = result
         this.imageHeight = imageHeight
         this.imageWidth = imageWidth
 
@@ -102,7 +64,46 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
         invalidate()
     }
 
+    fun clear() {
+        currentResult = null
+        invalidate()
+    }
+
+    private fun drawHandPoints(canvas: Canvas, hand: Hand) {
+        for (normalizedLandmark in hand.landmarks) {
+            canvas.drawPoint(
+                normalizedLandmark.x() * imageWidth * scaleFactor,
+                normalizedLandmark.y() * imageHeight * scaleFactor,
+                pointPaint
+            )
+        }
+    }
+
+    private fun drawHandConnections(canvas: Canvas, hand: Hand) {
+        val idx = hand.idx
+        HandLandmarker.HAND_CONNECTIONS.forEach {
+            canvas.drawLine(
+                hand.landmarks[it!!.start()].x() * imageWidth * scaleFactor,
+                hand.landmarks[it.start()].y() * imageHeight * scaleFactor,
+                hand.landmarks[it.end()].x() * imageWidth * scaleFactor,
+                hand.landmarks[it.end()].y() * imageHeight * scaleFactor,
+                linePaints[idx]
+            )
+        }
+    }
+
+    override fun draw(canvas: Canvas) {
+        super.draw(canvas)
+        currentResult?.let { result ->
+            result.forEachHand { hand ->
+                // * Draw landmarks for both hands
+                drawHandPoints(canvas, hand)
+                drawHandConnections(canvas, hand)
+            }
+        }
+    }
+
     companion object {
-        private const val LANDMARK_STROKE_WIDTH = 8F
+        private const val LANDMARK_STROKE_WIDTH = 10F
     }
 }

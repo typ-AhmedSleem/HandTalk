@@ -1,10 +1,12 @@
 package com.typ.handtalk.core.recognizer
 
+import com.typ.handtalk.core.errors.HandTalkError
+
 sealed class RecognizerError(
     val code: Int,
     override val message: String?,
     val reason: String? = null
-) : Exception(message) {
+) : HandTalkError(message) {
 
     class GPUError(reason: String? = null) : RecognizerError(201, "Gesture recognizer failed to initialize.", reason)
     class OtherError(reason: String? = null) : RecognizerError(202, "Gesture recognizer failed to initialize.", reason)
