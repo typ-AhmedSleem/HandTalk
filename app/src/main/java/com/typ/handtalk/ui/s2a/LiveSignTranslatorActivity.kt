@@ -18,17 +18,20 @@ import com.google.mediapipe.tasks.core.Delegate
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.typ.handtalk.MainViewModel
 import com.typ.handtalk.R
+import com.typ.handtalk.core.algorithms.sequencer.GestureSequence
+import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerCallback
 import com.typ.handtalk.core.perms.PermissionHelper
 import com.typ.handtalk.core.recognizer.HandSignRecognizer
 import com.typ.handtalk.core.recognizer.RecognizerError
 import com.typ.handtalk.core.recognizer.ResultBundle
-import com.typ.handtalk.core.recognizer.interfaces.GestureRecognizerListener
+import com.typ.handtalk.core.recognizer.interfaces.HandSignRecognizerCallback
+import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.databinding.ActivitySignToTextTranslatorBinding
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListener {
+class LiveSignTranslatorActivity : AppCompatActivity(), HandSignRecognizerCallback, GestureSequencerCallback {
 
     companion object {
         private const val TAG = "SignLiveTranslator"
@@ -110,31 +113,16 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
         // Setup background executor instance
         backgroundExecutor = Executors.newSingleThreadExecutor()
 
-        // Setup GestureRecognizer instance
-        var interpretedText = ""
+        // * Setup GestureRecognizer instance
         recognizer = HandSignRecognizer(
             context = this,
             minHandDetectionConfidence = viewModel.currentMinHandDetectionConfidence,
             minHandTrackingConfidence = viewModel.currentMinHandTrackingConfidence,
             minHandPresenceConfidence = viewModel.currentMinHandPresenceConfidence,
             currentDelegate = viewModel.currentDelegate,
-            listener = this
-        ) { label ->
-            runOnUiThread {
-                label.let {
-                    if (it == null) {
-                        interpretedText += "===SEPARATOR===\n"
-                        Log.i(TAG, "yield sequence: $interpretedText")
-                        interpretedText = ""
-                    } else {
-                        interpretedText += ("\n" + it)
-                    }
-
-                    binding.tvCurrentGesture.text = it
-//                    binding.tvInterpretedText.text = interpretedText
-                }
-            }
-        }
+            recognizerCallback = this,
+            sequencerCallback = this
+        )
 
         if (recognizer.closed) {
             backgroundExecutor.execute(recognizer::setupGestureRecognizer)
@@ -191,13 +179,13 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
         imageAnalyzer?.targetRotation = binding.viewFinder.display.rotation
     }
 
+    // REGION: HandSignRecognizerCallback
+
     override fun onRecognizerResult(resultBundle: ResultBundle) {
         runOnUiThread {
-            // Show result of recognized gesture
-            val rawResult = resultBundle.rawResult
             // Pass necessary information to OverlayView for drawing on the canvas
             binding.overlay.setResults(
-                rawResult,
+                resultBundle.rawResult,
                 resultBundle.inputImageHeight,
                 resultBundle.inputImageWidth,
                 RunningMode.LIVE_STREAM
@@ -223,13 +211,45 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
 
                 is RecognizerError.OtherError -> {
                     Log.e(TAG, "onRecognizerError::OtherError => $error")
+                    errorHasOccurred()
                 }
 
                 else -> {
                     Log.e(TAG, "onRecognizerError::UnknownError => $error")
+                    errorHasOccurred()
                 }
             }
         }
     }
+
+    private fun errorHasOccurred() {
+        Toast.makeText(this, "Error has occurred. Restart the app", Toast.LENGTH_SHORT).show()
+        finish()
+    }
+
+    // END: HandSignRecognizerCallback
+
+    // REGION: GestureSequencerCallback
+    override fun onSequenceFed(frame: FrameResult) {
+        runOnUiThread {
+            binding.tvCurrentGesture.text = frame.rhsLabel
+        }
+    }
+
+    override fun onSequenceCompleted(sequence: GestureSequence): Boolean {
+        Log.i(TAG, "onSequenceCompleted: $sequence")
+        return true
+    }
+
+    override fun onSequenceStarted() {
+        Log.i(TAG, "onSequenceStarted")
+    }
+
+    override fun onSequenceCancelled() {
+    }
+
+    // END: GestureSequencerCallback
+
+
 
 }

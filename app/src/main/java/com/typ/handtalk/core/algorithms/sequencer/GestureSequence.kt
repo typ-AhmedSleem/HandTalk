@@ -24,7 +24,13 @@ class GestureSequence(
     }
 
     override fun toString(): String {
-        return "GestureSequence(isValid=$isValid, length=$length, signs=signs)"
+        return "GestureSequence(isValid=$isValid, length=$length, signs:${
+            signs.joinToString(
+                prefix = "GestureSequence(isValid=$isValid, length=$length, signs:",
+                postfix = "\n)",
+                separator = "\n"
+            ) { it.rhsLabel.toString() }
+        }"
     }
 
 

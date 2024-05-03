@@ -8,10 +8,10 @@ abstract class AbstractAlgorithm<FT, OT> {
 
     abstract fun cancelCurrentRun()
 
-    abstract fun obtainResult(thenCreateNewRun: Boolean = true): OT
+    abstract fun obtainResult(): OT
 
     enum class AlgorithmState {
-        IDLE,
+        NEW_RUN,
         RUNNING
     }
 

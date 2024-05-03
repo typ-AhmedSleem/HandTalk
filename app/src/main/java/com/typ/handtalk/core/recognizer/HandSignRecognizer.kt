@@ -29,8 +29,9 @@ import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizer
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizerResult
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerAlgorithm
-import com.typ.handtalk.core.recognizer.interfaces.GestureRecognizerListener
+import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerCallback
 import com.typ.handtalk.core.recognizer.interfaces.HandRecognizerInternalCallback
+import com.typ.handtalk.core.recognizer.interfaces.HandSignRecognizerCallback
 import com.typ.handtalk.core.resolvers.FrameResultResolver
 import com.typ.handtalk.core.resolvers.models.FrameResult
 
@@ -40,8 +41,8 @@ class HandSignRecognizer(
     var minHandDetectionConfidence: Float = DEFAULT_HAND_DETECTION_CONFIDENCE,
     var minHandTrackingConfidence: Float = DEFAULT_HAND_TRACKING_CONFIDENCE,
     var minHandPresenceConfidence: Float = DEFAULT_HAND_PRESENCE_CONFIDENCE,
-    val listener: GestureRecognizerListener? = null,
-    private val callback: (String?) -> Unit
+    val recognizerCallback: HandSignRecognizerCallback,
+    val sequencerCallback: GestureSequencerCallback,
 ) : HandRecognizerInternalCallback {
 
     private var gestureRecognizer: GestureRecognizer? = null
@@ -96,10 +97,10 @@ class HandSignRecognizer(
             val options = optionsBuilder.build()
             gestureRecognizer = GestureRecognizer.createFromOptions(context, options)
         } catch (e: IllegalStateException) {
-            listener?.onRecognizerError(RecognizerError.OtherError(e.message))
+            recognizerCallback.onRecognizerError(RecognizerError.OtherError(e.message))
             Log.e(TAG, "MP Task Vision failed to load the task with error: " + e.message)
         } catch (e: RuntimeException) {
-            listener?.onRecognizerError(RecognizerError.GPUError(e.message))
+            recognizerCallback.onRecognizerError(RecognizerError.GPUError(e.message))
             Log.e(TAG, "MP Task Vision failed to load the task with error: " + e.message)
         }
     }
@@ -144,7 +145,7 @@ class HandSignRecognizer(
     }
 
     private fun returnLivestreamError(error: RuntimeException) {
-        listener?.onRecognizerError(RecognizerError.UnknownError(error.message))
+        recognizerCallback.onRecognizerError(RecognizerError.UnknownError(error.message))
     }
 
     /** Return the recognition result to the GestureRecognizerHelper's caller */
@@ -192,8 +193,6 @@ class HandSignRecognizer(
                         return@prev
                     }
                 }
-                // Invoke callback to update UI
-                callback.invoke(newResult.rhsLabel)
                 // * Fire onHandSignChanged
                 this.onHandSignChanged(prev, newResult)
             }
@@ -202,7 +201,7 @@ class HandSignRecognizer(
         }
 
         // * Fire the listener
-        listener?.onRecognizerResult(
+        recognizerCallback.onRecognizerResult(
             ResultBundle(
                 rawResult,
                 inferenceTime,
@@ -214,13 +213,21 @@ class HandSignRecognizer(
 
     override fun onHandDisappeared() {
         prevResult = null
-        callback.invoke(null)
+        // Obtain current sequence
+        with(sequencer.obtainResult()) {
+            if (isValid && sequencerCallback.onSequenceCompleted(this)) {
+                sequencer.createNewRun()
+                sequencerCallback.onSequenceStarted()
+            }
+        }
     }
 
     override fun onHandSignChanged(oldResult: FrameResult, newResult: FrameResult) {
-        // * Feed frame to the sequencer
-        sequencer.feed(newResult)
         logi("RHS has changed: ${oldResult.rhsLabel} -> ${newResult.rhsLabel}. Took ${newResult.timestamp - oldResult.timestamp} ms to change.\n")
+        // Feed frame to the sequencer
+        sequencer.feed(newResult)
+        // Notify callback
+        sequencerCallback.onSequenceFed(newResult)
     }
 
     override fun onSameSignRecognized(result: FrameResult) {
