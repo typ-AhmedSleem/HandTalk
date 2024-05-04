@@ -37,6 +37,10 @@ data class FrameResult(
         rhsLabel == null
     }
 
+    val isLhsNone by lazy {
+        lhsLabel == "None"
+    }
+
     override fun toString(): String {
         return "FrameResult(timestamp=$timestamp, leftHand=$leftHand, rightHand=$rightHand)"
     }
@@ -52,7 +56,12 @@ data class FrameResult(
         if (other !is FrameResult) return false
 
 //        return lhs == other.lhs && rhs == other.rhs
-        return hasSameRightSignAs(other.rhs)
+        val hasLHS = !isLeftNullOrNone()
+        val sameRHS = hasSameRightSignAs(other.rhs)
+        if (hasLHS) {
+            return hasSameLeftSignAs(other.lhs) && sameRHS
+        }
+        return sameRHS
     }
 
     fun hasSameRightSignAs(prevRHS: HandSign?): Boolean {
@@ -60,9 +69,9 @@ data class FrameResult(
         return rightHand.hasSameSignAs(prevRHS)
     }
 
-    fun hasSameLeftSignAs(prevSign: Hand?): Boolean {
+    fun hasSameLeftSignAs(prevSign: HandSign?): Boolean {
         if (leftHand == null || prevSign == null) return false
-        return leftHand.hasSameSignAs(prevSign.sign)
+        return leftHand.hasSameSignAs(prevSign)
     }
 
     fun isRightNullOrNone(): Boolean {

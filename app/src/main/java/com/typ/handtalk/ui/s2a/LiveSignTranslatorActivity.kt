@@ -173,14 +173,18 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
 
     override fun onHandsDisappear() {
         runOnUiThread {
-            binding.tvCurrentGesture.text = null
+            binding.tvRightGesture.text = null
         }
     }
 
     override fun onIdentifyGesture(frameResult: FrameResult) {
         runOnUiThread {
-            if (frameResult.isRhsNone) return@runOnUiThread
-            binding.tvCurrentGesture.text = frameResult.rhsLabel
+            if (!frameResult.isRhsNone) {
+                binding.tvRightGesture.text = frameResult.rhsLabel
+            }
+            if (!frameResult.isLhsNone) {
+                binding.tvLeftGesture.text = frameResult.lhsLabel
+            }
         }
     }
 
