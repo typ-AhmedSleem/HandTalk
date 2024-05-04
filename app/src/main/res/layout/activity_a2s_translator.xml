@@ -54,7 +54,8 @@
         app:boxCornerRadiusBottomEnd="@dimen/defaultButtonCornerRadius"
         app:boxCornerRadiusBottomStart="@dimen/defaultButtonCornerRadius"
         app:boxCornerRadiusTopEnd="@dimen/defaultButtonCornerRadius"
-        app:endIconMode="clear_text"
+        app:endIconDrawable="@android:drawable/ic_btn_speak_now"
+        app:endIconMode="custom"
         app:boxCornerRadiusTopStart="@dimen/defaultButtonCornerRadius"
         app:expandedHintEnabled="true"
         app:layout_constraintBottom_toTopOf="@id/btn_translate_a2s"
@@ -64,7 +65,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="start"
-            android:inputType="text"
             android:maxLength="100"
             android:textAlignment="viewStart"
             android:textColor="@color/colorTextTitle" />

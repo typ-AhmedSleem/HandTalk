@@ -92,5 +92,8 @@
     <string name="sign_to_arabic_translator">Sign to Arabic Translator</string>
     <string name="normal_user">Normal user (🗣️)</string>
     <string name="deaf_user">Deaf user (🧏🏻)</string>
+    <string name="mic_permission_denied_or_cancelled">Mic permission denied or cancelled</string>
+    <string name="mic_permission_granted">Mic permission granted</string>
+    <string name="listening">Listening...</string>
 
 </resources>

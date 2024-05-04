@@ -1,15 +1,19 @@
 package com.typ.handtalk.ui.a2s
 
+import android.Manifest
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import com.typ.handtalk.R
 import com.typ.handtalk.core.a2s.A2STranslationHistoryRecord
 import com.typ.handtalk.core.a2s.A2STranslationsHistory
 import com.typ.handtalk.core.a2s.Arabic2SignTranslator
+import com.typ.handtalk.core.perms.PermissionHelper
+import com.typ.handtalk.core.stt.SpeechToTextEngine
 import com.typ.handtalk.databinding.ActivityA2sTranslatorBinding
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -21,8 +25,9 @@ import kotlinx.coroutines.withContext
 
 class Arabic2SignTranslatorActivity : AppCompatActivity() {
 
-    private var lastToast: Toast? = null
     private lateinit var binding: ActivityA2sTranslatorBinding
+    private lateinit var stt: SpeechToTextEngine
+    private lateinit var permLauncher: ActivityResultLauncher<Array<String>>
 
     // * Runtime
     private var lastPrompt: String? = null
@@ -37,6 +42,10 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         // * Initialize translator instance
         translator = Arabic2SignTranslator()
+        // * Initialize translator instance
+        stt = SpeechToTextEngine(this) {
+            binding.tilA2sPrompt.editText?.setText(it)
+        }
         // * Initialize UI
         supportActionBar?.hide()
         binding = ActivityA2sTranslatorBinding.inflate(layoutInflater).apply {
@@ -96,6 +105,9 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
                     }
                 }
             }
+            tilA2sPrompt.setEndIconOnClickListener {
+                listenToUser()
+            }
         }
         // * Get passed prompt from intent (if any)
         intent.getStringExtra(EXTRA_PROMPT)?.let { sentence ->
@@ -103,6 +115,21 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
             binding.tilA2sPrompt.editText?.setText(sentence)
             binding.btnTranslateA2s.performClick()
         }
+        // * Initialize microphone permission launcher
+        permLauncher = PermissionHelper.requestPermissionLauncher(this) {
+            val granted = it.all { result -> result.value }
+            if (granted) listenToUser()
+            else toast(R.string.mic_permission_denied_or_cancelled)
+        }
+    }
+
+    private fun listenToUser() {
+        if (PermissionHelper.arePermissionsGranted(this, arrayOf(Manifest.permission.RECORD_AUDIO))) {
+            stt.listenToUser()
+            toast(R.string.listening)
+            return
+        }
+        permLauncher.launch(arrayOf(Manifest.permission.RECORD_AUDIO))
     }
 
     private fun changeButtonState(text: Int, bgColor: Int) {
