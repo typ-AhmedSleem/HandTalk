@@ -72,6 +72,16 @@ class HandTalkAlgorithm(
         recognizer.recognizeSignsInFrame(imageProxy)
     }
 
+    private fun finishCurrentSequence() {
+        with(sequencer.obtainResult()) {
+            if (isValid && onSequenceCompleted(this)) {
+                sequencer.createNewRun()
+                onSequenceStarted()
+            }
+        }
+        if (handTracker.isMoving) handTracker.stopTracking()
+    }
+
     // REGION: HandSignRecognizerCallback
 
     override fun onRecognizerReady() {
@@ -84,7 +94,6 @@ class HandTalkAlgorithm(
     override fun onRecognizeHands(frameResult: FrameResult, inputShape: ImageShape) {
         callback.onIdentifyGesture(frameResult)
         callback.onReadyToDrawLandmarks(frameResult, inputShape)
-//        handTracker.feedFrame(frameResult, inputShape)
     }
 
     override fun onHandSignChanged(oldResult: FrameResult, newResult: FrameResult) {
@@ -93,19 +102,23 @@ class HandTalkAlgorithm(
     }
 
     override fun onSameSignRecognized(result: FrameResult, inputShape: ImageShape) {
-        // * Check if the time difference btw current frame and starting frame is more than the allowed timeout
+        // * Check if the same sign is recognized for a while
+        if (recognizer.recognizingSameSignForAWhile) {
+            // Check if hand has travelled distance than the threshold
+            if (handTracker.currentResult != null) {
+                // * Finish the current sequence
+                finishCurrentSequence()
+            }
+            return
+        }
+        // * Feed frame to the tracker
         handTracker.feedFrame(result, inputShape)
     }
 
     override fun onHandsDisappear() {
+        Log.d(TAG, "onHandsDisappear: Right hand disappeared.")
         // Obtain current sequence
-        with(sequencer.obtainResult()) {
-            if (isValid && onSequenceCompleted(this)) {
-                sequencer.createNewRun()
-                onSequenceStarted()
-            }
-        }
-        handTracker.stopTracking()
+        finishCurrentSequence()
         callback.onHandsDisappear()
     }
 
@@ -126,7 +139,7 @@ class HandTalkAlgorithm(
         // * Identify the word through WordIdentifier algorithm
         WordIdentifier.identifyWord(sequence)?.let {
             callback.onIdentifyNewWord(it)
-            Log.i(TAG, "onSequenceCompleted: $sequence")
+            Log.d(TAG, "onSequenceCompleted: $sequence")
         }
         return true
     }
@@ -141,17 +154,16 @@ class HandTalkAlgorithm(
 
     // REGION: HandMovementTrackerCallback
     override fun onBeginHandTracking() {
-        Log.i(TAG, "onBeginHandTracking")
+        Log.d(TAG, "onBeginHandTracking")
     }
 
     override fun onHandMoving(position: Point) {
-        Log.i(TAG, "onHandMoving: Currently at $position")
+        Log.d(TAG, "onHandMoving: Currently at $position")
     }
 
     override fun onStopHandTracking(info: HandMotionInfo?) {
-        if (info != null) {
-            Log.i(TAG, "onStopHandTracking: Detected gesture => $info")
-        }
+        if (info != null) Log.d(TAG, "onStopHandTracking: Detected gesture => $info")
+        else Log.d(TAG, "onStopHandTracking: No gesture identified.")
     }
 
     // END: HandMovementTrackerCallback

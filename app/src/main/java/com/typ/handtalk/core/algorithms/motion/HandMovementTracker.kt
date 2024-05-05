@@ -8,6 +8,7 @@ import com.typ.handtalk.core.models.ImageShape
 import com.typ.handtalk.core.models.signs.MovingSign
 import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.utils.motionInfo
+import kotlin.math.absoluteValue
 
 class HandMovementTracker(
     private val callback: HandMovementTrackerCallback
@@ -20,7 +21,7 @@ class HandMovementTracker(
         get() = state == HandState.IDLE
 
     // * Runtime
-    private var state = HandState.IDLE
+    var state = HandState.IDLE
     var startingTimestamp: Long = 0L
         private set
     var endingTimestamp: Long = 0L
@@ -31,11 +32,38 @@ class HandMovementTracker(
     // * Motion estimation
     private val estimator = MotionEstimator()
 
-    // Estimator flags
+    // Accessors
     val travelledDistance: Point
         get() = estimator.travelledDistance
     val movingDirection: MovingDirection
         get() = estimator.direction
+
+    val currentResult: HandMotionInfo?
+        get() {
+            // Direction
+            val direction = movingDirection
+            if (direction == MovingDirection.UNKNOWN) return null
+
+            // Distance
+            val distance = travelledDistance
+            val travelledThanThreshold = distance.let {
+                when (direction) {
+                    MovingDirection.LEFT_TO_RIGHT,
+                    MovingDirection.RIGHT_TO_LEFT -> {
+                        it.x.absoluteValue >= -MOVEMENT_ACTION_THRESHOLD
+                    }
+
+                    MovingDirection.UP_TO_DOWN,
+                    MovingDirection.DOWN_TO_TOP -> {
+                        it.y.absoluteValue >= MOVEMENT_ACTION_THRESHOLD
+                    }
+
+                    else -> false
+                }
+            }
+
+            return if (travelledThanThreshold) return motionInfo(distance, direction) else null
+        }
 
     override fun createNewRun() {
         throw Exception("Use beginTracking instead")
@@ -56,7 +84,7 @@ class HandMovementTracker(
     fun beginTracking(frame: FrameResult, shape: ImageShape, notifyCallback: Boolean = true) {
         if (isIdle) {
             resetTracker()
-            state = HandState.MOVING
+            state = HandState.IDLE
             estimator.begin(getTrackingLandmark(frame), shape)
             startingTimestamp = frame.timestamp
             if (notifyCallback) {
@@ -83,12 +111,13 @@ class HandMovementTracker(
         if (isStartingFrameInvalid(frame.timestamp)) {
             estimator.begin(getTrackingLandmark(frame), shape)
         }
+        if (isIdle) state = HandState.MOVING
         // * Update the endingTimestamp
         this.lastFrameTimestamp = frame.timestamp
         // * Update the lastFramePos
         val info = estimator.update(getTrackingLandmark(frame), shape)
         if (info != null) {
-            // Gesture has been recognized
+            // * Gesture has been recognized * //
             // Notify
             callback.onStopHandTracking(motionInfo(travelledDistance, movingDirection))
             // Reset tracker
@@ -110,7 +139,7 @@ class HandMovementTracker(
     companion object {
         const val TRACKING_LANDMARK_POINT_IDX = 9 // MIDDLE_FINGER_MCP
         const val MOVEMENT_ACTION_THRESHOLD = 100 // in pixels
-        const val MIN_MOVEMENT_DISTANCE = 250 // in pixels
+        const val MIN_MOVEMENT_DISTANCE = 100 // in pixels
         const val STARTING_FRAME_VALID_TIME = 1000 // in ms
     }
 

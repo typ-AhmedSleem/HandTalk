@@ -75,7 +75,7 @@ data class FrameResult(
     }
 
     fun isRightNullOrNone(): Boolean {
-        return rhsLabel == null || isRhsNone
+        return isRhsNull || isRhsNone
     }
 
     fun isLeftNullOrNone(): Boolean {

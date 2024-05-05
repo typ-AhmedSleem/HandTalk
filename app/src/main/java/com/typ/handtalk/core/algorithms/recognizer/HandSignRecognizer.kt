@@ -51,8 +51,25 @@ class HandSignRecognizer(
     val running: Boolean
         get() = !closed
 
+    val recognizingSameSignForAWhile: Boolean
+        get() {
+            val tookTooLong = sameSignCurrFrameTimestamp - sameSignStartFrameTimestamp >= SAME_SIGN_RECOGNIZE_TIMEOUT
+            if (tookTooLong) {
+                sameSignStartFrameTimestamp = 0L
+                sameSignCurrFrameTimestamp = 0L
+            }
+            return tookTooLong
+        }
+
+    val timestamps: Triple<Long, Long, Long>
+        get() {
+            return Triple(sameSignStartFrameTimestamp, sameSignCurrFrameTimestamp, sameSignCurrFrameTimestamp - sameSignStartFrameTimestamp)
+        }
+
     // Recognizer runtime
-    private var prevResult: FrameResult? = null
+    private var currentFrame: FrameResult? = null
+    private var sameSignStartFrameTimestamp: Long = 0L
+    private var sameSignCurrFrameTimestamp: Long = 0L
 
     init {
         setupGestureRecognizer()
@@ -146,79 +163,93 @@ class HandSignRecognizer(
 
     /** Return the recognition result to the GestureRecognizerHelper's caller */
     private fun returnLivestreamResult(rawResult: GestureRecognizerResult, input: MPImage) {
-        val finishTimeMs = SystemClock.uptimeMillis()
-        val inferenceTime = finishTimeMs - rawResult.timestampMs()
+//        val finishTimeMs = SystemClock.uptimeMillis()
+//        val inferenceTime = finishTimeMs - rawResult.timestampMs()
 
-        val newResult = FrameResultResolver.resolve(rawResult)
-
-        if (prevResult == null) {
-            // No previous result
-            prevResult = newResult
-            // * Notify
-            this.onHandAppeared(newResult, input.shape())
+        val newFrame = FrameResultResolver.resolve(rawResult)
+        if (newFrame == null) {
+            onHandDisappeared()
             return
         }
-        // Found a previous result
-        prevResult?.let prev@{ prev ->
-            if (newResult.isRhsNone) return@prev
-            // Check if newResult is same as lastResult
-            if (newResult == prev) {
+
+        if (currentFrame == null) {
+            // No current frame
+            currentFrame = newFrame
+            // * Notify
+            if (!newFrame.isRightNullOrNone()) {
+                this.onHandAppeared(newFrame, input.shape())
+            }
+            return
+        }
+        // Found a current frame
+        currentFrame?.let prev@{ prev ->
+            if (newFrame.isRhsNone) return@prev
+            // Check if new frame is same as current
+            if (newFrame == prev) {
                 // * Fire onSameSignRecognized
-                this.onSameSignRecognized(newResult, input.shape())
+                this.onSameSignRecognized(newFrame, input.shape())
                 return@prev
             }
             // Check if RHS has changed
-            if (newResult.isRhsNull) {
+            if (newFrame.isRhsNull) {
                 // * Fire onReachNoResultTimeout
-                val timeout = newResult.timestamp - prev.timestamp
+                val timeout = newFrame.timestamp - prev.timestamp
                 val timeoutReached = timeout >= HAND_DISAPPEAR_TIMEOUT
                 val disappeared = !prev.isRhsNull
                 if (timeoutReached && disappeared) {
                     // Timeout has been exceeded
-                    logi("onHandDisappeared: Right hand has disappeared.")
                     this.onHandDisappeared()
                     return@prev
                 }
             } else {
                 // * Handle the right hand
-                newResult.rightHand?.sign?.let rhs@{ rhs ->
+                newFrame.rightHand?.sign?.let rhs@{ rhs ->
                     // Return immediately if RHS hasn't changed
                     if (rhs == prev.rightHand?.sign) return@prev
                     // Sign has actually changed. Check the timeout...
-                    if (newResult.timestamp - prev.timestamp < HAND_SIGN_CHANGE_TIMEOUT) {
+                    if (newFrame.timestamp - prev.timestamp < HAND_SIGN_CHANGE_TIMEOUT) {
                         // Timeout hasn't yet been exceeded
-                        logi("onHandSignChanged: Timeout hasn't yet been exceeded. Timeout is ${newResult.timestamp - prev.timestamp}")
                         return@prev
                     }
                 }
                 // * Fire onHandSignChanged
-                this.onHandSignChanged(prev, newResult)
+                this.onHandSignChanged(prev, newFrame)
             }
             // * Update runtime
-            prevResult = newResult
+            currentFrame = newFrame
         }
 
         // * Notify the global callback
-        callback.onRecognizeHands(newResult, input.shape())
+        callback.onRecognizeHands(newFrame, input.shape())
     }
 
     override fun onHandAppeared(frame: FrameResult, inputShape: ImageShape) {
+        sameSignStartFrameTimestamp = 0L
         callback.onHandAppeared(frame, inputShape)
     }
 
     override fun onHandDisappeared() {
-        prevResult = null
-        // Notify callback about disappeared hands
-        callback.onHandsDisappear()
+        if (currentFrame != null) {
+            currentFrame = null
+            sameSignStartFrameTimestamp = 0L
+            // Notify callback about disappeared hands
+            callback.onHandsDisappear()
+        }
     }
 
     override fun onHandSignChanged(oldResult: FrameResult, newResult: FrameResult) {
+        sameSignStartFrameTimestamp = 0L
         logi("RHS has changed: ${oldResult.rhsLabel} -> ${newResult.rhsLabel}. Took ${newResult.timestamp - oldResult.timestamp} ms to change.\n")
         // Notify callback
         callback.onHandSignChanged(oldResult, newResult)
     }
 
     override fun onSameSignRecognized(result: FrameResult, inputShape: ImageShape) {
+        if (sameSignStartFrameTimestamp == 0L) {
+            sameSignStartFrameTimestamp = result.timestamp
+//            Log.i(TAG, "Started tracking a sign: ${result.rhsLabel} at ${result.timestamp}")
+        }
+        sameSignCurrFrameTimestamp = result.timestamp
         callback.onSameSignRecognized(result, inputShape)
     }
 
@@ -233,6 +264,7 @@ class HandSignRecognizer(
 
         const val HAND_SIGN_CHANGE_TIMEOUT = 100 // in millis
         const val HAND_DISAPPEAR_TIMEOUT = 100 // in millis
+        const val SAME_SIGN_RECOGNIZE_TIMEOUT = 2500 // in millis
 
         @JvmStatic
         fun logi(msg: Any) {
