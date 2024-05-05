@@ -17,7 +17,7 @@ package com.typ.handtalk
 
 import androidx.lifecycle.ViewModel
 import com.google.mediapipe.tasks.core.Delegate
-import com.typ.handtalk.core.recognizer.HandSignRecognizer
+import com.typ.handtalk.core.algorithms.recognizer.HandSignRecognizer
 
 class MainViewModel : ViewModel() {
     private var _delegate: Delegate = Delegate.GPU

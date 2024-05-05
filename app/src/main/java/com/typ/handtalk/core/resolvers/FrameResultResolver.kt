@@ -13,9 +13,11 @@ object FrameResultResolver {
     const val LEFT_HAND_INDEX = 0
 
     @JvmStatic
-    fun resolve(rawResult: GestureRecognizerResult): FrameResult {
+    fun resolve(rawResult: GestureRecognizerResult): FrameResult? {
         // * Obtain hands and its gestures
         val (rightHand, leftHand) = identifyHands(rawResult)
+        // * Return null if no hands were identified
+        if (rightHand == null && leftHand == null) return null
         // * Return new FrameResult instance
         return FrameResult(leftHand, rightHand)
     }

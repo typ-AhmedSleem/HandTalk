@@ -19,13 +19,12 @@ import com.typ.handtalk.MainViewModel
 import com.typ.handtalk.R
 import com.typ.handtalk.core.algorithms.handtalk.HandTalkAlgorithm
 import com.typ.handtalk.core.algorithms.handtalk.HandTalkAlgorithmCallback
+import com.typ.handtalk.core.algorithms.recognizer.RecognizerError
 import com.typ.handtalk.core.errors.HandTalkError
+import com.typ.handtalk.core.models.ImageShape
 import com.typ.handtalk.core.perms.PermissionHelper
-import com.typ.handtalk.core.recognizer.RecognizerError
 import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.databinding.ActivitySignToTextTranslatorBinding
-import com.typ.handtalk.utils.Height
-import com.typ.handtalk.utils.Width
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -174,6 +173,8 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
     override fun onHandsDisappear() {
         runOnUiThread {
             binding.tvRightGesture.text = null
+            binding.tvLeftGesture.text = null
+            binding.overlay.clear()
         }
     }
 
@@ -202,12 +203,13 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
         }
     }
 
-    override fun onReadyToDrawLandmarks(frameResult: FrameResult, inputShape: Pair<Width, Height>) {
+    override fun onReadyToDrawLandmarks(frameResult: FrameResult, inputShape: ImageShape) {
+        Log.d(TAG, "onReadyToDrawLandmarks")
         runOnUiThread {
             binding.overlay.drawLandmarks(
                 frameResult,
-                inputShape.first,
-                inputShape.second,
+                inputShape.height,
+                inputShape.width,
             )
         }
     }

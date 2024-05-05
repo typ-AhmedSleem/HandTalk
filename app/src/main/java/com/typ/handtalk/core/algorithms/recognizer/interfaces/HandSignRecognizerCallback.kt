@@ -1,9 +1,8 @@
-package com.typ.handtalk.core.recognizer.interfaces
+package com.typ.handtalk.core.algorithms.recognizer.interfaces
 
-import com.typ.handtalk.core.recognizer.RecognizerError
+import com.typ.handtalk.core.algorithms.recognizer.RecognizerError
+import com.typ.handtalk.core.models.ImageShape
 import com.typ.handtalk.core.resolvers.models.FrameResult
-import com.typ.handtalk.utils.Height
-import com.typ.handtalk.utils.Width
 
 interface HandSignRecognizerCallback {
 
@@ -13,9 +12,14 @@ interface HandSignRecognizerCallback {
     fun onRecognizerReady()
 
     /**
+     * Called when a hand is appeared in the processed frame.
+     */
+    fun onHandAppeared(frame: FrameResult, inputShape: ImageShape)
+
+    /**
      * Called when a hand is recognized by the recognizer or both hand.
      */
-    fun onRecognizeHands(frameResult: FrameResult, inputShape: Pair<Height, Width>)
+    fun onRecognizeHands(frameResult: FrameResult, inputShape: ImageShape)
 
     /**
      * Invoked when the recognizer detected another sign that is
@@ -31,7 +35,7 @@ interface HandSignRecognizerCallback {
      * calculate the distance travelled by each hand
      * and at which direction they are moving.
      */
-    fun onSameSignRecognized(result: FrameResult)
+    fun onSameSignRecognized(result: FrameResult, inputShape: ImageShape)
 
     /**
      * Called when the recognizer encounters an error.

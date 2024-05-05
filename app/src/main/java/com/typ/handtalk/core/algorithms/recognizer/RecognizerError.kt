@@ -1,4 +1,4 @@
-package com.typ.handtalk.core.recognizer
+package com.typ.handtalk.core.algorithms.recognizer
 
 import com.typ.handtalk.core.errors.HandTalkError
 
