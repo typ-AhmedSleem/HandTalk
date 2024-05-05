@@ -21,7 +21,7 @@ import com.typ.handtalk.core.algorithms.handtalk.HandTalkAlgorithm
 import com.typ.handtalk.core.algorithms.handtalk.HandTalkAlgorithmCallback
 import com.typ.handtalk.core.errors.HandTalkError
 import com.typ.handtalk.core.perms.PermissionHelper
-import com.typ.handtalk.core.recognizer.RecognizerError
+import com.typ.handtalk.core.algorithms.recognizer.RecognizerError
 import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.databinding.ActivitySignToTextTranslatorBinding
 import com.typ.handtalk.utils.Height

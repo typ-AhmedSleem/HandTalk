@@ -8,10 +8,10 @@ import com.typ.handtalk.core.algorithms.motion.HandMovementTracker
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequence
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequencer
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerCallback
-import com.typ.handtalk.core.recognizer.GestureRecognizerConfig
-import com.typ.handtalk.core.recognizer.HandSignRecognizer
-import com.typ.handtalk.core.recognizer.RecognizerError
-import com.typ.handtalk.core.recognizer.interfaces.HandSignRecognizerCallback
+import com.typ.handtalk.core.algorithms.recognizer.GestureRecognizerConfig
+import com.typ.handtalk.core.algorithms.recognizer.HandSignRecognizer
+import com.typ.handtalk.core.algorithms.recognizer.RecognizerError
+import com.typ.handtalk.core.algorithms.recognizer.interfaces.HandSignRecognizerCallback
 import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.utils.Height
 import com.typ.handtalk.utils.Width

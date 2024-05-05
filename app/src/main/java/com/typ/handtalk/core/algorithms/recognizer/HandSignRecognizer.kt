@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.typ.handtalk.core.recognizer
+package com.typ.handtalk.core.algorithms.recognizer
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -28,8 +28,8 @@ import com.google.mediapipe.tasks.core.Delegate
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizer
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizerResult
-import com.typ.handtalk.core.recognizer.interfaces.HandRecognizerInternalCallback
-import com.typ.handtalk.core.recognizer.interfaces.HandSignRecognizerCallback
+import com.typ.handtalk.core.algorithms.recognizer.interfaces.HandRecognizerInternalCallback
+import com.typ.handtalk.core.algorithms.recognizer.interfaces.HandSignRecognizerCallback
 import com.typ.handtalk.core.resolvers.FrameResultResolver
 import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.utils.Height
@@ -154,6 +154,8 @@ class HandSignRecognizer(
         if (prevResult == null) {
             // No previous result
             prevResult = newResult
+            // * Notify
+            this.onHandAppeared()
             return
         }
         // Found a previous result
@@ -196,8 +198,12 @@ class HandSignRecognizer(
             prevResult = newResult
         }
 
-        // * Notify
+        // * Notify the global callback
         callback.onRecognizeHands(newResult, input.width to input.height)
+    }
+
+    override fun onHandAppeared() {
+        callback.onHandAppeared()
     }
 
     override fun onHandDisappeared() {

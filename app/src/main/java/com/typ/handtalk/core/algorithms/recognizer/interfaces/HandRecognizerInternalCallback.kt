@@ -1,10 +1,15 @@
-package com.typ.handtalk.core.recognizer.interfaces
+package com.typ.handtalk.core.algorithms.recognizer.interfaces
 
 import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.utils.Height
 import com.typ.handtalk.utils.Width
 
 interface HandRecognizerInternalCallback {
+
+    /**
+     * Invoked when a hand is appeared in the processed frame.
+     */
+    fun onHandAppeared()
 
     /**
      * Invoked when the right hand is not detected
