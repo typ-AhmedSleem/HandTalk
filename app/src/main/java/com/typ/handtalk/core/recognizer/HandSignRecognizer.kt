@@ -32,6 +32,8 @@ import com.typ.handtalk.core.recognizer.interfaces.HandRecognizerInternalCallbac
 import com.typ.handtalk.core.recognizer.interfaces.HandSignRecognizerCallback
 import com.typ.handtalk.core.resolvers.FrameResultResolver
 import com.typ.handtalk.core.resolvers.models.FrameResult
+import com.typ.handtalk.utils.Height
+import com.typ.handtalk.utils.Width
 
 class HandSignRecognizer(
     val context: Context,
@@ -160,7 +162,7 @@ class HandSignRecognizer(
             // Check if newResult is same as lastResult
             if (newResult == prev) {
                 // * Fire onSameSignRecognized
-                this.onSameSignRecognized(newResult)
+                this.onSameSignRecognized(newResult, input.width to input.height)
                 return@prev
             }
             // Check if RHS has changed
@@ -195,7 +197,7 @@ class HandSignRecognizer(
         }
 
         // * Notify
-        callback.onRecognizeHands(newResult, input.height to input.width)
+        callback.onRecognizeHands(newResult, input.width to input.height)
     }
 
     override fun onHandDisappeared() {
@@ -210,8 +212,8 @@ class HandSignRecognizer(
         callback.onHandSignChanged(oldResult, newResult)
     }
 
-    override fun onSameSignRecognized(result: FrameResult) {
-        callback.onSameSignRecognized(result)
+    override fun onSameSignRecognized(result: FrameResult, inputShape: Pair<Width, Height>) {
+        callback.onSameSignRecognized(result, inputShape)
     }
 
     companion object {

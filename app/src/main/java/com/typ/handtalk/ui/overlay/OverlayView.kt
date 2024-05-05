@@ -83,7 +83,7 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
         val idx = hand.idx
         HandLandmarker.HAND_CONNECTIONS.forEach {
             canvas.drawLine(
-                hand.landmarks[it!!.start()].x() * imageWidth * scaleFactor,
+                hand.landmarks[it.start()].x() * imageWidth * scaleFactor,
                 hand.landmarks[it.start()].y() * imageHeight * scaleFactor,
                 hand.landmarks[it.end()].x() * imageWidth * scaleFactor,
                 hand.landmarks[it.end()].y() * imageHeight * scaleFactor,

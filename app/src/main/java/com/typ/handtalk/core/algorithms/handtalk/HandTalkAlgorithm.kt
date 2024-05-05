@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.camera.core.ImageProxy
 import com.typ.handtalk.core.algorithms.identifier.WordIdentifier
+import com.typ.handtalk.core.algorithms.motion.HandMovementTracker
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequence
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequencer
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerCallback
@@ -25,6 +26,8 @@ class HandTalkAlgorithm(
         private set
     lateinit var sequencer: GestureSequencer
         private set
+    lateinit var handTracker: HandMovementTracker
+        private set
 
     // * Flags
     val recognizerInitialized: Boolean
@@ -32,11 +35,13 @@ class HandTalkAlgorithm(
 
     val sequencerInitialized: Boolean
         get() = ::sequencer.isInitialized
+    val trackerInitialized: Boolean
+        get() = ::handTracker.isInitialized
 
     init {
-        // * Setup gesture recognizer
         setupGestureRecognizer()
         setupSequencer()
+        setupHandTracker()
     }
 
     fun setupGestureRecognizer(recognizerConfig: GestureRecognizerConfig = GestureRecognizerConfig()) {
@@ -57,6 +62,10 @@ class HandTalkAlgorithm(
         if (!sequencerInitialized) sequencer = GestureSequencer()
     }
 
+    private fun setupHandTracker() {
+        if (!trackerInitialized) handTracker = HandMovementTracker()
+    }
+
     fun recognizeHandGestures(imageProxy: ImageProxy) {
         recognizer.recognizeSignsInFrame(imageProxy)
     }
@@ -69,6 +78,7 @@ class HandTalkAlgorithm(
     override fun onRecognizeHands(frameResult: FrameResult, inputShape: Pair<Width, Height>) {
         callback.onIdentifyGesture(frameResult)
         callback.onReadyToDrawLandmarks(frameResult, inputShape)
+//        handTracker.feedFrame(frameResult, inputShape.first, inputShape.second)
     }
 
     override fun onHandSignChanged(oldResult: FrameResult, newResult: FrameResult) {
@@ -76,9 +86,9 @@ class HandTalkAlgorithm(
         onSequenceFed(newResult)
     }
 
-    override fun onSameSignRecognized(result: FrameResult) {
-        // todo: Feed frame to the MotionEstimation algorithm
-        // todo: Check the motion estimation algorithm if the hand has moved the distance threshold
+    override fun onSameSignRecognized(result: FrameResult, inputShape: Pair<Width, Height>) {
+        // * Feed frame to the HandTracker algorithm
+        handTracker.feedFrame(result, inputShape.first, inputShape.second)
     }
 
     override fun onHandsDisappear() {
@@ -89,6 +99,7 @@ class HandTalkAlgorithm(
                 onSequenceStarted()
             }
         }
+        handTracker.cancelCurrentRun()
         callback.onHandsDisappear()
     }
 
@@ -101,6 +112,7 @@ class HandTalkAlgorithm(
     // REGION: GestureSequencerCallback
 
     override fun onSequenceFed(frame: FrameResult) {
+        // todo: We have much work here to do
         sequencer.feed(frame)
     }
 

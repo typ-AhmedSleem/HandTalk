@@ -31,7 +31,7 @@ interface HandSignRecognizerCallback {
      * calculate the distance travelled by each hand
      * and at which direction they are moving.
      */
-    fun onSameSignRecognized(result: FrameResult)
+    fun onSameSignRecognized(result: FrameResult, inputShape: Pair<Width, Height>)
 
     /**
      * Called when the recognizer encounters an error.

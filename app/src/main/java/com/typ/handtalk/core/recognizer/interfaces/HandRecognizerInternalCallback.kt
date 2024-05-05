@@ -1,6 +1,8 @@
 package com.typ.handtalk.core.recognizer.interfaces
 
 import com.typ.handtalk.core.resolvers.models.FrameResult
+import com.typ.handtalk.utils.Height
+import com.typ.handtalk.utils.Width
 
 interface HandRecognizerInternalCallback {
 
@@ -25,6 +27,6 @@ interface HandRecognizerInternalCallback {
      * calculate the distance travelled by each hand
      * and at which direction they are moving.
      */
-    fun onSameSignRecognized(result: FrameResult)
+    fun onSameSignRecognized(result: FrameResult, inputShape: Pair<Height, Width>)
 
 }

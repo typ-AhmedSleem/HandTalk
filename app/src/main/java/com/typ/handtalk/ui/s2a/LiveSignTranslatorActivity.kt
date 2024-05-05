@@ -174,6 +174,7 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
     override fun onHandsDisappear() {
         runOnUiThread {
             binding.tvRightGesture.text = null
+            binding.tvLeftGesture.text = null
         }
     }
 
@@ -206,8 +207,8 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
         runOnUiThread {
             binding.overlay.drawLandmarks(
                 frameResult,
-                inputShape.first,
                 inputShape.second,
+                inputShape.first,
             )
         }
     }
