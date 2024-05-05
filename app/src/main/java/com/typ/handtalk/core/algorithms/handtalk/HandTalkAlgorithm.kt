@@ -26,18 +26,16 @@ class HandTalkAlgorithm(
     // * Algorithms
     lateinit var recognizer: HandSignRecognizer
         private set
-    lateinit var sequencer: GestureSequencer
-        private set
-    lateinit var handTracker: HandMovementTracker
-        private set
+    private lateinit var sequencer: GestureSequencer
+    private lateinit var handTracker: HandMovementTracker
 
     // * Flags
     val recognizerInitialized: Boolean
         get() = ::recognizer.isInitialized
 
-    val sequencerInitialized: Boolean
+    private val sequencerInitialized: Boolean
         get() = ::sequencer.isInitialized
-    val trackerInitialized: Boolean
+    private val trackerInitialized: Boolean
         get() = ::handTracker.isInitialized
 
     init {
@@ -92,6 +90,9 @@ class HandTalkAlgorithm(
     }
 
     override fun onRecognizeHands(frameResult: FrameResult, inputShape: ImageShape) {
+        // * Feed frame to the tracker
+        handTracker.feedFrame(frameResult, inputShape)
+        // * Notify callback
         callback.onIdentifyGesture(frameResult)
         callback.onReadyToDrawLandmarks(frameResult, inputShape)
     }
@@ -112,7 +113,7 @@ class HandTalkAlgorithm(
             return
         }
         // * Feed frame to the tracker
-        handTracker.feedFrame(result, inputShape)
+//        handTracker.feedFrame(result, inputShape)
     }
 
     override fun onHandsDisappear() {
@@ -158,7 +159,7 @@ class HandTalkAlgorithm(
     }
 
     override fun onHandMoving(position: Point) {
-        Log.d(TAG, "onHandMoving: Currently at $position")
+//        Log.d(TAG, "onHandMoving: Hand is currently at $position")
     }
 
     override fun onStopHandTracking(info: HandMotionInfo?) {

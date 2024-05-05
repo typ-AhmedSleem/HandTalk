@@ -24,8 +24,6 @@ class HandMovementTracker(
     var state = HandState.IDLE
     var startingTimestamp: Long = 0L
         private set
-    var endingTimestamp: Long = 0L
-        private set
     var lastFrameTimestamp: Long = 0L
         private set
 
@@ -50,12 +48,12 @@ class HandMovementTracker(
                 when (direction) {
                     MovingDirection.LEFT_TO_RIGHT,
                     MovingDirection.RIGHT_TO_LEFT -> {
-                        it.x.absoluteValue >= -MOVEMENT_ACTION_THRESHOLD
+                        it.x.absoluteValue >= MotionEstimator.MIN_MOVEMENT_DISTANCE
                     }
 
                     MovingDirection.UP_TO_DOWN,
                     MovingDirection.DOWN_TO_TOP -> {
-                        it.y.absoluteValue >= MOVEMENT_ACTION_THRESHOLD
+                        it.y.absoluteValue >= MotionEstimator.MIN_MOVEMENT_DISTANCE
                     }
 
                     else -> false
@@ -84,9 +82,8 @@ class HandMovementTracker(
     fun beginTracking(frame: FrameResult, shape: ImageShape, notifyCallback: Boolean = true) {
         if (isIdle) {
             resetTracker()
-            state = HandState.IDLE
-            estimator.begin(getTrackingLandmark(frame), shape)
             startingTimestamp = frame.timestamp
+            estimator.begin(getTrackingLandmark(frame), shape)
             if (notifyCallback) {
                 callback.onBeginHandTracking()
             }
@@ -94,28 +91,29 @@ class HandMovementTracker(
     }
 
     fun stopTracking() {
-        state = HandState.IDLE
         resetTracker()
         callback.onStopHandTracking(null)
     }
 
     private fun resetTracker() {
         estimator.reset()
+        state = HandState.IDLE
         startingTimestamp = 0L
-        endingTimestamp = 0L
         lastFrameTimestamp = 0L
     }
 
     fun feedFrame(frame: FrameResult, shape: ImageShape) {
         // * Check if the time difference btw current frame and starting frame is more than the allowed timeout
+        val landmark = getTrackingLandmark(frame)
         if (isStartingFrameInvalid(frame.timestamp)) {
-            estimator.begin(getTrackingLandmark(frame), shape)
+            startingTimestamp = frame.timestamp
+            estimator.begin(landmark, shape)
         }
         if (isIdle) state = HandState.MOVING
         // * Update the endingTimestamp
         this.lastFrameTimestamp = frame.timestamp
         // * Update the lastFramePos
-        val info = estimator.update(getTrackingLandmark(frame), shape)
+        val info = estimator.update(landmark, shape)
         if (info != null) {
             // * Gesture has been recognized * //
             // Notify
@@ -137,9 +135,8 @@ class HandMovementTracker(
     }
 
     companion object {
+        const val TAG = "HandTracker"
         const val TRACKING_LANDMARK_POINT_IDX = 9 // MIDDLE_FINGER_MCP
-        const val MOVEMENT_ACTION_THRESHOLD = 100 // in pixels
-        const val MIN_MOVEMENT_DISTANCE = 100 // in pixels
         const val STARTING_FRAME_VALID_TIME = 1000 // in ms
     }
 

@@ -20,8 +20,10 @@ class MotionEstimator {
     // Frame info
     private val scaleFactor = 3.75f
     private var frameShape = emptyImageShape()
-    private val widthSF = (frameShape.width * scaleFactor).toInt()
-    private val heightSF = (frameShape.height * scaleFactor).toInt()
+    private val widthSF
+        get() = (frameShape.width * scaleFactor).toInt()
+    private val heightSF
+        get() = (frameShape.height * scaleFactor).toInt()
 
     var firstFramePos = emptyPoint()
         private set
@@ -37,9 +39,9 @@ class MotionEstimator {
     val direction: MovingDirection
         get() {
             return if (travelledDistance.x.absoluteValue > MIN_MOVEMENT_DISTANCE) {
-                if (travelledDistance.x > 0) MovingDirection.RIGHT_TO_LEFT else MovingDirection.LEFT_TO_RIGHT
+                if (travelledDistance.x < 0) MovingDirection.RIGHT_TO_LEFT else MovingDirection.LEFT_TO_RIGHT
             } else if (travelledDistance.y.absoluteValue > MIN_MOVEMENT_DISTANCE) {
-                if (travelledDistance.y > 0) MovingDirection.DOWN_TO_TOP else MovingDirection.UP_TO_DOWN
+                if (travelledDistance.y < 0) MovingDirection.DOWN_TO_TOP else MovingDirection.UP_TO_DOWN
             } else {
                 MovingDirection.UNKNOWN
             }
@@ -57,8 +59,10 @@ class MotionEstimator {
 
     fun begin(landmark: NormalizedLandmark?, shape: ImageShape) {
         if (landmark == null) return
+        reset()
         frameShape = shape
         firstFramePos = landmark.toScaledPoint(widthSF, heightSF)
+        lastFramePos = firstFramePos
     }
 
     fun update(landmark: NormalizedLandmark?, shape: ImageShape): HandMotionInfo? {
@@ -71,7 +75,6 @@ class MotionEstimator {
         if (direction != lastKnownDirection) {
             if (direction == MovingDirection.UNKNOWN) return null
             lastKnownDirection = direction
-//            Log.d("HandTracker", "direction: $dir, movedY: $startY -> $endY, distanceY: ${travelledDistance.y}")
             return motionInfo(distance, direction)
         }
         return null
@@ -84,7 +87,8 @@ class MotionEstimator {
     }
 
     companion object {
-        const val MIN_MOVEMENT_DISTANCE = 250 // in pixels
+        private const val TAG = "MotionEstimator"
+        internal const val MIN_MOVEMENT_DISTANCE = 200 // in pixels
     }
 
 }

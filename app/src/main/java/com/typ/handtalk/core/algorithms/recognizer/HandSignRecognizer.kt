@@ -53,12 +53,7 @@ class HandSignRecognizer(
 
     val recognizingSameSignForAWhile: Boolean
         get() {
-            val tookTooLong = sameSignCurrFrameTimestamp - sameSignStartFrameTimestamp >= SAME_SIGN_RECOGNIZE_TIMEOUT
-            if (tookTooLong) {
-                sameSignStartFrameTimestamp = 0L
-                sameSignCurrFrameTimestamp = 0L
-            }
-            return tookTooLong
+            return sameSignCurrFrameTimestamp - sameSignStartFrameTimestamp >= SAME_SIGN_RECOGNIZE_TIMEOUT
         }
 
     val timestamps: Triple<Long, Long, Long>
