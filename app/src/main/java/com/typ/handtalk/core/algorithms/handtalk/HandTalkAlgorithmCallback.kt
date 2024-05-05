@@ -1,9 +1,8 @@
 package com.typ.handtalk.core.algorithms.handtalk
 
 import com.typ.handtalk.core.errors.HandTalkError
+import com.typ.handtalk.core.models.ImageShape
 import com.typ.handtalk.core.resolvers.models.FrameResult
-import com.typ.handtalk.utils.Height
-import com.typ.handtalk.utils.Width
 
 interface HandTalkAlgorithmCallback {
 
@@ -30,7 +29,7 @@ interface HandTalkAlgorithmCallback {
     /**
      * Called when recognizer results landmarks for both hands.
      */
-    fun onReadyToDrawLandmarks(frameResult: FrameResult, inputShape: Pair<Width, Height>)
+    fun onReadyToDrawLandmarks(frameResult: FrameResult, inputShape: ImageShape)
 
     fun onErrorOccurred(error: HandTalkError)
 

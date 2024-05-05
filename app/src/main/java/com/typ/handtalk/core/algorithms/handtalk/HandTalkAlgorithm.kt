@@ -1,25 +1,27 @@
 package com.typ.handtalk.core.algorithms.handtalk
 
 import android.content.Context
+import android.graphics.Point
 import android.util.Log
 import androidx.camera.core.ImageProxy
 import com.typ.handtalk.core.algorithms.identifier.WordIdentifier
+import com.typ.handtalk.core.algorithms.motion.HandMotionInfo
 import com.typ.handtalk.core.algorithms.motion.HandMovementTracker
-import com.typ.handtalk.core.algorithms.sequencer.GestureSequence
-import com.typ.handtalk.core.algorithms.sequencer.GestureSequencer
-import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerCallback
+import com.typ.handtalk.core.algorithms.motion.HandMovementTrackerCallback
 import com.typ.handtalk.core.algorithms.recognizer.GestureRecognizerConfig
 import com.typ.handtalk.core.algorithms.recognizer.HandSignRecognizer
 import com.typ.handtalk.core.algorithms.recognizer.RecognizerError
 import com.typ.handtalk.core.algorithms.recognizer.interfaces.HandSignRecognizerCallback
+import com.typ.handtalk.core.algorithms.sequencer.GestureSequence
+import com.typ.handtalk.core.algorithms.sequencer.GestureSequencer
+import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerCallback
+import com.typ.handtalk.core.models.ImageShape
 import com.typ.handtalk.core.resolvers.models.FrameResult
-import com.typ.handtalk.utils.Height
-import com.typ.handtalk.utils.Width
 
 class HandTalkAlgorithm(
     val context: Context,
     private val callback: HandTalkAlgorithmCallback
-) : HandSignRecognizerCallback, GestureSequencerCallback {
+) : HandSignRecognizerCallback, GestureSequencerCallback, HandMovementTrackerCallback {
 
     // * Algorithms
     lateinit var recognizer: HandSignRecognizer
@@ -63,7 +65,7 @@ class HandTalkAlgorithm(
     }
 
     private fun setupHandTracker() {
-        if (!trackerInitialized) handTracker = HandMovementTracker()
+        if (!trackerInitialized) handTracker = HandMovementTracker(this)
     }
 
     fun recognizeHandGestures(imageProxy: ImageProxy) {
@@ -75,10 +77,14 @@ class HandTalkAlgorithm(
     override fun onRecognizerReady() {
     }
 
-    override fun onRecognizeHands(frameResult: FrameResult, inputShape: Pair<Width, Height>) {
+    override fun onHandAppeared(frame: FrameResult, inputShape: ImageShape) {
+        handTracker.beginTracking(frame, inputShape)
+    }
+
+    override fun onRecognizeHands(frameResult: FrameResult, inputShape: ImageShape) {
         callback.onIdentifyGesture(frameResult)
         callback.onReadyToDrawLandmarks(frameResult, inputShape)
-//        handTracker.feedFrame(frameResult, inputShape.first, inputShape.second)
+//        handTracker.feedFrame(frameResult, inputShape)
     }
 
     override fun onHandSignChanged(oldResult: FrameResult, newResult: FrameResult) {
@@ -86,9 +92,9 @@ class HandTalkAlgorithm(
         onSequenceFed(newResult)
     }
 
-    override fun onSameSignRecognized(result: FrameResult, inputShape: Pair<Width, Height>) {
-        // * Feed frame to the HandTracker algorithm
-        handTracker.feedFrame(result, inputShape.first, inputShape.second)
+    override fun onSameSignRecognized(result: FrameResult, inputShape: ImageShape) {
+        // * Check if the time difference btw current frame and starting frame is more than the allowed timeout
+        handTracker.feedFrame(result, inputShape)
     }
 
     override fun onHandsDisappear() {
@@ -99,7 +105,7 @@ class HandTalkAlgorithm(
                 onSequenceStarted()
             }
         }
-        handTracker.cancelCurrentRun()
+        handTracker.stopTracking()
         callback.onHandsDisappear()
     }
 
@@ -132,6 +138,23 @@ class HandTalkAlgorithm(
     }
 
     // END: GestureSequencerCallback
+
+    // REGION: HandMovementTrackerCallback
+    override fun onBeginHandTracking() {
+        Log.i(TAG, "onBeginHandTracking")
+    }
+
+    override fun onHandMoving(position: Point) {
+        Log.i(TAG, "onHandMoving: Currently at $position")
+    }
+
+    override fun onStopHandTracking(info: HandMotionInfo?) {
+        if (info != null) {
+            Log.i(TAG, "onStopHandTracking: Detected gesture => $info")
+        }
+    }
+
+    // END: HandMovementTrackerCallback
 
     companion object {
         const val TAG = "HandTalkAlgo"

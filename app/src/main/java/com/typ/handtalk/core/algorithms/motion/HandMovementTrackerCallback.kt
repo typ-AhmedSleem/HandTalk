@@ -1,11 +1,13 @@
 package com.typ.handtalk.core.algorithms.motion
 
+import android.graphics.Point
+
 interface HandMovementTrackerCallback {
 
-    fun onHandMovementStart()
+    fun onBeginHandTracking()
 
-    fun onHandMoving()
+    fun onHandMoving(position: Point)
 
-    fun onHandMovementEnd()
+    fun onStopHandTracking(info: HandMotionInfo?)
 
 }

@@ -1,15 +1,14 @@
 package com.typ.handtalk.core.algorithms.recognizer.interfaces
 
+import com.typ.handtalk.core.models.ImageShape
 import com.typ.handtalk.core.resolvers.models.FrameResult
-import com.typ.handtalk.utils.Height
-import com.typ.handtalk.utils.Width
 
 interface HandRecognizerInternalCallback {
 
     /**
      * Invoked when a hand is appeared in the processed frame.
      */
-    fun onHandAppeared()
+    fun onHandAppeared(frame: FrameResult, inputShape: ImageShape)
 
     /**
      * Invoked when the right hand is not detected
@@ -32,6 +31,6 @@ interface HandRecognizerInternalCallback {
      * calculate the distance travelled by each hand
      * and at which direction they are moving.
      */
-    fun onSameSignRecognized(result: FrameResult, inputShape: Pair<Height, Width>)
+    fun onSameSignRecognized(result: FrameResult, inputShape: ImageShape)
 
 }

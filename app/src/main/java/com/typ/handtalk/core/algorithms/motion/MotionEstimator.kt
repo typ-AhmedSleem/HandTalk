@@ -1,11 +1,13 @@
 package com.typ.handtalk.core.algorithms.motion
 
 import android.graphics.Point
-import android.util.Log
 import androidx.core.graphics.minus
 import com.google.mediapipe.tasks.components.containers.NormalizedLandmark
 import com.typ.handtalk.core.enums.MovingDirection
+import com.typ.handtalk.core.models.ImageShape
+import com.typ.handtalk.utils.emptyImageShape
 import com.typ.handtalk.utils.emptyPoint
+import com.typ.handtalk.utils.motionInfo
 import com.typ.handtalk.utils.toScaledPoint
 import kotlin.math.absoluteValue
 
@@ -15,15 +17,19 @@ import kotlin.math.absoluteValue
  */
 class MotionEstimator {
 
-    // Frame dimensions
-    private var frameWidth = 0
-    private var frameHeight = 0
+    // Frame info
     private val scaleFactor = 3.75f
+    private var frameShape = emptyImageShape()
+    private val widthSF = (frameShape.width * scaleFactor).toInt()
+    private val heightSF = (frameShape.height * scaleFactor).toInt()
 
-    private var firstFramePos = emptyPoint()
-    private var lastFramePos = emptyPoint()
+    var firstFramePos = emptyPoint()
+        private set
+    var lastFramePos = emptyPoint()
+        private set
 
-    private var lastKnownDirection = MovingDirection.UNKNOWN
+    var lastKnownDirection = MovingDirection.UNKNOWN
+        private set
 
     val travelledDistance: Point
         get() = lastFramePos - firstFramePos
@@ -49,38 +55,32 @@ class MotionEstimator {
     val endY: Int
         get() = lastFramePos.y
 
-    fun begin(landmark: NormalizedLandmark?, frameWidth: Int, frameHeight: Int) {
+    fun begin(landmark: NormalizedLandmark?, shape: ImageShape) {
         if (landmark == null) return
-        firstFramePos = landmark.toScaledPoint(
-            (frameWidth * scaleFactor).toInt(),
-            (frameHeight * scaleFactor).toInt(),
-        )
+        frameShape = shape
+        firstFramePos = landmark.toScaledPoint(widthSF, heightSF)
     }
 
-    fun update(landmark: NormalizedLandmark?, frameWidth: Int, frameHeight: Int): Boolean {
-        if (landmark == null) return false
-        this.frameWidth = frameWidth
-        this.frameHeight = frameHeight
-        this.lastFramePos = landmark.toScaledPoint(
-            (frameWidth * scaleFactor).toInt(),
-            (frameHeight * scaleFactor).toInt(),
-        )
+    fun update(landmark: NormalizedLandmark?, shape: ImageShape): HandMotionInfo? {
+        if (landmark == null) return null
+        this.frameShape = shape
+        this.lastFramePos = landmark.toScaledPoint(widthSF, heightSF)
 
-        val dir = direction
-        if (dir != lastKnownDirection) {
-            if (dir == MovingDirection.UNKNOWN) return false
-            lastKnownDirection = dir
-            Log.d("HandTracker", "direction: $dir, movedY: $startY -> $endY, distanceY: ${travelledDistance.y}")
-            return true
+        val distance = this.travelledDistance
+        val direction = this.direction
+        if (direction != lastKnownDirection) {
+            if (direction == MovingDirection.UNKNOWN) return null
+            lastKnownDirection = direction
+//            Log.d("HandTracker", "direction: $dir, movedY: $startY -> $endY, distanceY: ${travelledDistance.y}")
+            return motionInfo(distance, direction)
         }
-        return false
+        return null
     }
 
     fun reset() {
         firstFramePos = emptyPoint()
         lastFramePos = emptyPoint()
-        frameHeight = 0
-        frameWidth = 0
+        frameShape = emptyImageShape()
     }
 
     companion object {

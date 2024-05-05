@@ -4,10 +4,14 @@ import android.graphics.Point
 import com.google.mediapipe.tasks.components.containers.NormalizedLandmark
 import com.typ.handtalk.core.algorithms.AbstractAlgorithm
 import com.typ.handtalk.core.enums.MovingDirection
+import com.typ.handtalk.core.models.ImageShape
 import com.typ.handtalk.core.models.signs.MovingSign
 import com.typ.handtalk.core.resolvers.models.FrameResult
+import com.typ.handtalk.utils.motionInfo
 
-class HandMovementTracker : AbstractAlgorithm<FrameResult, MovingSign>() {
+class HandMovementTracker(
+    private val callback: HandMovementTrackerCallback
+) : AbstractAlgorithm<FrameResult, MovingSign>() {
 
     // * Flags
     val isMoving: Boolean
@@ -17,9 +21,12 @@ class HandMovementTracker : AbstractAlgorithm<FrameResult, MovingSign>() {
 
     // * Runtime
     private var state = HandState.IDLE
-    private var startingTimestamp: Long = 0L
-    private var endingTimestamp: Long = 0L
-    private var lastFrameTimestamp: Long = 0L
+    var startingTimestamp: Long = 0L
+        private set
+    var endingTimestamp: Long = 0L
+        private set
+    var lastFrameTimestamp: Long = 0L
+        private set
 
     // * Motion estimation
     private val estimator = MotionEstimator()
@@ -31,50 +38,80 @@ class HandMovementTracker : AbstractAlgorithm<FrameResult, MovingSign>() {
         get() = estimator.direction
 
     override fun createNewRun() {
-        TODO("Not yet implemented")
+        throw Exception("Use beginTracking instead")
     }
 
     override fun cancelCurrentRun() {
-        state = HandState.IDLE
-        estimator.reset()
+        throw Exception("Use stopTracking instead")
     }
 
     override fun obtainResult(): MovingSign {
-        TODO("Not yet implemented")
+        throw Exception("Use travelledDistance and movingDirection instead")
     }
 
     override fun feed(payload: FrameResult) {
         throw Exception("Use feedFrame instead")
     }
 
-    fun feedFrame(frame: FrameResult, fw: Int, fh: Int) {
+    fun beginTracking(frame: FrameResult, shape: ImageShape, notifyCallback: Boolean = true) {
         if (isIdle) {
-            estimator.begin(getTrackingLandmark(frame), fw, fh)
-            startingTimestamp = frame.timestamp
+            resetTracker()
             state = HandState.MOVING
+            estimator.begin(getTrackingLandmark(frame), shape)
+            startingTimestamp = frame.timestamp
+            if (notifyCallback) {
+                callback.onBeginHandTracking()
+            }
+        }
+    }
+
+    fun stopTracking() {
+        state = HandState.IDLE
+        resetTracker()
+        callback.onStopHandTracking(null)
+    }
+
+    private fun resetTracker() {
+        estimator.reset()
+        startingTimestamp = 0L
+        endingTimestamp = 0L
+        lastFrameTimestamp = 0L
+    }
+
+    fun feedFrame(frame: FrameResult, shape: ImageShape) {
+        // * Check if the time difference btw current frame and starting frame is more than the allowed timeout
+        if (isStartingFrameInvalid(frame.timestamp)) {
+            estimator.begin(getTrackingLandmark(frame), shape)
         }
         // * Update the endingTimestamp
         this.lastFrameTimestamp = frame.timestamp
         // * Update the lastFramePos
-        val estimated = estimator.update(getTrackingLandmark(frame), fw, fh)
-        if (estimated) {
+        val info = estimator.update(getTrackingLandmark(frame), shape)
+        if (info != null) {
+            // Gesture has been recognized
+            // Notify
+            callback.onStopHandTracking(motionInfo(travelledDistance, movingDirection))
             // Reset tracker
-            estimator.reset()
-            endingTimestamp = frame.timestamp
-            state = HandState.IDLE
+            resetTracker()
+            return
         }
-        // * Calculate the direction of movement
-//        Log.d("HandTracker", "direction: $movingDirection, distance: $travelledDistance")
+        // * Notify movement
+        callback.onHandMoving(estimator.lastFramePos)
     }
 
     private fun getTrackingLandmark(frame: FrameResult): NormalizedLandmark? {
         return frame.rightHand?.landmarks?.get(TRACKING_LANDMARK_POINT_IDX)
     }
 
+    private fun isStartingFrameInvalid(currTimestamp: Long): Boolean {
+        return currTimestamp - startingTimestamp > STARTING_FRAME_VALID_TIME
+    }
+
     companion object {
-        const val TRACKING_LANDMARK_POINT_IDX = 0 // MIDDLE_FINGER_MCP
+        const val TRACKING_LANDMARK_POINT_IDX = 9 // MIDDLE_FINGER_MCP
         const val MOVEMENT_ACTION_THRESHOLD = 100 // in pixels
         const val MIN_MOVEMENT_DISTANCE = 250 // in pixels
+        const val STARTING_FRAME_VALID_TIME = 1000 // in ms
     }
 
 }

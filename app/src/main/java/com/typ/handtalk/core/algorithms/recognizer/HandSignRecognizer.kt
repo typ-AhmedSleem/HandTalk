@@ -30,10 +30,10 @@ import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizer
 import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizerResult
 import com.typ.handtalk.core.algorithms.recognizer.interfaces.HandRecognizerInternalCallback
 import com.typ.handtalk.core.algorithms.recognizer.interfaces.HandSignRecognizerCallback
+import com.typ.handtalk.core.models.ImageShape
 import com.typ.handtalk.core.resolvers.FrameResultResolver
 import com.typ.handtalk.core.resolvers.models.FrameResult
-import com.typ.handtalk.utils.Height
-import com.typ.handtalk.utils.Width
+import com.typ.handtalk.utils.shape
 
 class HandSignRecognizer(
     val context: Context,
@@ -155,7 +155,7 @@ class HandSignRecognizer(
             // No previous result
             prevResult = newResult
             // * Notify
-            this.onHandAppeared()
+            this.onHandAppeared(newResult, input.shape())
             return
         }
         // Found a previous result
@@ -164,7 +164,7 @@ class HandSignRecognizer(
             // Check if newResult is same as lastResult
             if (newResult == prev) {
                 // * Fire onSameSignRecognized
-                this.onSameSignRecognized(newResult, input.width to input.height)
+                this.onSameSignRecognized(newResult, input.shape())
                 return@prev
             }
             // Check if RHS has changed
@@ -199,11 +199,11 @@ class HandSignRecognizer(
         }
 
         // * Notify the global callback
-        callback.onRecognizeHands(newResult, input.width to input.height)
+        callback.onRecognizeHands(newResult, input.shape())
     }
 
-    override fun onHandAppeared() {
-        callback.onHandAppeared()
+    override fun onHandAppeared(frame: FrameResult, inputShape: ImageShape) {
+        callback.onHandAppeared(frame, inputShape)
     }
 
     override fun onHandDisappeared() {
@@ -218,7 +218,7 @@ class HandSignRecognizer(
         callback.onHandSignChanged(oldResult, newResult)
     }
 
-    override fun onSameSignRecognized(result: FrameResult, inputShape: Pair<Width, Height>) {
+    override fun onSameSignRecognized(result: FrameResult, inputShape: ImageShape) {
         callback.onSameSignRecognized(result, inputShape)
     }
 
