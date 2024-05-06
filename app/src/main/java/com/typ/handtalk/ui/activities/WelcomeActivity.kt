@@ -8,8 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
 import com.typ.handtalk.R
-import com.typ.handtalk.core.a2s.A2SPlayableRepository
-import com.typ.handtalk.core.a2s.playables.A2SignPlayableVideo
 import com.typ.handtalk.core.perms.PermissionHelper
 import com.typ.handtalk.core.perms.RequestRequiredPermissionsContract
 import com.typ.handtalk.databinding.ActivityWelcomeBinding
@@ -17,10 +15,6 @@ import com.typ.handtalk.ui.a2s.Arabic2SignTranslationHistoryActivity
 import com.typ.handtalk.ui.articles.ArticlesActivity
 import com.typ.handtalk.ui.s2a.LiveSignTranslatorActivity
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @OptIn(DelicateCoroutinesApi::class)
 class WelcomeActivity : AppCompatActivity() {
@@ -74,18 +68,6 @@ class WelcomeActivity : AppCompatActivity() {
             }
             btnArticles.setOnClickListener {
                 startActivity(Intent(this@WelcomeActivity, ArticlesActivity::class.java))
-            }
-
-            GlobalScope.launch(Dispatchers.IO) {
-                (A2SPlayableRepository.getPlayableForWord("احمد") as A2SignPlayableVideo).let {
-                    val copied = it.copyToCache(this@WelcomeActivity)
-                    if (copied) {
-                        withContext(Dispatchers.Main){
-                            videoTutorial.setVideoPath(it.getVideoPath(cacheDir))
-                            videoTutorial.start()
-                        }
-                    }
-                }
             }
 
         }
