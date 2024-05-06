@@ -17,35 +17,35 @@
 <resources>
     <string name="app_name">Hand Talk</string>
 
-    <string name="media_pipe">MediaPipe</string>
+    <string name="media_pipe" translatable="false">MediaPipe</string>
 
-    <string name="alt_bottom_sheet_chevron">Bottom sheet expandable indicator</string>
+    <string name="alt_bottom_sheet_chevron" translatable="false">Bottom sheet expandable indicator</string>
 
-    <string name="alt_bottom_sheet_max_results_button_minus">Decreasing
+    <string name="alt_bottom_sheet_max_results_button_minus" translatable="false">Decreasing
         maximum recognized results button</string>
-    <string name="alt_bottom_sheet_max_results_button_plus">Increasing maximum recognized results
+    <string name="alt_bottom_sheet_max_results_button_plus" translatable="false">Increasing maximum recognized results
         button</string>
-    <string name="alt_bottom_sheet_threshold_button_minus">Decreasing
+    <string name="alt_bottom_sheet_threshold_button_minus" translatable="false">Decreasing
         threshold of recognized hand gesture results button</string>
-    <string name="alt_bottom_sheet_threshold_button_plus">Increasing
+    <string name="alt_bottom_sheet_threshold_button_plus" translatable="false">Increasing
         threshold of recognized hand gesture results button</string>
-    <string name="alt_bottom_sheet_thread_button_minus">Decrease the number of threads used</string>
-    <string name="alt_bottom_sheet_thread_button_plus">Increase the number of threads used</string>
-    <string name="menu_camera">Camera</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="tv_gallery_placeholder">Click + to add an image or a video
+    <string name="alt_bottom_sheet_thread_button_minus" translatable="false">Decrease the number of threads used</string>
+    <string name="alt_bottom_sheet_thread_button_plus" translatable="false">Increase the number of threads used</string>
+    <string name="menu_camera" translatable="false">Camera</string>
+    <string name="menu_gallery" translatable="false">Gallery</string>
+    <string name="tv_gallery_placeholder" translatable="false">Click + to add an image or a video
         to begin running the gesture recognizer.</string>
 
-    <string name="label_inference_time">Inference Time</string>
-    <string name="label_fps">Frames per Second</string>
-    <string name="label_hand_detection_confidence_threshold">Detection
+    <string name="label_inference_time" translatable="false">Inference Time</string>
+    <string name="label_fps" translatable="false">Frames per Second</string>
+    <string name="label_hand_detection_confidence_threshold" translatable="false">Detection
         Threshold</string>
-    <string name="label_hand_tracking_confidence_threshold">Tracking
+    <string name="label_hand_tracking_confidence_threshold" translatable="false">Tracking
         Threshold</string>
-    <string name="label_hand_presence_confidence_threshold">Presence
+    <string name="label_hand_presence_confidence_threshold" translatable="false">Presence
         Threshold</string>
-    <string name="label_delegate">Delegate</string>
-    <string name="i_m_not_deaf">I\'m not deaf</string>
+    <string name="label_delegate" translatable="false">Delegate</string>
+    <string name="i_m_not_deaf" translatable="false">I\'m not deaf</string>
     <string name="welcome_to_handtalk">Welcome to HandTalk!</string>
     <string name="handtalk_goal_desc">Now deaf can communicate in their native language</string>
     <string name="start_using_handtalk">Start using HandTalk</string>
@@ -68,8 +68,8 @@
     <string name="cat5">عملية زراعة القوقعة</string>
     <string name="cat6">مؤسسات تأهيل الصم</string>
     <string name="cat7">مترجمين لغة الإشارة</string>
-    <string name="transition_title_to_title">TransitionTitleToTitle</string>
-    <string name="transition_cat_to_topic">TransitionCatToTopic</string>
+    <string name="transition_title_to_title" translatable="false">TransitionTitleToTitle</string>
+    <string name="transition_cat_to_topic" translatable="false">TransitionCatToTopic</string>
     <string name="video">فيديو</string>
     <string name="show_fnd_on_map">عرض الموقع علي الخرائط</string>
     <string name="copy_fnd_number">نسخ رقم الهاتف</string>
