@@ -22,14 +22,18 @@ fun rhResult(rhs: HandSign?): FrameResult {
     return frameResult(rhs)
 }
 
+fun rhResult(rhsLabel: String?): FrameResult {
+    return rhsLabel?.let { frameResult(handSign(it)) } ?: frameResult(null)
+}
+
 fun handSign(label: String): HandSign {
     return HandSign(label)
 }
 
-fun emptyPoint() = Point(0,0)
+fun emptyPoint() = Point(0, 0)
 
 fun point(x: Int, y: Int) = Point(x, y)
 
-fun emptyImageShape() = ImageShape(0,0)
+fun emptyImageShape() = ImageShape(0, 0)
 
 fun motionInfo(distance: Point, direction: MovingDirection) = HandMotionInfo(distance, direction)
