@@ -204,7 +204,6 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
     }
 
     override fun onReadyToDrawLandmarks(frameResult: FrameResult, inputShape: ImageShape) {
-        Log.d(TAG, "onReadyToDrawLandmarks")
         runOnUiThread {
             binding.overlay.drawLandmarks(
                 frameResult,

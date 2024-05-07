@@ -162,37 +162,32 @@ class HandSignRecognizer(
 //        val inferenceTime = finishTimeMs - rawResult.timestampMs()
 
         val newFrame = FrameResultResolver.resolve(rawResult)
-        if (newFrame == null) {
-            onHandDisappeared()
-            return
-        }
 
         if (currentFrame == null) {
-            // No current frame
+            // No previous result
             currentFrame = newFrame
             // * Notify
-            if (!newFrame.isRightNullOrNone()) {
-                this.onHandAppeared(newFrame, input.shape())
-            }
+            this.onHandAppeared(newFrame, input.shape())
             return
         }
-        // Found a current frame
+        // Found a previous result
         currentFrame?.let prev@{ prev ->
             if (newFrame.isRhsNone) return@prev
-            // Check if new frame is same as current
+            // Check if newFrame is same as lastResult
             if (newFrame == prev) {
                 // * Fire onSameSignRecognized
                 this.onSameSignRecognized(newFrame, input.shape())
                 return@prev
             }
             // Check if RHS has changed
-            if (newFrame.isRhsNull) {
+            if (newFrame.isRightNullOrNone()) {
                 // * Fire onReachNoResultTimeout
                 val timeout = newFrame.timestamp - prev.timestamp
                 val timeoutReached = timeout >= HAND_DISAPPEAR_TIMEOUT
                 val disappeared = !prev.isRhsNull
                 if (timeoutReached && disappeared) {
                     // Timeout has been exceeded
+                    logi("onHandDisappeared: Right hand has disappeared.")
                     this.onHandDisappeared()
                     return@prev
                 }
@@ -204,6 +199,7 @@ class HandSignRecognizer(
                     // Sign has actually changed. Check the timeout...
                     if (newFrame.timestamp - prev.timestamp < HAND_SIGN_CHANGE_TIMEOUT) {
                         // Timeout hasn't yet been exceeded
+                        logi("onHandSignChanged: Timeout hasn't yet been exceeded. Timeout is ${newFrame.timestamp - prev.timestamp}")
                         return@prev
                     }
                 }
@@ -260,6 +256,7 @@ class HandSignRecognizer(
         const val HAND_SIGN_CHANGE_TIMEOUT = 250 // in millis
         const val HAND_DISAPPEAR_TIMEOUT = 100 // in millis
         const val SAME_SIGN_RECOGNIZE_TIMEOUT = 2500 // in millis
+        const val WORD_RECOGNITION_TIMEOUT = 3000 // in millis
 
         @JvmStatic
         fun logi(msg: Any) {

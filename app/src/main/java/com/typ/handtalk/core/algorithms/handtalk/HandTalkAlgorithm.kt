@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.camera.core.ImageProxy
 import com.typ.handtalk.core.algorithms.identifier.WordIdentifier
 import com.typ.handtalk.core.algorithms.motion.HandMotionInfo
-import com.typ.handtalk.core.algorithms.motion.HandMovementTracker
 import com.typ.handtalk.core.algorithms.motion.HandMovementTrackerCallback
 import com.typ.handtalk.core.algorithms.recognizer.GestureRecognizerConfig
 import com.typ.handtalk.core.algorithms.recognizer.HandSignRecognizer
@@ -27,7 +26,7 @@ class HandTalkAlgorithm(
     lateinit var recognizer: HandSignRecognizer
         private set
     private lateinit var sequencer: GestureSequencer
-    private lateinit var handTracker: HandMovementTracker
+//    private lateinit var handTracker: HandMovementTracker
 
     // * Flags
     val recognizerInitialized: Boolean
@@ -35,13 +34,13 @@ class HandTalkAlgorithm(
 
     private val sequencerInitialized: Boolean
         get() = ::sequencer.isInitialized
-    private val trackerInitialized: Boolean
-        get() = ::handTracker.isInitialized
+//    private val trackerInitialized: Boolean
+//        get() = ::handTracker.isInitialized
 
     init {
         setupGestureRecognizer()
         setupSequencer()
-        setupHandTracker()
+//        setupHandTracker()
     }
 
     fun setupGestureRecognizer(recognizerConfig: GestureRecognizerConfig = GestureRecognizerConfig()) {
@@ -63,7 +62,7 @@ class HandTalkAlgorithm(
     }
 
     private fun setupHandTracker() {
-        if (!trackerInitialized) handTracker = HandMovementTracker(this)
+//        if (!trackerInitialized) handTracker = HandMovementTracker(this)
     }
 
     fun recognizeHandGestures(imageProxy: ImageProxy) {
@@ -77,7 +76,7 @@ class HandTalkAlgorithm(
                 onSequenceStarted()
             }
         }
-        if (handTracker.isMoving) handTracker.stopTracking()
+//        if (handTracker.isMoving) handTracker.stopTracking()
     }
 
     // REGION: HandSignRecognizerCallback
@@ -86,32 +85,33 @@ class HandTalkAlgorithm(
     }
 
     override fun onHandAppeared(frame: FrameResult, inputShape: ImageShape) {
-        handTracker.beginTracking(frame, inputShape)
+
+//        handTracker.beginTracking(frame, inputShape)
     }
 
     override fun onRecognizeHands(frameResult: FrameResult, inputShape: ImageShape) {
         // * Feed frame to the tracker
-        handTracker.feedFrame(frameResult, inputShape)
+//        handTracker.feedFrame(frameResult, inputShape)
         // * Notify callback
-        callback.onIdentifyGesture(frameResult)
         callback.onReadyToDrawLandmarks(frameResult, inputShape)
     }
 
     override fun onHandSignChanged(oldResult: FrameResult, newResult: FrameResult) {
         // Feed frame to the sequencer
         onSequenceFed(newResult)
+        callback.onIdentifyGesture(newResult)
     }
 
     override fun onSameSignRecognized(result: FrameResult, inputShape: ImageShape) {
         // * Check if the same sign is recognized for a while
-        if (recognizer.recognizingSameSignForAWhile) {
-            // Check if hand has travelled distance than the threshold
-            if (handTracker.currentResult != null) {
-                // * Finish the current sequence
-                finishCurrentSequence()
-            }
-            return
-        }
+//        if (recognizer.recognizingSameSignForAWhile) {
+//            // Check if hand has travelled distance than the threshold
+//            if (handTracker.currentResult != null) {
+//                // * Finish the current sequence
+//                finishCurrentSequence()
+//            }
+//            return
+//        }
         // * Feed frame to the tracker
 //        handTracker.feedFrame(result, inputShape)
     }
