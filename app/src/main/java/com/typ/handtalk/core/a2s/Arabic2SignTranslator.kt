@@ -16,6 +16,12 @@ class Arabic2SignTranslator {
         Log.i(TAG, "translate: Translating sentence => '$sentence'")
         // * Create an empty map
         val playableSentence = mutableMapOf<String, A2SignPlayable?>()
+        // Check first if the sentence matches a sentence in repo
+        val sentencePlayable = A2SPlayableRepository.getPlayableForSentence(sentence)
+        if (sentencePlayable != null) {
+            playableSentence[sentence] = sentencePlayable
+            return playableSentence
+        }
         // * Split the sentence into words separated by space
         val words = sentence.split(SPACE)
         // * Get the playable object for each word from the A2SPlayableRepository

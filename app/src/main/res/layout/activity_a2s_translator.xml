@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorParent">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -19,22 +19,43 @@
         app:titleCentered="true"
         app:titleTextColor="@color/colorPrimary" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_a2s_translation_error"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:textColor="@color/colorTextTitle"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/a2s_translation_player_view"
+        app:layout_constraintEnd_toEndOf="@id/a2s_translation_player_view"
+        app:layout_constraintStart_toStartOf="@id/a2s_translation_player_view"
+        app:layout_constraintTop_toTopOf="@id/a2s_translation_player_view"
+        tools:text="@string/sign_language_will_be_displayed_here" />
+
     <com.typ.handtalk.ui.a2s.views.A2SPlayablePlayerView
         android:id="@+id/a2s_translation_player_view"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_margin="25dp"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:visibility="invisible" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_a2s_translation_sentence"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
+        android:background="@drawable/bg_interpreted_text"
+        android:backgroundTint="#80000000"
         android:gravity="center"
+        android:padding="10dp"
         android:textAlignment="center"
         android:textColor="@color/colorTextTitle"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/a2s_translation_player_view"
         app:layout_constraintStart_toStartOf="@id/a2s_translation_player_view"
         app:layout_constraintTop_toBottomOf="@id/a2s_translation_player_view"
@@ -54,9 +75,9 @@
         app:boxCornerRadiusBottomEnd="@dimen/defaultButtonCornerRadius"
         app:boxCornerRadiusBottomStart="@dimen/defaultButtonCornerRadius"
         app:boxCornerRadiusTopEnd="@dimen/defaultButtonCornerRadius"
+        app:boxCornerRadiusTopStart="@dimen/defaultButtonCornerRadius"
         app:endIconDrawable="@android:drawable/ic_btn_speak_now"
         app:endIconMode="custom"
-        app:boxCornerRadiusTopStart="@dimen/defaultButtonCornerRadius"
         app:expandedHintEnabled="true"
         app:layout_constraintBottom_toTopOf="@id/btn_translate_a2s"
         app:layout_constraintStart_toStartOf="parent">
@@ -80,9 +101,9 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="25dp"
-        android:textColor="@color/colorOnPrimary"
         android:importantForAccessibility="no"
         android:text="@string/translate"
+        android:textColor="@color/colorOnPrimary"
         app:backgroundTint="@color/colorPrimary"
         app:cornerRadius="@dimen/defaultButtonCornerRadius"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
 import android.widget.FrameLayout
+import android.widget.VideoView
 import com.typ.handtalk.R
 import com.typ.handtalk.core.a2s.playables.A2SignPlayable
 import com.typ.handtalk.core.a2s.playables.A2SignPlayableImage
@@ -11,8 +12,6 @@ import com.typ.handtalk.core.a2s.playables.A2SignPlayableVideo
 import com.typ.handtalk.databinding.LayoutA2sPlayablePlayerViewBinding
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
@@ -59,7 +58,8 @@ class A2SPlayablePlayerView @JvmOverloads constructor(
         playing = false
     }
 
-    fun display(playable: A2SignPlayable) {
+    suspend fun display(playable: A2SignPlayable?, callback: () -> A2SignPlayable?) {
+        if (playable == null) return
         playing = true
         when (playable) {
             is A2SignPlayableImage -> {
@@ -67,40 +67,55 @@ class A2SPlayablePlayerView @JvmOverloads constructor(
             }
 
             is A2SignPlayableVideo -> {
-                displayVideo(playable)
+                displayVideo(playable, callback)
             }
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
-    private fun displayVideo(video: A2SignPlayableVideo) {
-        GlobalScope.launch {
-            // Return the function if the video doesn't exist in Assets
-            if (!video.existsInAssets(context.assets)) {
-                return@launch
-            }
-            Log.i(TAG, "displayVideo: Video at path '${video.getVideoPath(context.cacheDir)}' exists in assets folder.")
-            // Save video file from Assets to cache if not exist in cache
-            if (!video.existsInCache(context.cacheDir)) {
-                Log.i(TAG, "displayVideo: Video doesn't exist in cache folder. Caching it...")
-                val cached = video.copyToCache(context)
-                if (!cached) {
-                    Log.i(TAG, "displayVideo: Video can't be cached.")
-                    return@launch
+    private suspend fun displayVideo(video: A2SignPlayableVideo, callback: () -> A2SignPlayable?) {
+        if (!ensureVideoInCache(video)) return
+        // Display the video from its file path and hide the ImageView
+        withContext(Dispatchers.Main) {
+            binding.ivPlayable.visibility = INVISIBLE
+            binding.videoPlayable.apply {
+                visibility = VISIBLE
+                setOnCompletionListener {
+                    val next = callback()
+                    if (next != null && next is A2SignPlayableVideo) {
+//                        startPlayback(this, next)
+                        if (next.cacheVideo(context)) {
+                            startPlayback(this, next)
+                        }
+                    }
                 }
-                Log.i(TAG, "displayVideo: Video has been cached.")
-            }
-            Log.i(TAG, "displayVideo: Video at path '${video.filePath}' exists in cache folder.")
-            // Display the video from its file path and hide the ImageView
-            withContext(Dispatchers.Main) {
-                binding.ivPlayable.visibility = INVISIBLE
-                binding.videoPlayable.apply {
-                    visibility = VISIBLE
-                    setVideoPath(video.getVideoPath(context.cacheDir))
-                    start()
-                }
+                startPlayback(this, video)
             }
         }
+    }
+
+    private suspend fun ensureVideoInCache(video: A2SignPlayableVideo): Boolean {
+        // Return the function if the video doesn't exist in Assets
+        if (!video.existsInAssets(context.assets)) return false
+        Log.i(TAG, "displayVideo: Video at path '${video.getVideoPath(context.cacheDir)}' exists in assets folder.")
+        // Save video file from Assets to cache if not exist in cache
+        if (!video.existsInCache(context.cacheDir)) {
+            Log.i(TAG, "displayVideo: Video doesn't exist in cache folder. Caching it...")
+            val cached = video.cacheVideoOnIO(context)
+            if (!cached) {
+                Log.i(TAG, "displayVideo: Video can't be cached.")
+                return false
+            }
+            Log.i(TAG, "displayVideo: Video has been cached.")
+        }
+        Log.i(TAG, "displayVideo: Video at path '${video.filePath}' exists in cache folder.")
+        return true
+    }
+
+    private fun startPlayback(player: VideoView, video: A2SignPlayableVideo) {
+        Log.i(TAG, "startPlayback: Starting video playback for: '${video.filename}'")
+        player.setVideoPath(video.getVideoPath(context.cacheDir))
+        player.start()
     }
 
     companion object {

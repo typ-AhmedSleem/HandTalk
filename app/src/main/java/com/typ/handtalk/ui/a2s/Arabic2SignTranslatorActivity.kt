@@ -4,6 +4,7 @@ import android.Manifest
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
@@ -19,9 +20,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class Arabic2SignTranslatorActivity : AppCompatActivity() {
 
@@ -57,6 +56,7 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
                     currentlyActiveJob?.cancel()
                     binding.a2sTranslationPlayerView.reset()
                     binding.tilA2sPrompt.isEnabled = true
+                    binding.tvA2sTranslationError.setText(R.string.sign_language_will_be_displayed_here)
                     changeButtonState(R.string.translate, R.color.colorPrimary)
                     return@setOnClickListener
                 }
@@ -66,13 +66,18 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
                     return@setOnClickListener
                 }
                 binding.tilA2sPrompt.isEnabled = false
+                binding.tvA2sTranslationError.text = null
                 changeButtonState(R.string.stop_translating, R.color.colorErrorContainer)
                 // * Translate the prompt
                 val translation = translator.translate(prompt)
                 // * Display the stylized prompt on its own Textview
+                binding.tvA2sTranslationSentence.visibility = VISIBLE
                 binding.tvA2sTranslationSentence.text = stylizePrompt(prompt, translation)
                 if (translation.values.any { it == null }) {
-                    toast(R.string.translation_has_missing_words)
+//                    toast(R.string.translation_has_missing_words)
+                    binding.tvA2sTranslationError.setText(R.string.translation_has_missing_words)
+                    binding.tilA2sPrompt.isEnabled = true
+                    changeButtonState(R.string.translate, R.color.colorPrimary)
                 }
                 // Quit if the translation contains only nulls
 //                if (translation.values.all { it == null }) {
@@ -88,20 +93,20 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
                     )
                 }
                 // * Display the translation
-                currentlyActiveJob = GlobalScope.launch(Dispatchers.IO) {
-                    translation.values.forEach { playable ->
-                        if (playable != null) {
-                            withContext(Dispatchers.Main) {
-                                binding.a2sTranslationPlayerView.display(playable)
-                            }
-                            delay(playable.delay)
+                currentlyActiveJob = GlobalScope.launch(Dispatchers.Main) {
+                    // Create counter for each playable
+                    val iterator = translation.values.iterator()
+                    if (!iterator.hasNext()) return@launch
+                    binding.a2sTranslationPlayerView.display(iterator.next() ?: return@launch) {
+                        if (iterator.hasNext()) {
+                            return@display iterator.next()
+                        } else {
+                            binding.a2sTranslationPlayerView.reset()
+                            binding.tilA2sPrompt.isEnabled = true
+                            binding.tvA2sTranslationError.setText(R.string.sign_language_will_be_displayed_here)
+                            changeButtonState(R.string.translate, R.color.colorPrimary)
                         }
-                    }
-                    delay(2500L)
-                    withContext(Dispatchers.Main) {
-                        binding.a2sTranslationPlayerView.reset()
-                        binding.tilA2sPrompt.isEnabled = true
-                        changeButtonState(R.string.translate, R.color.colorPrimary)
+                        return@display null
                     }
                 }
             }
@@ -150,6 +155,17 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
 
     private fun stylizePrompt(prompt: String, values: Map<String, Any?>): SpannableString {
         val styledPrompt = SpannableString(prompt)
+        // Full sentence at once
+        if (prompt in values) {
+            styledPrompt.setSpan(
+                ForegroundColorSpan(colorGreen),
+                prompt.indexOf(prompt),
+                prompt.indexOf(prompt) + prompt.length,
+                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            return styledPrompt
+        }
+        // Words-split sentence
         val words = prompt.split(SPACE)
         for (word in words) {
             if (values.containsKey(word)) {

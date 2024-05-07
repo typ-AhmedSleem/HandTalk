@@ -57,5 +57,6 @@
     <string name="mic_permission_denied_or_cancelled">تعذر استخدام الميكروفون</string>
     <string name="mic_permission_granted">تم السماح باستخدام الميكروفون</string>
     <string name="listening">يمكنك التحدث انا اسمعك…</string>
+    <string name="sign_language_will_be_displayed_here">سيتم عرض الترجمة الي لغة الاشاره هنا بمجرد القيام بها</string>
 
 </resources>

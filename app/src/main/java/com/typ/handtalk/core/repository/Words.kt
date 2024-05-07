@@ -11,20 +11,20 @@ object Words {
     internal val WORDS = arrayOf(
         Word(
             1,
-            "hello", sequenceOfGestures(
+            "اهلا انا اسمي احمد", sequenceOfGestures(
                 rhResult(handSign("Open_Palm"))
             )
         ),
         Word(
             2,
-            "my",
+            "انا",
             sequenceOfGestures(
                 rhResult(handSign(label = "Closed_Fist")),
             )
         ),
         Word(
             3,
-            "name",
+            "اسمي",
             sequenceOfGestures(
                 rhResult(handSign("Thumb_Up"))
             )
@@ -38,7 +38,7 @@ object Words {
         ),
         Word(
             4,
-            "ahmed",
+            "احمد",
             sequenceOfGestures(
                 frameResult(handSign("Pointing_Up")),
                 frameResult(handSign("Victory")),
