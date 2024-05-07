@@ -250,14 +250,14 @@ class HandSignRecognizer(
 
     companion object {
         val TAG = "HandSignRecognizer-${this.hashCode()}"
-        private const val MP_RECOGNIZER_TASK = "model/gesture_recognizer.task"
+        private const val MP_RECOGNIZER_TASK = "model/handtalk-model-v1.task"
 
         const val NUM_HANDS = 2
         const val DEFAULT_HAND_DETECTION_CONFIDENCE = 0.5F
         const val DEFAULT_HAND_TRACKING_CONFIDENCE = 0.5F
         const val DEFAULT_HAND_PRESENCE_CONFIDENCE = 0.5F
 
-        const val HAND_SIGN_CHANGE_TIMEOUT = 100 // in millis
+        const val HAND_SIGN_CHANGE_TIMEOUT = 250 // in millis
         const val HAND_DISAPPEAR_TIMEOUT = 100 // in millis
         const val SAME_SIGN_RECOGNIZE_TIMEOUT = 2500 // in millis
 
