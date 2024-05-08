@@ -11,7 +11,7 @@ import com.typ.handtalk.core.models.signs.HandSign
 import com.typ.handtalk.core.resolvers.models.FrameResult
 
 fun sequenceOfGestures(vararg results: FrameResult): GestureSequence {
-    return GestureSequence(false, results.toMutableList())
+    return GestureSequence(results.toMutableList())
 }
 
 fun frameResult(rhs: HandSign?, lhs: HandSign? = null): FrameResult {

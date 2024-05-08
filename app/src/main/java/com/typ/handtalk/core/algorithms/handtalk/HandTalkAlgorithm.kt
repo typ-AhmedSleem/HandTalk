@@ -13,7 +13,6 @@ import com.typ.handtalk.core.algorithms.recognizer.interfaces.HandSignRecognizer
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequence
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequencer
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerCallback
-import com.typ.handtalk.core.algorithms.words.WordIdentifier
 import com.typ.handtalk.core.models.ImageShape
 import com.typ.handtalk.core.resolvers.models.FrameResult
 
@@ -132,16 +131,14 @@ class HandTalkAlgorithm(
     // REGION: GestureSequencerCallback
 
     override fun onSequenceFed(frame: FrameResult) {
-        // todo: We have much work here to do
         sequencer.feed(frame)
     }
 
     override fun onSequenceCompleted(sequence: GestureSequence): Boolean {
-        // * Identify the word through WordIdentifier algorithm
-        WordIdentifier.identifyWord(sequence)?.let {
-            callback.onIdentifyNewWord(it)
-            Log.d(TAG, "onSequenceCompleted: $sequence")
-        }
+        // * Validate the sequence
+        if (!sequence.isValid) return true
+        // todo * Build the current sentence
+        // todo * Notify callback with the built sentence
         return true
     }
 

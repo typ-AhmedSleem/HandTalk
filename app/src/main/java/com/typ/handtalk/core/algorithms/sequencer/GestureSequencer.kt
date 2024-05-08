@@ -3,13 +3,14 @@ package com.typ.handtalk.core.algorithms.sequencer
 import android.util.Log
 import com.typ.handtalk.core.algorithms.AbstractAlgorithm
 import com.typ.handtalk.core.algorithms.words.WordSuggester
+import com.typ.handtalk.core.models.Word
 import com.typ.handtalk.core.resolvers.models.FrameResult
 
 class GestureSequencer : AbstractAlgorithm<FrameResult, GestureSequence>() {
 
     // * Runtime
     private var currentSequence = GestureSequence()
-    private val suggestedWords = mutableListOf<String>()
+    private var lastSuggestedWords = mutableListOf<Word>()
 
     val state: AlgorithmState
         get() {
@@ -25,6 +26,7 @@ class GestureSequencer : AbstractAlgorithm<FrameResult, GestureSequence>() {
     override fun createNewRun() {
         if (state == AlgorithmState.NEW_RUN) return
         currentSequence = createNewSequence()
+        lastSuggestedWords = mutableListOf()
     }
 
     override fun feed(payload: FrameResult) {
@@ -45,6 +47,10 @@ class GestureSequencer : AbstractAlgorithm<FrameResult, GestureSequence>() {
                     }
                 }"
             )
+
+            // Save the last suggested words
+            lastSuggestedWords = mutableListOf()
+            lastSuggestedWords.addAll(possibleWords)
         } else {
             createNewRun()
             Log.i(TAG, "No possible words for seq: $currentSequence")
@@ -56,7 +62,7 @@ class GestureSequencer : AbstractAlgorithm<FrameResult, GestureSequence>() {
     }
 
     override fun obtainResult(): GestureSequence {
-        return GestureSequence(sequenceLength > 0, currentSequence.signs)
+        return GestureSequence(currentSequence.signs)
     }
 
     companion object {

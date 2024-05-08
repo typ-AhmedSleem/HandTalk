@@ -198,7 +198,7 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
             val sentence = binding.tvInterpretedText.text.toString() + " " + word
             binding.tvInterpretedText.text = sentence
             // * Try to speak the word
-//            speaker.speak(word)
+            speaker.speak(word)
         }
     }
 

@@ -1,6 +1,7 @@
 package com.typ.handtalk.core.algorithms.sequencer
 
 import android.util.Log
+import com.typ.handtalk.core.models.Word
 import com.typ.handtalk.core.resolvers.models.FrameResult
 
 /**
@@ -10,25 +11,31 @@ import com.typ.handtalk.core.resolvers.models.FrameResult
  * signs
  */
 class GestureSequence(
-    val isValid: Boolean = true,
-    val signs: MutableList<FrameResult> = mutableListOf()
+    val signs: MutableList<FrameResult> = mutableListOf(),
+    val suggestedWords: Array<Word> = emptyArray(),
 ) {
     val length: Int
         get() = signs.size
+
+    val isValid: Boolean
+        get() = suggestedWords.isNotEmpty()
 
     fun appendFrameResult(frameResult: FrameResult) {
         signs.add(frameResult)
     }
 
-    fun clear() {
-        signs.clear()
-    }
-
     override fun toString(): String {
-        return signs.joinToString(
-            prefix = "GestureSequence(isValid=$isValid, length=$length, signs: '",
-            postfix = "')",
-        ) { it.rhsLabel.toString() }
+        return "GestureSequence(isValid=$isValid, length=$length, signs: '${
+            signs.joinToString(
+                prefix = "signs: '",
+                postfix = "')",
+            ) { it.rhsLabel.toString() }
+        }, ${
+            suggestedWords.joinToString(
+                prefix = "suggestedWords: '",
+                postfix = "')",
+            ) { it.toString() }
+        }"
     }
 
     fun containsWithSameLength(sequence: GestureSequence): Boolean {
