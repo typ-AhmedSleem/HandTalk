@@ -167,7 +167,9 @@ class HandSignRecognizer(
             // No previous result
             currentFrame = newFrame
             // * Notify
-            this.onHandAppeared(newFrame, input.shape())
+            if (!newFrame.isRightNullOrNone()) {
+                this.onHandAppeared(newFrame, input.shape())
+            }
             return
         }
         // Found a previous result
@@ -180,7 +182,7 @@ class HandSignRecognizer(
                 return@prev
             }
             // Check if RHS has changed
-            if (newFrame.isRightNullOrNone()) {
+            if (newFrame.isRhsNull) {
                 // * Fire onReachNoResultTimeout
                 val timeout = newFrame.timestamp - prev.timestamp
                 val timeoutReached = timeout >= HAND_DISAPPEAR_TIMEOUT
@@ -253,8 +255,8 @@ class HandSignRecognizer(
         const val DEFAULT_HAND_TRACKING_CONFIDENCE = 0.5F
         const val DEFAULT_HAND_PRESENCE_CONFIDENCE = 0.5F
 
-        const val HAND_SIGN_CHANGE_TIMEOUT = 250 // in millis
-        const val HAND_DISAPPEAR_TIMEOUT = 100 // in millis
+        const val HAND_SIGN_CHANGE_TIMEOUT = 500 // in millis
+        const val HAND_DISAPPEAR_TIMEOUT = 250 // in millis
         const val SAME_SIGN_RECOGNIZE_TIMEOUT = 2500 // in millis
         const val WORD_RECOGNITION_TIMEOUT = 3000 // in millis
 

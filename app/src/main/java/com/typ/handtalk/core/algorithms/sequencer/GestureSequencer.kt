@@ -2,6 +2,7 @@ package com.typ.handtalk.core.algorithms.sequencer
 
 import android.util.Log
 import com.typ.handtalk.core.algorithms.AbstractAlgorithm
+import com.typ.handtalk.core.algorithms.words.WordSuggester
 import com.typ.handtalk.core.resolvers.models.FrameResult
 
 class GestureSequencer : AbstractAlgorithm<FrameResult, GestureSequence>() {
@@ -30,6 +31,24 @@ class GestureSequencer : AbstractAlgorithm<FrameResult, GestureSequence>() {
         // Append the result to the current sequence
         currentSequence.appendFrameResult(payload)
         Log.i(TAG, "feed: Fed result ${payload.rhsLabel} to algorithm.")
+        val possibleWords = WordSuggester.suggestWords(currentSequence)
+        // Log possible words
+        if (possibleWords.isNotEmpty()) {
+            Log.i(
+                TAG, "Possible words: ${
+                    possibleWords.joinToString(
+                        prefix = "Possible words(\n",
+                        separator = "\n",
+                        postfix = "\n)"
+                    ) {
+                        "\t" + it.arabicText
+                    }
+                }"
+            )
+        } else {
+            createNewRun()
+            Log.i(TAG, "No possible words for seq: $currentSequence")
+        }
     }
 
     override fun cancelCurrentRun() {

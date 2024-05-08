@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Point
 import android.util.Log
 import androidx.camera.core.ImageProxy
-import com.typ.handtalk.core.algorithms.identifier.WordIdentifier
+import com.typ.handtalk.core.algorithms.words.WordIdentifier
 import com.typ.handtalk.core.algorithms.motion.HandMotionInfo
 import com.typ.handtalk.core.algorithms.motion.HandMovementTrackerCallback
 import com.typ.handtalk.core.algorithms.recognizer.GestureRecognizerConfig
