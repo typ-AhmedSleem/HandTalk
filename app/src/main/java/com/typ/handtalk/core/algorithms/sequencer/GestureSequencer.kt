@@ -39,7 +39,7 @@ class GestureSequencer : AbstractAlgorithm<FrameResult, GestureSequence>() {
             Log.i(
                 TAG, "Possible words: ${
                     possibleWords.joinToString(
-                        prefix = "Possible words(\n",
+                        prefix = "(\n",
                         separator = "\n",
                         postfix = "\n)"
                     ) {
@@ -51,6 +51,7 @@ class GestureSequencer : AbstractAlgorithm<FrameResult, GestureSequence>() {
             // Save the last suggested words
             lastSuggestedWords = mutableListOf()
             lastSuggestedWords.addAll(possibleWords)
+            Log.i(TAG, "lastSuggestedWords: $lastSuggestedWords")
         } else {
             createNewRun()
             Log.i(TAG, "No possible words for seq: $currentSequence")
@@ -59,10 +60,11 @@ class GestureSequencer : AbstractAlgorithm<FrameResult, GestureSequence>() {
 
     override fun cancelCurrentRun() {
         currentSequence = GestureSequence()
+        lastSuggestedWords = mutableListOf()
     }
 
     override fun obtainResult(): GestureSequence {
-        return GestureSequence(currentSequence.signs)
+        return GestureSequence(currentSequence.signs, lastSuggestedWords.toTypedArray())
     }
 
     companion object {

@@ -5,7 +5,27 @@ data class Sentence(
 ) {
 
     val arabic: String
-        get() = words.joinToString(" ", postfix = ".") { it.arabicText }
+        get() = words.joinToString(" ") { it.arabicText }
+
+    val firstWord: Word?
+        get() = words.firstOrNull()
+
+    val lastWord: Word?
+        get() = words.lastOrNull()
+
+    val length: Int = words.size
+
+    fun startsSameAs(other: Sentence): Boolean {
+        return firstWord == other.firstWord
+    }
+
+    fun sameOrMoreLengthThan(other: Sentence?): Boolean {
+        return length >= (other?.length ?: 5)
+    }
+
+    override fun toString(): String {
+        return "sen($arabic)"
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

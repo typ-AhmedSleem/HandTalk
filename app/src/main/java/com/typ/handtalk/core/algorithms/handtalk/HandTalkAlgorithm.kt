@@ -14,6 +14,7 @@ import com.typ.handtalk.core.algorithms.sequencer.GestureSequence
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequencer
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerCallback
 import com.typ.handtalk.core.algorithms.words.SentenceBuilder
+import com.typ.handtalk.core.algorithms.words.WordSelector
 import com.typ.handtalk.core.models.ImageShape
 import com.typ.handtalk.core.resolvers.models.FrameResult
 
@@ -71,16 +72,6 @@ class HandTalkAlgorithm(
         recognizer.recognizeSignsInFrame(imageProxy)
     }
 
-    private fun finishCurrentSequence() {
-        with(sequencer.obtainResult()) {
-            if (isValid && onSequenceCompleted(this)) {
-                sequencer.createNewRun()
-                onSequenceStarted()
-            }
-        }
-//        if (handTracker.isMoving) handTracker.stopTracking()
-    }
-
     // REGION: HandSignRecognizerCallback
 
     override fun onRecognizerReady() {
@@ -121,7 +112,14 @@ class HandTalkAlgorithm(
     override fun onHandsDisappear() {
         Log.d(TAG, "onHandsDisappear: Right hand disappeared.")
         // Obtain current sequence
-        finishCurrentSequence()
+        with(sequencer.obtainResult()) {
+            Log.d(TAG, "finishCurrentSequence: $this")
+            if (onSequenceCompleted(this)) {
+                sequencer.createNewRun()
+                onSequenceStarted()
+            }
+        }
+        // Notify callback
         callback.onHandsDisappear()
     }
 
@@ -139,13 +137,33 @@ class HandTalkAlgorithm(
 
     override fun onSequenceCompleted(sequence: GestureSequence): Boolean {
         // * Validate the sequence
-        if (!sequence.isValid) return true
-        // * Get the expected sentence
-        val expectedSentence = sentenceBuilder.expectedSentence
-        // todo * Select the most suitable word out of this sequence
-        // todo * Append the
-
-
+        if (!sequence.isValid) {
+            Log.d(TAG, "onSequenceCompleted: Invalid sequence (Empty suggested words).")
+            return true
+        }
+        val suggestedWords = sequence.suggestedWords
+        Log.d(TAG, "onSequenceCompleted: Suggested words= ${suggestedWords.contentToString()}")
+        // * Get the current sentence
+        var currentSentence = sentenceBuilder.currentSentence
+        Log.d(TAG, "onSequenceCompleted: CurrentSentence= $currentSentence")
+        var expectedSentence = sentenceBuilder.expectedSentence
+        Log.d(TAG, "onSequenceCompleted: ExpectedSentence= $expectedSentence")
+        // * Select the most suitable word out of this sequence then append it to builder
+        val suitableWord = WordSelector.selectMostSuitableWord(currentSentence, expectedSentence, suggestedWords)
+        val completed = sentenceBuilder.appendWord(suitableWord)
+        currentSentence = sentenceBuilder.currentSentence
+        Log.d(TAG, "onSequenceCompleted: CurrentSentence= $currentSentence")
+        expectedSentence = sentenceBuilder.expectedSentence
+        Log.d(TAG, "onSequenceCompleted: ExpectedSentence= $expectedSentence")
+        // * Check if the sentence is completed
+        if (completed) {
+            // Notify callback
+            Log.d(TAG, "onSequenceCompleted: Sentence completed. cur=$currentSentence | exp=$expectedSentence")
+            sentenceBuilder.expectedSentence?.let { callback.onTranslateFullSentence(it) }
+            sentenceBuilder.reset()
+        } else {
+            Log.d(TAG, "onSequenceCompleted: Sentence not completed. length= ${sentenceBuilder.currentSentence}")
+        }
         return true
     }
 

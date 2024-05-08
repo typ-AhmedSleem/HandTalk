@@ -12,7 +12,7 @@ object Words {
             "السلام عليكم ورحمة الله وبركاته",
             sequenceOfGestures(
                 rhResult("11"),
-                rhResult("1"),
+                rhResult("19"), // 19
                 rhResult("2"),
                 rhResult("5"),
                 rhResult("4"),
@@ -33,7 +33,7 @@ object Words {
             3,
             "ممكن",
             sequenceOfGestures(
-                rhResult("12"),
+                rhResult("19"), // 12
             )
         ),
         Word(
