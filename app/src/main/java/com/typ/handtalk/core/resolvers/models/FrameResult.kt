@@ -4,8 +4,6 @@ import com.typ.handtalk.core.models.hands.Hand
 import com.typ.handtalk.core.models.hands.LeftHand
 import com.typ.handtalk.core.models.hands.RightHand
 import com.typ.handtalk.core.models.signs.HandSign
-import com.typ.handtalk.core.models.signs.MovingSign
-import com.typ.handtalk.core.repository.Signs
 
 data class FrameResult(
     val leftHand: LeftHand? = null,
@@ -91,15 +89,4 @@ data class FrameResult(
         rightHand?.let(action)
     }
 
-}
-
-private fun MovingSign.isSeparator(): Boolean {
-    val separator = Signs.Separator()
-
-    if (this.label != separator.label) return false
-    if (this.score < separator.score) return false
-    if (this.direction != separator.direction) return false
-    if (this.distance < separator.distance) return false
-
-    return true // Considered a separator.
 }
