@@ -4,6 +4,7 @@ import android.content.Context
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import java.util.Locale
+import kotlin.random.Random
 
 /**
  * Class that utilizes TTS (TextToSpeech) apis
@@ -32,27 +33,31 @@ class TextSpeaker(context: Context) {
      */
     private fun initializeEngine() {
         // Set language
-        val english = Locale("eng_USA_default")
-        Log.i(TAG, "Language ${english.language} support is ${engine.isLanguageAvailable(english)}")
-        Log.i(TAG, "List of supported languages:\n${engine.availableLanguages}")
-        if (engine.isLanguageAvailable(english) == TextToSpeech.LANG_AVAILABLE) {
-            engine.setLanguage(english)
-            Log.d(TAG, "Language is set to: ${english.language}.")
-        } else {
-            Log.w(TAG, "Language isn't available.")
-        }
+        if (engine.isLanguageAvailable(ARABIC) == TextToSpeech.LANG_AVAILABLE) {
+            val result = engine.setLanguage(ARABIC)
+            when (result) {
+                TextToSpeech.LANG_MISSING_DATA -> {
+                    Log.w(TAG, "Arabic tts data or voice is missing.")
+                    return
+                }
+
+                TextToSpeech.LANG_NOT_SUPPORTED -> {
+                    Log.w(TAG, "Arabic tts is not supported.")
+                    return
+                }
+            }
+            engine.language = Locale("ar")
+            Log.d(TAG, "Language is set to: ${ARABIC.language}.")
+        } else Log.w(TAG, "Language isn't available.")
         // Set voice
         val voices = engine.voices
         if (voices.isEmpty()) {
             Log.w(TAG, "No voices available for this language.")
         } else {
-            val targetVoice = voices.find { it.name == "en-US-default" }
-            Log.d(TAG, "Discovering voices\n")
-            voices.forEach {
-                Log.d(TAG, "\t${it.name},${it.locale} ,${it.quality}")
+            voices.filter { it.locale == ARABIC }.randomOrNull(Random(System.currentTimeMillis()))?.let {
+                engine.voice = it
+                Log.d(TAG, "Voice is set to: $it.")
             }
-            Log.d(TAG, "Voice is set to: $targetVoice .")
-            engine.voice = targetVoice
         }
     }
 
@@ -74,6 +79,7 @@ class TextSpeaker(context: Context) {
 
     companion object {
         const val TAG = "TextSpeaker"
+        val ARABIC = Locale("ar")
     }
 
 }

@@ -24,6 +24,7 @@ import com.typ.handtalk.core.errors.HandTalkError
 import com.typ.handtalk.core.models.ImageShape
 import com.typ.handtalk.core.perms.PermissionHelper
 import com.typ.handtalk.core.resolvers.models.FrameResult
+import com.typ.handtalk.core.tts.TextSpeaker
 import com.typ.handtalk.databinding.ActivitySignToTextTranslatorBinding
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -35,8 +36,9 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
         private const val TAG = "SignLiveTranslator"
     }
 
-    private lateinit var algoHandTalk: HandTalkAlgorithm
+    private lateinit var speaker: TextSpeaker
     private val viewModel: MainViewModel by viewModels()
+    private lateinit var algoHandTalk: HandTalkAlgorithm
     private lateinit var binding: ActivitySignToTextTranslatorBinding
 
     // * Camera runtime
@@ -112,6 +114,8 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
         backgroundExecutor = Executors.newSingleThreadExecutor()
         // * Setup HandTalkAlgorithm instance
         algoHandTalk = HandTalkAlgorithm(this, this)
+        // * Setup TextSpeaker instance
+        speaker = TextSpeaker(this)
 
         if (!algoHandTalk.recognizerInitialized) {
             backgroundExecutor.execute(algoHandTalk::setupGestureRecognizer)
@@ -193,6 +197,8 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
         runOnUiThread {
             val sentence = binding.tvInterpretedText.text.toString() + " " + word
             binding.tvInterpretedText.text = sentence
+            // * Try to speak the word
+//            speaker.speak(word)
         }
     }
 
@@ -200,6 +206,8 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
         runOnUiThread {
             val fullSentence = sentence + "\n"
             binding.tvInterpretedText.text = fullSentence
+            // * Try to speak the sentence
+            speaker.speak(fullSentence)
         }
     }
 
