@@ -38,7 +38,7 @@
             android:justificationMode="none"
             android:padding="10dp"
             android:textAlignment="textStart"
-            android:textColor="#000"
+            android:textColor="@color/white"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="Hello, My name is Ahmed Sleem." />
@@ -55,14 +55,14 @@
         android:background="@drawable/bg_interpreted_text"
         android:backgroundTint="#4CAF50"
         android:gravity="center"
-        android:textColor="#4CAF50"
         android:padding="10dp"
-        android:textStyle="bold"
+        android:textColor="@color/white"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_left_gesture"
-        app:layout_constraintWidth_percent="0.45"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.45"
         tools:text="RHS" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -75,7 +75,7 @@
         android:backgroundTint="#F44336"
         android:gravity="center"
         android:padding="10dp"
-        android:textColor="#F44336"
+        android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"

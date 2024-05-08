@@ -11,19 +11,13 @@ import kotlin.random.Random
  * to speak out sentences we obtain from
  * Sign language to Text translation
  */
-class TextSpeaker(context: Context) {
+class TextSpeaker {
 
     private var status: Status = Status.NOT_READY
-    private val engine = TextToSpeech(context) { ttsStatus ->
-        status = when (ttsStatus) {
-            TextToSpeech.SUCCESS -> {
-                initializeEngine()
-                Status.READY
-            }
+    private lateinit var engine: TextToSpeech
 
-            else -> Status.FAILED
-        }
-    }
+    private val engineInitialized: Boolean
+        get() = ::engine.isInitialized
 
     /**
      * Setup tts instance with desired language and voice.
@@ -31,7 +25,23 @@ class TextSpeaker(context: Context) {
      * !NOTE: This engine only speaks US english now but it
      * !should speak Arabic as primary language.
      */
-    private fun initializeEngine() {
+    fun initializeEngine(context: Context, onInitializedCallback: (() -> Unit)?) {
+        // Create tts instance
+        if (!engineInitialized) {
+            engine = TextToSpeech(context) { ttsStatus ->
+                when (ttsStatus) {
+                    TextToSpeech.SUCCESS -> {
+                        setupEngine()
+                        onInitializedCallback?.invoke()
+                    }
+
+                    else -> Status.FAILED
+                }
+            }
+        }
+    }
+
+    private fun setupEngine() {
         // Set language
         if (engine.isLanguageAvailable(ARABIC) == TextToSpeech.LANG_AVAILABLE) {
             val result = engine.setLanguage(ARABIC)
@@ -46,7 +56,6 @@ class TextSpeaker(context: Context) {
                     return
                 }
             }
-            engine.language = Locale("ar")
             Log.d(TAG, "Language is set to: ${ARABIC.language}.")
         } else Log.w(TAG, "Language isn't available.")
         // Set voice
@@ -56,14 +65,17 @@ class TextSpeaker(context: Context) {
         } else {
             voices.filter { it.locale == ARABIC }.randomOrNull(Random(System.currentTimeMillis()))?.let {
                 engine.voice = it
+                status = Status.READY
                 Log.d(TAG, "Voice is set to: $it.")
             }
         }
     }
 
-    fun speak(sentence: String) {
+    fun speak(sentence: String?) {
+        if (sentence.isNullOrEmpty()) return
         if (status == Status.READY) {
             // Speak out sentence
+            Log.d(TAG, "Speaking out: $sentence")
             engine.speak(sentence, TextToSpeech.QUEUE_FLUSH, null, null)
         } else {
             // Can't speak text because of error or failed to init

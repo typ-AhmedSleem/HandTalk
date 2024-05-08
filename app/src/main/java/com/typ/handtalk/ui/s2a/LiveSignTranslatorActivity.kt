@@ -1,6 +1,7 @@
 package com.typ.handtalk.ui.s2a
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -26,7 +27,6 @@ import com.typ.handtalk.core.models.Sentence
 import com.typ.handtalk.core.models.Word
 import com.typ.handtalk.core.perms.PermissionHelper
 import com.typ.handtalk.core.resolvers.models.FrameResult
-import com.typ.handtalk.core.tts.TextSpeaker
 import com.typ.handtalk.databinding.ActivitySignToTextTranslatorBinding
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -38,7 +38,6 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
         private const val TAG = "SignLiveTranslator"
     }
 
-    private lateinit var speaker: TextSpeaker
     private val viewModel: MainViewModel by viewModels()
     private lateinit var algoHandTalk: HandTalkAlgorithm
     private lateinit var binding: ActivitySignToTextTranslatorBinding
@@ -116,8 +115,6 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
         backgroundExecutor = Executors.newSingleThreadExecutor()
         // * Setup HandTalkAlgorithm instance
         algoHandTalk = HandTalkAlgorithm(this, this)
-        // * Setup TextSpeaker instance
-        speaker = TextSpeaker(this)
 
         if (!algoHandTalk.recognizerInitialized) {
             backgroundExecutor.execute(algoHandTalk::setupGestureRecognizer)
@@ -197,19 +194,19 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
 
     override fun onIdentifyNewWord(word: Word) {
         runOnUiThread {
-            val sentence = binding.tvInterpretedText.text.toString() + " " + word.arabicText
-            binding.tvInterpretedText.text = sentence
+//            val sentence = binding.tvInterpretedText.text.toString() + " " + word.arabicText
+            binding.tvInterpretedText.text = word.arabicText
             // * Try to speak the word
-            speaker.speak(word.arabicText)
+//            speaker.speak(word.arabicText)
         }
     }
 
     override fun onTranslateFullSentence(sentence: Sentence) {
         runOnUiThread {
-            val fullSentence = sentence.arabic + "\n"
-            binding.tvInterpretedText.text = fullSentence
-            // * Try to speak the sentence
-            speaker.speak(fullSentence)
+            // * Display the translation
+            startActivity(Intent(this, DisplayTranslationActivity::class.java).apply {
+                putExtra(DisplayTranslationActivity.EXTRA_TRANSLATION, sentence.arabic)
+            })
         }
     }
 

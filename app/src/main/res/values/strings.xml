@@ -96,5 +96,8 @@
     <string name="mic_permission_granted">Mic permission granted</string>
     <string name="listening">Listening...</string>
     <string name="sign_language_will_be_displayed_here">Sign language translation will be displayed here</string>
+    <string name="reply">Reply using A2S translator</string>
+    <string name="speak_translation">Speak translation</string>
+    <string name="copy_translation">Copy translation</string>
 
 </resources>
