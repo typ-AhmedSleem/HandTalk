@@ -1,8 +1,23 @@
 package com.typ.handtalk.core.repository
 
 import com.typ.handtalk.core.models.Sentence
+import com.typ.handtalk.core.models.Word
 
 object Sentences {
+    @JvmStatic
+    fun getSentenceByFirstWord(firstWord: Word): Sentence? {
+        return SENTENCES.firstOrNull { it.words.contains(firstWord) }
+    }
+
+    @JvmStatic
+    fun getSentence(idx: Int): Sentence {
+        return SENTENCES[idx]
+    }
+
+    @JvmStatic
+    fun getSentenceByWords(words: Array<Word>): Sentence? {
+        return SENTENCES.firstOrNull { it.words.asList().containsAll(words.toList()) }
+    }
 
     @JvmStatic
     val SENTENCES = arrayOf(

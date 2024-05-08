@@ -22,6 +22,8 @@ import com.typ.handtalk.core.algorithms.handtalk.HandTalkAlgorithmCallback
 import com.typ.handtalk.core.algorithms.recognizer.RecognizerError
 import com.typ.handtalk.core.errors.HandTalkError
 import com.typ.handtalk.core.models.ImageShape
+import com.typ.handtalk.core.models.Sentence
+import com.typ.handtalk.core.models.Word
 import com.typ.handtalk.core.perms.PermissionHelper
 import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.core.tts.TextSpeaker
@@ -193,18 +195,18 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
         }
     }
 
-    override fun onIdentifyNewWord(word: String) {
+    override fun onIdentifyNewWord(word: Word) {
         runOnUiThread {
-            val sentence = binding.tvInterpretedText.text.toString() + " " + word
+            val sentence = binding.tvInterpretedText.text.toString() + " " + word.arabicText
             binding.tvInterpretedText.text = sentence
             // * Try to speak the word
-            speaker.speak(word)
+            speaker.speak(word.arabicText)
         }
     }
 
-    override fun onTranslateFullSentence(sentence: String) {
+    override fun onTranslateFullSentence(sentence: Sentence) {
         runOnUiThread {
-            val fullSentence = sentence + "\n"
+            val fullSentence = sentence.arabic + "\n"
             binding.tvInterpretedText.text = fullSentence
             // * Try to speak the sentence
             speaker.speak(fullSentence)

@@ -13,6 +13,7 @@ import com.typ.handtalk.core.algorithms.recognizer.interfaces.HandSignRecognizer
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequence
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequencer
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerCallback
+import com.typ.handtalk.core.algorithms.words.SentenceBuilder
 import com.typ.handtalk.core.models.ImageShape
 import com.typ.handtalk.core.resolvers.models.FrameResult
 
@@ -35,6 +36,8 @@ class HandTalkAlgorithm(
         get() = ::sequencer.isInitialized
 //    private val trackerInitialized: Boolean
 //        get() = ::handTracker.isInitialized
+
+    private val sentenceBuilder = SentenceBuilder()
 
     init {
         setupGestureRecognizer()
@@ -137,8 +140,12 @@ class HandTalkAlgorithm(
     override fun onSequenceCompleted(sequence: GestureSequence): Boolean {
         // * Validate the sequence
         if (!sequence.isValid) return true
-        // todo * Build the current sentence
-        // todo * Notify callback with the built sentence
+        // * Get the expected sentence
+        val expectedSentence = sentenceBuilder.expectedSentence
+        // todo * Select the most suitable word out of this sequence
+        // todo * Append the
+
+
         return true
     }
 

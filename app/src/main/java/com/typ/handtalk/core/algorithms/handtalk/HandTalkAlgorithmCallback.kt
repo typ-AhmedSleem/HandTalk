@@ -2,6 +2,8 @@ package com.typ.handtalk.core.algorithms.handtalk
 
 import com.typ.handtalk.core.errors.HandTalkError
 import com.typ.handtalk.core.models.ImageShape
+import com.typ.handtalk.core.models.Sentence
+import com.typ.handtalk.core.models.Word
 import com.typ.handtalk.core.resolvers.models.FrameResult
 
 interface HandTalkAlgorithmCallback {
@@ -14,12 +16,12 @@ interface HandTalkAlgorithmCallback {
     /**
      * Called when a new word is identified.
      */
-    fun onIdentifyNewWord(word: String)
+    fun onIdentifyNewWord(word: Word)
 
     /**
      * Called when the algorithm has identified a the full sentence.
      */
-    fun onTranslateFullSentence(sentence: String)
+    fun onTranslateFullSentence(sentence: Sentence)
 
     /**
      * Called when the recognizer reports that primary hand has disappeared.
