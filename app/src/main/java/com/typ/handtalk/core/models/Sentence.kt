@@ -51,4 +51,13 @@ data class Sentence(
         return words.contentHashCode()
     }
 
+    fun sameAs(another: Sentence?): Boolean {
+        if (another == null) return false
+        if (length != another.length) return false
+        return words.zip(another.words).all { (a, b) -> a == b }
+    }
+
+    fun clone() = Sentence(words.copyOf())
+
+
 }

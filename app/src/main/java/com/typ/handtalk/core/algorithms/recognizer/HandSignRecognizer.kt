@@ -35,6 +35,7 @@ import com.typ.handtalk.core.repository.Sentences
 import com.typ.handtalk.core.resolvers.FrameResultResolver
 import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.utils.shape
+import kotlin.random.Random
 
 class HandSignRecognizer(
     val context: Context,
@@ -157,7 +158,7 @@ class HandSignRecognizer(
         callback.onRecognizerError(RecognizerError.UnknownError(error.message))
     }
 
-    private val signs = Sentences.getSentence(2).let {
+    private val signs = Sentences.SENTENCES.random(Random(System.currentTimeMillis())).let {
         Log.i(TAG, "Testing on sentence: ${it.arabic} signs: ${it.allSigns}")
         return@let it.allSigns.iterator()
     }
@@ -200,7 +201,6 @@ class HandSignRecognizer(
                 val timeout = newFrame.timestamp - prev.timestamp
                 val timeoutReached = timeout >= HAND_DISAPPEAR_TIMEOUT
                 val disappeared = !prev.isRhsNull
-//                logi("onHandDisappeared: Checking if right hand disappeared. timeoutReached= ${newFrame.timestamp - prev.timestamp}. disappeared= ${disappeared}")
                 if (timeoutReached && disappeared) {
                     // Timeout has been exceeded
                     logi("onHandDisappeared: Right hand has disappeared.")

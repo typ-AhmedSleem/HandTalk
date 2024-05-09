@@ -1,5 +1,6 @@
 package com.typ.handtalk.core.algorithms.sequencer
 
+import com.typ.handtalk.core.models.Word
 import com.typ.handtalk.core.resolvers.models.FrameResult
 
 interface GestureSequencerCallback {
@@ -23,6 +24,6 @@ interface GestureSequencerCallback {
      *
      * @return boolean indicating whether sequencer should create a new sequence or not.
      */
-    fun onSequenceCompleted(sequence: GestureSequence): Boolean
+    fun onSequenceCompleted(word: Word): Boolean
 
 }

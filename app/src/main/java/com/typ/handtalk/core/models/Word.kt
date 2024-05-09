@@ -16,9 +16,7 @@ data class Word(
         if (this === other) return true
         if (other !is Word) return false
 
-        if (id != other.id) return false
-
-        return true
+        return id == other.id
     }
 
     override fun hashCode(): Int {

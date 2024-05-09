@@ -1,6 +1,7 @@
 package com.typ.handtalk.core.algorithms.sequencer
 
 import android.util.Log
+import com.typ.handtalk.core.algorithms.words.WordIdentifier
 import com.typ.handtalk.core.models.Word
 import com.typ.handtalk.core.resolvers.models.FrameResult
 
@@ -22,6 +23,9 @@ class GestureSequence(
 
     val signsToString: String
         get() = signs.joinToString(prefix = "seq[", postfix = "]") { it.rhsLabel.toString() }
+
+    val expectedWord: Word?
+        get() = WordIdentifier.identifyWord(this)
 
     fun appendFrameResult(frameResult: FrameResult) {
         signs.add(frameResult)

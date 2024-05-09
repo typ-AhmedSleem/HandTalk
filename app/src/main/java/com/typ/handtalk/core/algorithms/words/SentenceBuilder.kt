@@ -25,6 +25,9 @@ class SentenceBuilder {
             return sentence
         }
 
+    val isSentenceCompleted: Boolean
+        get() = currentSentence.sameAs(expectedSentence)
+
     fun appendWord(word: Word): Boolean {
         expectedSentence?.let {
             if (currentSentence.length >= it.length) return true
@@ -37,6 +40,10 @@ class SentenceBuilder {
 
     fun reset() {
         words = mutableListOf()
+    }
+
+    override fun toString(): String {
+        return "SentenceBuilder(curr= $currentSentence, exp= $expectedSentence)"
     }
 
 }

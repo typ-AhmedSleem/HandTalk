@@ -34,10 +34,10 @@ object Words {
         ),
         Word(
             4,
-            "كليه",
+            "كلية",
             sequenceOfGestures(
                 rhResult("43"),
-                rhResult("47"),
+//                rhResult("47"),
             )
         ),
         Word(
