@@ -24,6 +24,6 @@ interface GestureSequencerCallback {
      *
      * @return boolean indicating whether sequencer should create a new sequence or not.
      */
-    fun onSequenceCompleted(word: Word): Boolean
+    fun onWordIdentified(word: Word): Boolean
 
 }

@@ -57,7 +57,7 @@ object Words {
             7,
             "دكتور", sequenceOfGestures(
                 rhResult("19"),
-                rhResult("14"),
+//                rhResult("14"),
             )
         ),
         Word(
@@ -68,7 +68,7 @@ object Words {
         ),
         Word(
             9,
-            "باطنة", sequenceOfGestures(
+            "الباطنة", sequenceOfGestures(
                 rhResult("7"),
             )
         ),

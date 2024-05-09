@@ -110,6 +110,7 @@ class HandTalkAlgorithm(
 
     override fun onHandsDisappear() {
         Log.d(TAG, "onHandsDisappear: Right hand disappeared.")
+        Log.i(TAG, "onHandsDisappear: $sentenceBuilder")
         // Obtain current sequence
 //        with(sequencer.obtainResult()) {
 //            Log.d(TAG, "finishCurrentSequence: $this")
@@ -118,8 +119,10 @@ class HandTalkAlgorithm(
 //                onSequenceStarted()
 //            }
 //        }
-//        // Notify callback
-//        callback.onHandsDisappear()
+        sequencer.createNewRun()
+        sentenceBuilder.reset()
+        // Notify callback
+        callback.onHandsDisappear()
     }
 
     override fun onRecognizerError(error: RecognizerError) {
@@ -133,10 +136,10 @@ class HandTalkAlgorithm(
     override fun onSequenceFed(frame: FrameResult) {
         Log.d(TAG, "------------------------------ Feeding a new result to the sequence ------------------------------------")
         val completedWord = sequencer.feed(frame)
-        completedWord?.let { onSequenceCompleted(it) }
+        completedWord?.let { onWordIdentified(it) }
     }
 
-    override fun onSequenceCompleted(word: Word): Boolean {
+    override fun onWordIdentified(word: Word): Boolean {
         Log.i(TAG, "onSequenceCompleted: Received seq: ${word.signs.signsToString}. word= $word")
         Log.d(TAG, "onSequenceCompleted: Completed word identified. word= $word.")
 
@@ -149,38 +152,40 @@ class HandTalkAlgorithm(
             // * Notify callback
             sentenceBuilder.expectedSentence?.let { callback.onTranslateFullSentence(it.clone()) }
             sentenceBuilder.reset()
-        }
+        } else callback.onIdentifyNewWord(word)
 
         return true
-        // * Validate the sequence
-//        if (!sequence.isValid) {
-//            Log.d(TAG, "onSequenceCompleted: Invalid sequence (Empty suggested words).")
-//            return true
-//        }
-//        val suggestedWords = sequence.suggestedWords
-//        Log.d(TAG, "onSequenceCompleted: Suggested words= ${suggestedWords.contentToString()}")
-//        // * Get the current sentence
-//        var currentSentence = sentenceBuilder.currentSentence
-//        Log.d(TAG, "onSequenceCompleted: CurrentSentence= $currentSentence")
-//        var expectedSentence = sentenceBuilder.expectedSentence
-//        Log.d(TAG, "onSequenceCompleted: ExpectedSentence= $expectedSentence")
-//        // * Select the most suitable word out of this sequence then append it to builder
-//        val suitableWord = WordSelector.selectMostSuitableWord(currentSentence, expectedSentence, suggestedWords)
-//        val completed = sentenceBuilder.appendWord(suitableWord)
-//        currentSentence = sentenceBuilder.currentSentence
-//        Log.d(TAG, "onSequenceCompleted: CurrentSentence= $currentSentence")
-//        expectedSentence = sentenceBuilder.expectedSentence
-//        Log.d(TAG, "onSequenceCompleted: ExpectedSentence= $expectedSentence")
-//        // * Check if the sentence is completed
-//        if (completed) {
-//            // Notify callback
-//            Log.d(TAG, "onSequenceCompleted: Sentence completed. cur=$currentSentence | exp=$expectedSentence")
-//            sentenceBuilder.expectedSentence?.let { callback.onTranslateFullSentence(it) }
-//            sentenceBuilder.reset()
-//        } else {
-//            Log.d(TAG, "onSequenceCompleted: Sentence not completed. length= ${sentenceBuilder.currentSentence}")
-//        }
-//        return true
+        /*
+        * Validate the sequence
+        if (!sequence.isValid) {
+        Log.d(TAG, "onSequenceCompleted: Invalid sequence (Empty suggested words).")
+        return true
+        }
+        val suggestedWords = sequence.suggestedWords
+        Log.d(TAG, "onSequenceCompleted: Suggested words= ${suggestedWords.contentToString()}")
+        // * Get the current sentence
+        var currentSentence = sentenceBuilder.currentSentence
+        Log.d(TAG, "onSequenceCompleted: CurrentSentence= $currentSentence")
+        var expectedSentence = sentenceBuilder.expectedSentence
+        Log.d(TAG, "onSequenceCompleted: ExpectedSentence= $expectedSentence")
+        // * Select the most suitable word out of this sequence then append it to builder
+        val suitableWord = WordSelector.selectMostSuitableWord(currentSentence, expectedSentence, suggestedWords)
+        val completed = sentenceBuilder.appendWord(suitableWord)
+        currentSentence = sentenceBuilder.currentSentence
+        Log.d(TAG, "onSequenceCompleted: CurrentSentence= $currentSentence")
+        expectedSentence = sentenceBuilder.expectedSentence
+        Log.d(TAG, "onSequenceCompleted: ExpectedSentence= $expectedSentence")
+        // * Check if the sentence is completed
+        if (completed) {
+        // Notify callback
+        Log.d(TAG, "onSequenceCompleted: Sentence completed. cur=$currentSentence | exp=$expectedSentence")
+        sentenceBuilder.expectedSentence?.let { callback.onTranslateFullSentence(it) }
+        sentenceBuilder.reset()
+        } else {
+        Log.d(TAG, "onSequenceCompleted: Sentence not completed. length= ${sentenceBuilder.currentSentence}")
+        }
+        return true
+        */
     }
 
     override fun onSequenceStarted() {
@@ -209,7 +214,6 @@ class HandTalkAlgorithm(
 
     companion object {
         const val TAG = "HandTalkAlgo"
-        private const val TESTING = true
     }
 
 }

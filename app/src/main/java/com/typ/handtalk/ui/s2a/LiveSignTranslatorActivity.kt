@@ -27,6 +27,7 @@ import com.typ.handtalk.core.models.Sentence
 import com.typ.handtalk.core.models.Word
 import com.typ.handtalk.core.perms.PermissionHelper
 import com.typ.handtalk.core.resolvers.models.FrameResult
+import com.typ.handtalk.core.tts.TextSpeaker
 import com.typ.handtalk.databinding.ActivitySignToTextTranslatorBinding
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -39,6 +40,7 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
     }
 
     private val viewModel: MainViewModel by viewModels()
+    private lateinit var speaker: TextSpeaker
     private lateinit var algoHandTalk: HandTalkAlgorithm
     private lateinit var binding: ActivitySignToTextTranslatorBinding
 
@@ -116,6 +118,12 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
         // * Setup HandTalkAlgorithm instance
         algoHandTalk = HandTalkAlgorithm(this, this)
 
+        speaker = TextSpeaker().apply {
+            this.initializeEngine(this@LiveSignTranslatorActivity) {
+                speaker.speak("مرحباً بكم في HandTalk")
+            }
+        }
+
         if (!algoHandTalk.recognizerInitialized) {
             backgroundExecutor.execute(algoHandTalk::setupGestureRecognizer)
         }
@@ -177,6 +185,7 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
         runOnUiThread {
             binding.tvRightGesture.text = null
             binding.tvLeftGesture.text = null
+            binding.tvInterpretedText.text = null
             binding.overlay.clear()
         }
     }
@@ -194,10 +203,10 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
 
     override fun onIdentifyNewWord(word: Word) {
         runOnUiThread {
-//            val sentence = binding.tvInterpretedText.text.toString() + " " + word.arabicText
+            val sentence = binding.tvInterpretedText.text.toString() + " " + word.arabicText
             binding.tvInterpretedText.text = word.arabicText
             // * Try to speak the word
-//            speaker.speak(word.arabicText)
+            speaker.speak(word.arabicText)
         }
     }
 
