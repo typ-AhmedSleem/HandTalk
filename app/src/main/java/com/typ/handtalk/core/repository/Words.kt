@@ -22,7 +22,7 @@ object Words {
             "صباح",
             sequenceOfGestures(
 //                rhResult("44"),
-                rhResult("40"),
+                rhResult("-"),
             )
         ),
         Word(
@@ -38,8 +38,8 @@ object Words {
             sequenceOfGestures(
 //                rhResult("43"),
                 frameResult(
-                    rhs = handSign("43"),
-                    lhs = handSign("47"),
+                    rhs = handSign("-"),
+                    lhs = handSign("-"),
                 )
             )
         ),
@@ -65,21 +65,21 @@ object Words {
         ),
         Word(
             8,
-            "المعدة", sequenceOfGestures(
+            "الباطنة", sequenceOfGestures(
                 rhResult("7"),
             )
         ),
         Word(
             9,
-            "الباطنة", sequenceOfGestures(
+            "المعدة", sequenceOfGestures(
                 rhResult("7"),
             )
         ),
         Word(
             10,
             "مكانها", sequenceOfGestures(
-                rhResult("20"),
-                rhResult("26"),
+                rhResult("-"),
+                rhResult("-"),
             )
         ),
         Word(
@@ -103,7 +103,7 @@ object Words {
         Word(
             14,
             "حقوق", sequenceOfGestures(
-                rhResult("39"),
+                rhResult("-"),
             )
         ),
         Word(
@@ -138,7 +138,7 @@ object Words {
             19,
             "الخير",
             sequenceOfGestures(
-                rhResult("38"),
+                rhResult("-"),
 //                rhResult("37"),
             )
         ),

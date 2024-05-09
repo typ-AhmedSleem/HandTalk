@@ -7,7 +7,7 @@ object Sentences {
 
     @JvmStatic
     fun getSentenceByFirstWord(firstWord: Word): Sentence? {
-        return Conversations.CONVERSATIONS[1].sentences.firstOrNull { it.words.contains(firstWord) }
+        return Conversations.DEFAULT_CONVERSATION.sentences.firstOrNull { it.words.contains(firstWord) }
     }
 
     @JvmStatic
@@ -59,14 +59,14 @@ object Sentences {
             arrayOf(
                 Words.WORDS[11],
                 Words.WORDS[6],
-                Words.WORDS[8],
+                Words.WORDS[7],
             )
         ),
         Sentence(
             arrayOf(
                 Words.WORDS[4],
                 Words.WORDS[10],
-                Words.WORDS[7],
+                Words.WORDS[8],
             )
         ),
         Sentence(
