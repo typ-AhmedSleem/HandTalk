@@ -112,13 +112,13 @@ class HandTalkAlgorithm(
     override fun onHandsDisappear() {
         Log.d(TAG, "onHandsDisappear: Right hand disappeared.")
         // Obtain current sequence
-//        with(sequencer.obtainResult()) {
-//            Log.d(TAG, "finishCurrentSequence: $this")
-//            if (onSequenceCompleted(this)) {
-//                sequencer.createNewRun()
-//                onSequenceStarted()
-//            }
-//        }
+        with(sequencer.obtainResult()) {
+            Log.d(TAG, "finishCurrentSequence: $this")
+            if (onSequenceCompleted(this)) {
+                sequencer.createNewRun()
+                onSequenceStarted()
+            }
+        }
         // Notify callback
         callback.onHandsDisappear()
     }

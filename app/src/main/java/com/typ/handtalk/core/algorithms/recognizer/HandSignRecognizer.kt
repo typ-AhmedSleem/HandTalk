@@ -200,6 +200,7 @@ class HandSignRecognizer(
                 val timeout = newFrame.timestamp - prev.timestamp
                 val timeoutReached = timeout >= HAND_DISAPPEAR_TIMEOUT
                 val disappeared = !prev.isRhsNull
+//                logi("onHandDisappeared: Checking if right hand disappeared. timeoutReached= ${newFrame.timestamp - prev.timestamp}. disappeared= ${disappeared}")
                 if (timeoutReached && disappeared) {
                     // Timeout has been exceeded
                     logi("onHandDisappeared: Right hand has disappeared.")
@@ -269,7 +270,7 @@ class HandSignRecognizer(
         const val DEFAULT_HAND_PRESENCE_CONFIDENCE = 0.5F
 
         const val HAND_SIGN_CHANGE_TIMEOUT = 100 // in millis
-        const val HAND_DISAPPEAR_TIMEOUT = 100 // in millis
+        const val HAND_DISAPPEAR_TIMEOUT = 25 // in millis
         const val SAME_SIGN_RECOGNIZE_TIMEOUT = 2500 // in millis
         const val WORD_RECOGNITION_TIMEOUT = 3000 // in millis
 
