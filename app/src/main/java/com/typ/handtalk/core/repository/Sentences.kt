@@ -4,9 +4,10 @@ import com.typ.handtalk.core.models.Sentence
 import com.typ.handtalk.core.models.Word
 
 object Sentences {
+
     @JvmStatic
     fun getSentenceByFirstWord(firstWord: Word): Sentence? {
-        return SENTENCES.firstOrNull { it.words.contains(firstWord) }
+        return Conversations.CONVERSATIONS[1].sentences.firstOrNull { it.words.contains(firstWord) }
     }
 
     @JvmStatic

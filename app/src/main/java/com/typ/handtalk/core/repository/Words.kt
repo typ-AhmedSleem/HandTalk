@@ -1,6 +1,8 @@
 package com.typ.handtalk.core.repository
 
 import com.typ.handtalk.core.models.Word
+import com.typ.handtalk.utils.frameResult
+import com.typ.handtalk.utils.handSign
 import com.typ.handtalk.utils.rhResult
 import com.typ.handtalk.utils.sequenceOfGestures
 
@@ -12,17 +14,15 @@ object Words {
             "السلام",
             sequenceOfGestures(
                 rhResult("48"),
-                rhResult("31"),
+//                rhResult("31"),
             )
         ),
         Word(
             2,
-            "صباح الخير",
+            "صباح",
             sequenceOfGestures(
-                rhResult("44"),
+//                rhResult("44"),
                 rhResult("40"),
-                rhResult("38"),
-                rhResult("37"),
             )
         ),
         Word(
@@ -36,8 +36,11 @@ object Words {
             4,
             "كلية",
             sequenceOfGestures(
-                rhResult("43"),
-//                rhResult("47"),
+//                rhResult("43"),
+                frameResult(
+                    rhs = handSign("43"),
+                    lhs = handSign("47"),
+                )
             )
         ),
         Word(
@@ -62,8 +65,8 @@ object Words {
         ),
         Word(
             8,
-            "المعده", sequenceOfGestures(
-                rhResult("18"),
+            "المعدة", sequenceOfGestures(
+                rhResult("7"),
             )
         ),
         Word(
@@ -131,6 +134,23 @@ object Words {
                 rhResult("49"),
             )
         ),
+        Word(
+            19,
+            "الخير",
+            sequenceOfGestures(
+                rhResult("38"),
+//                rhResult("37"),
+            )
+        ),
+
+        //  Region: Repeating word with same overlapping signs
+//        Word(
+//            7,
+//            "دكتور", sequenceOfGestures(
+//                rhResult("14"),
+//            )
+//        ),
+        // End Region
     )
 
 }

@@ -1,7 +1,6 @@
 package com.typ.handtalk.ui.s2a
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -204,7 +203,7 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
     override fun onIdentifyNewWord(word: Word) {
         runOnUiThread {
             val sentence = binding.tvInterpretedText.text.toString() + " " + word.arabicText
-            binding.tvInterpretedText.text = word.arabicText
+            binding.tvInterpretedText.text = sentence
             // * Try to speak the word
             speaker.speak(word.arabicText)
         }
@@ -213,9 +212,11 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
     override fun onTranslateFullSentence(sentence: Sentence) {
         runOnUiThread {
             // * Display the translation
-            startActivity(Intent(this, DisplayTranslationActivity::class.java).apply {
-                putExtra(DisplayTranslationActivity.EXTRA_TRANSLATION, sentence.arabic)
-            })
+            // * Try to speak the word
+            speaker.speak(sentence.arabic)
+//            startActivity(Intent(this, DisplayTranslationActivity::class.java).apply {
+//                putExtra(DisplayTranslationActivity.EXTRA_TRANSLATION, sentence.arabic)
+//            })
         }
     }
 

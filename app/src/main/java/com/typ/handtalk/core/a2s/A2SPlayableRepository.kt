@@ -17,6 +17,7 @@ object A2SPlayableRepository {
         "التجارة" to A2SignPlayableVideo("التجارة.mp4"),
         "بجانب" to A2SignPlayableVideo("بجانب.mp4"),
         "طوارئ" to A2SignPlayableVideo("طوارئ.mp4"),
+        "الطوارئ" to A2SignPlayableVideo("طوارئ.mp4"),
         "علاج" to A2SignPlayableVideo("علاج.mp4"),
         "في" to A2SignPlayableVideo("في.mp4"),
         "فى" to A2SignPlayableVideo("في.mp4"),
