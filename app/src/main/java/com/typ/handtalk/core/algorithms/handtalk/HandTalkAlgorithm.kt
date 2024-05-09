@@ -112,13 +112,13 @@ class HandTalkAlgorithm(
     override fun onHandsDisappear() {
         Log.d(TAG, "onHandsDisappear: Right hand disappeared.")
         // Obtain current sequence
-        with(sequencer.obtainResult()) {
-            Log.d(TAG, "finishCurrentSequence: $this")
-            if (onSequenceCompleted(this)) {
-                sequencer.createNewRun()
-                onSequenceStarted()
-            }
-        }
+//        with(sequencer.obtainResult()) {
+//            Log.d(TAG, "finishCurrentSequence: $this")
+//            if (onSequenceCompleted(this)) {
+//                sequencer.createNewRun()
+//                onSequenceStarted()
+//            }
+//        }
         // Notify callback
         callback.onHandsDisappear()
     }
@@ -131,8 +131,16 @@ class HandTalkAlgorithm(
 
     // REGION: GestureSequencerCallback
 
+    private val tempSentence = SentenceBuilder()
+
     override fun onSequenceFed(frame: FrameResult) {
-        sequencer.feed(frame)
+        Log.d(TAG, "------------------------------ Feeding a new result to the sequence ------------------------------------")
+        val completedWord = sequencer.feed(frame)
+        completedWord?.let { word ->
+            Log.d(TAG, "onSequenceFed: Completed word found. word= $word.")
+            tempSentence.appendWord(word)
+            Log.i(TAG, "onSequenceFed: Current sentence= ${tempSentence.currentSentence}")
+        }
     }
 
     override fun onSequenceCompleted(sequence: GestureSequence): Boolean {
@@ -193,6 +201,7 @@ class HandTalkAlgorithm(
 
     companion object {
         const val TAG = "HandTalkAlgo"
+        private const val TESTING = true
     }
 
 }

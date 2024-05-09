@@ -36,7 +36,7 @@ data class FrameResult(
     }
 
     val isLhsNone by lazy {
-        lhsLabel == "none" || rhsLabel == ""
+        lhsLabel == "none" || lhsLabel == ""
     }
 
     override fun toString(): String {

@@ -31,6 +31,7 @@ import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizerResu
 import com.typ.handtalk.core.algorithms.recognizer.interfaces.HandRecognizerInternalCallback
 import com.typ.handtalk.core.algorithms.recognizer.interfaces.HandSignRecognizerCallback
 import com.typ.handtalk.core.models.ImageShape
+import com.typ.handtalk.core.repository.Sentences
 import com.typ.handtalk.core.resolvers.FrameResultResolver
 import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.utils.shape
@@ -156,10 +157,22 @@ class HandSignRecognizer(
         callback.onRecognizerError(RecognizerError.UnknownError(error.message))
     }
 
+    private val signs = Sentences.getSentence(2).let {
+        Log.i(TAG, "Testing on sentence: ${it.arabic} signs: ${it.allSigns}")
+        return@let it.allSigns.iterator()
+    }
+
     /** Return the recognition result to the GestureRecognizerHelper's caller */
     private fun returnLivestreamResult(rawResult: GestureRecognizerResult, input: MPImage) {
-//        val finishTimeMs = SystemClock.uptimeMillis()
-//        val inferenceTime = finishTimeMs - rawResult.timestampMs()
+//        if (signs.hasNext()) {
+//            this.onHandSignChanged(
+//                frameResult(null),
+//                rhResult(signs.next())
+//            )
+//        } else return
+
+        val finishTimeMs = SystemClock.uptimeMillis()
+        val inferenceTime = finishTimeMs - rawResult.timestampMs()
 
         val newFrame = FrameResultResolver.resolve(rawResult)
 
@@ -255,8 +268,8 @@ class HandSignRecognizer(
         const val DEFAULT_HAND_TRACKING_CONFIDENCE = 0.5F
         const val DEFAULT_HAND_PRESENCE_CONFIDENCE = 0.5F
 
-        const val HAND_SIGN_CHANGE_TIMEOUT = 500 // in millis
-        const val HAND_DISAPPEAR_TIMEOUT = 250 // in millis
+        const val HAND_SIGN_CHANGE_TIMEOUT = 100 // in millis
+        const val HAND_DISAPPEAR_TIMEOUT = 100 // in millis
         const val SAME_SIGN_RECOGNIZE_TIMEOUT = 2500 // in millis
         const val WORD_RECOGNITION_TIMEOUT = 3000 // in millis
 

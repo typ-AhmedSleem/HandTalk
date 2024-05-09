@@ -1,12 +1,12 @@
 package com.typ.handtalk.core.algorithms.sequencer
 
 import android.util.Log
-import com.typ.handtalk.core.algorithms.AbstractAlgorithm
+import com.typ.handtalk.core.algorithms.AbstractAlgorithm.AlgorithmState
 import com.typ.handtalk.core.algorithms.words.WordSuggester
 import com.typ.handtalk.core.models.Word
 import com.typ.handtalk.core.resolvers.models.FrameResult
 
-class GestureSequencer : AbstractAlgorithm<FrameResult, GestureSequence>() {
+class GestureSequencer {
 
     // * Runtime
     private var currentSequence = GestureSequence()
@@ -23,13 +23,13 @@ class GestureSequencer : AbstractAlgorithm<FrameResult, GestureSequence>() {
         return GestureSequence()
     }
 
-    override fun createNewRun() {
+    fun createNewRun() {
         if (state == AlgorithmState.NEW_RUN) return
         currentSequence = createNewSequence()
         lastSuggestedWords = mutableListOf()
     }
 
-    override fun feed(payload: FrameResult) {
+    fun feed(payload: FrameResult): Word? {
         // Append the result to the current sequence
         currentSequence.appendFrameResult(payload)
         Log.i(TAG, "feed: Fed result ${payload.rhsLabel} to algorithm.")
@@ -51,24 +51,37 @@ class GestureSequencer : AbstractAlgorithm<FrameResult, GestureSequence>() {
             // Save the last suggested words
             lastSuggestedWords = mutableListOf()
             lastSuggestedWords.addAll(possibleWords)
-            Log.i(TAG, "lastSuggestedWords: $lastSuggestedWords")
+
+            // Check if at least one word has same sequence of signs
+            val completedWords = possibleWords.filter {
+                it.signs.containsWithSameLength(currentSequence)
+            }
+            if (completedWords.isNotEmpty()) {
+                Log.i(TAG, "Found complete word for curr=${currentSequence}, last=$lastSuggestedWords")
+                createNewRun()
+                return completedWords.first()
+            } else {
+                Log.i(TAG, "No complete word for curr=${currentSequence}, last=$lastSuggestedWords")
+                return null
+            }
         } else {
             createNewRun()
-            Log.i(TAG, "No possible words for seq: $currentSequence")
+            Log.i(TAG, "No possible words for seq: curr=${currentSequence.suggestedWords.contentToString()}, last=$lastSuggestedWords")
+            return null
         }
     }
 
-    override fun cancelCurrentRun() {
+    fun cancelCurrentRun() {
         currentSequence = GestureSequence()
         lastSuggestedWords = mutableListOf()
     }
 
-    override fun obtainResult(): GestureSequence {
+    fun obtainResult(): GestureSequence {
         return GestureSequence(currentSequence.signs, lastSuggestedWords.toTypedArray())
     }
 
     companion object {
-        const val TAG = "GestureSequencerAlgorithm"
+        const val TAG = "GestureSequencer"
     }
 
 }

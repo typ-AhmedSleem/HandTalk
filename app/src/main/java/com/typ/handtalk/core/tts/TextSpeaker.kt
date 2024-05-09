@@ -4,7 +4,6 @@ import android.content.Context
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import java.util.Locale
-import kotlin.random.Random
 
 /**
  * Class that utilizes TTS (TextToSpeech) apis
@@ -63,11 +62,13 @@ class TextSpeaker {
         if (voices.isEmpty()) {
             Log.w(TAG, "No voices available for this language.")
         } else {
-            voices.filter { it.locale == ARABIC }.randomOrNull(Random(System.currentTimeMillis()))?.let {
-                engine.voice = it
-                status = Status.READY
-                Log.d(TAG, "Voice is set to: $it.")
-            }
+            status = Status.READY
+            Log.d(TAG, "Voice is set to: ${engine.voice}")
+//            voices.filter { it.locale == ARABIC }.randomOrNull(Random(System.currentTimeMillis()))?.let {
+//                engine.voice = it
+//                status = Status.READY
+//                Log.d(TAG, "Voice is set to: $it.")
+//            }
         }
     }
 

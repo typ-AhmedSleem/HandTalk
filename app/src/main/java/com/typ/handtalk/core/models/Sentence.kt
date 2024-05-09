@@ -4,6 +4,17 @@ data class Sentence(
     val words: Array<Word>
 ) {
 
+    val allSigns: List<String>
+        get() {
+            val signs = mutableListOf<String>()
+            for (word in words) {
+                word.signs.signs.forEach {
+                    signs.add(it.rhsLabel.toString())
+                }
+            }
+            return signs
+        }
+
     val arabic: String
         get() = words.joinToString(" ") { it.arabicText }
 

@@ -23,20 +23,26 @@ object Sentences {
     val SENTENCES = arrayOf(
         // =========== CONVERSATION 1 =========== //
         Sentence(
-            arrayOf(Words.WORDS[0])
+            arrayOf(
+                Words.WORDS[0],
+                Words.WORDS[14],
+                Words.WORDS[15],
+                Words.WORDS[16],
+                Words.WORDS[17],
+            )
         ),
         Sentence(
             arrayOf(
                 Words.WORDS[2],
-//                Words.WORDS[?], // todo: add the word 'question'
+                Words.WORDS[12],
             )
         ),
         Sentence(
             arrayOf(
                 Words.WORDS[3],
-//                Words.WORDS[?], // todo: add word 'law'
+                Words.WORDS[13],
                 Words.WORDS[9],
-//                Words.WORDS[?], // todo: add word 'where'
+                Words.WORDS[11],
             )
         ),
         Sentence(
@@ -50,7 +56,7 @@ object Sentences {
         ),
         Sentence(
             arrayOf(
-//                Words.WORDS[?], // todo: add word 'where'
+                Words.WORDS[11],
                 Words.WORDS[6],
                 Words.WORDS[8],
             )

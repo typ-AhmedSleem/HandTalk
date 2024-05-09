@@ -35,8 +35,6 @@ object A2SPlayableRepository {
         "عليكم السلام" to A2SignPlayableVideo("عليكم السلام.mp4"),
         "هكتب لك علاج لمده اسبوع" to A2SignPlayableVideo("هكتبلك علاج لمدة اسبوع.mp4"),
         "هكتبلك علاج لمده اسبوع" to A2SignPlayableVideo("هكتبلك علاج لمدة اسبوع.mp4"),
-        "كليه التجاره" to A2SignPlayableVideo("كليةالتجارة.mp4"),
-        "كلية التجاره" to A2SignPlayableVideo("كليةالتجارة.mp4"),
     )
 
     @JvmStatic

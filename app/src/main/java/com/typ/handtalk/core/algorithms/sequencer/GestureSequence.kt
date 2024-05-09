@@ -20,6 +20,9 @@ class GestureSequence(
     val isValid: Boolean
         get() = suggestedWords.isNotEmpty()
 
+    val signsToString: String
+        get() = signs.joinToString(prefix = "seq[", postfix = "]") { it.rhsLabel.toString() }
+
     fun appendFrameResult(frameResult: FrameResult) {
         signs.add(frameResult)
     }
@@ -39,13 +42,11 @@ class GestureSequence(
     }
 
     fun containsWithSameLength(sequence: GestureSequence): Boolean {
-//        if (sequence.length == 1 && this.length == 1) {
-//            return sequence.signs.containsAll(this.signs)
-//        }
+        Log.d("GestureSequence", "containsWithSameLength: curr=${this.signsToString} & seq=${sequence.signsToString}")
         // Check whether current sequence is not shorter than the given one
         if (sequence.length != this.length) return false
         // Check whether current sequence is contained in the given one
-        return sequence.signs.containsAll(this.signs)
+        return sequence.signs == this.signs
     }
 
     fun containsWithSameOrder(seq: GestureSequence): Boolean {

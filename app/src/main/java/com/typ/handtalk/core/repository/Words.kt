@@ -9,14 +9,10 @@ object Words {
     internal val WORDS = arrayOf(
         Word(
             1,
-            "السلام عليكم ورحمة الله وبركاته",
+            "السلام",
             sequenceOfGestures(
                 rhResult("48"),
-                rhResult("31"), // 19
-                rhResult("32"),
-                rhResult("33"),
-                rhResult("41"),
-                rhResult("49"),
+                rhResult("31"),
             )
         ),
         Word(
@@ -78,7 +74,7 @@ object Words {
         ),
         Word(
             10,
-            "مكان", sequenceOfGestures(
+            "مكانها", sequenceOfGestures(
                 rhResult("20"),
                 rhResult("26"),
             )
@@ -99,6 +95,40 @@ object Words {
             13,
             "سؤال", sequenceOfGestures(
                 rhResult("51"),
+            )
+        ),
+        Word(
+            14,
+            "حقوق", sequenceOfGestures(
+                rhResult("39"),
+            )
+        ),
+        Word(
+            15,
+            "عليكم",
+            sequenceOfGestures(
+                rhResult("32"),
+            )
+        ),
+        Word(
+            16,
+            "ورحمة",
+            sequenceOfGestures(
+                rhResult("33"),
+            )
+        ),
+        Word(
+            17,
+            "الله",
+            sequenceOfGestures(
+                rhResult("41"),
+            )
+        ),
+        Word(
+            18,
+            "وبركاته",
+            sequenceOfGestures(
+                rhResult("49"),
             )
         ),
     )
