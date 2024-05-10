@@ -156,7 +156,7 @@ class Arabic2SignTranslatorActivity : AppCompatActivity() {
     private fun stylizePrompt(prompt: String, values: Map<String, Any?>): SpannableString {
         val styledPrompt = SpannableString(prompt)
         // Full sentence at once
-        if (prompt in values) {
+        if (values[prompt] != null) {
             styledPrompt.setSpan(
                 ForegroundColorSpan(colorGreen),
                 prompt.indexOf(prompt),
