@@ -1,4 +1,4 @@
-package com.typ.handtalk.articles.models
+package com.typ.handtalk.core.articles.models
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes

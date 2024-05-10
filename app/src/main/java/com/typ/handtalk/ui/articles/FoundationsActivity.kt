@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textview.MaterialTextView
 import com.typ.handtalk.R
-import com.typ.handtalk.articles.data.Foundations
-import com.typ.handtalk.articles.models.Foundation
+import com.typ.handtalk.core.articles.data.Foundations
+import com.typ.handtalk.core.articles.models.Foundation
 import com.typ.handtalk.databinding.ActivityFoundationsBinding
 import com.typ.handtalk.databinding.BsFoundationDetailsBinding
 

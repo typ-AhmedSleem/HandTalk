@@ -1,4 +1,4 @@
-package com.typ.handtalk.articles.models
+package com.typ.handtalk.core.articles.models
 
 data class MapPoint(
     val latitude: Double,

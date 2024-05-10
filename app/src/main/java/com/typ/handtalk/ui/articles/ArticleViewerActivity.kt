@@ -10,8 +10,8 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.MediaController
 import androidx.appcompat.app.AppCompatActivity
-import com.typ.handtalk.articles.models.Article
-import com.typ.handtalk.articles.models.Section
+import com.typ.handtalk.core.articles.models.Article
+import com.typ.handtalk.core.articles.models.Section
 import com.typ.handtalk.databinding.ActivityArticleViewerBinding
 import com.typ.handtalk.ui.articles.views.ImageSectionView
 import com.typ.handtalk.ui.articles.views.TextSectionView

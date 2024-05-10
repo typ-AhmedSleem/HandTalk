@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textview.MaterialTextView
 import com.typ.handtalk.R
-import com.typ.handtalk.articles.data.Translators
-import com.typ.handtalk.articles.models.TranslatorProfile
+import com.typ.handtalk.core.articles.data.Translators
+import com.typ.handtalk.core.articles.models.TranslatorProfile
 import com.typ.handtalk.databinding.ActivityTranslatorsBinding
 import com.typ.handtalk.databinding.BsTranslatorProfileDetailsBinding
 import java.util.Locale

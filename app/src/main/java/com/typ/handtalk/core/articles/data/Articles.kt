@@ -1,8 +1,8 @@
-package com.typ.handtalk.articles.data
+package com.typ.handtalk.core.articles.data
 
-import com.typ.handtalk.articles.models.Article
-import com.typ.handtalk.articles.models.Section.ImageSection
-import com.typ.handtalk.articles.models.Section.TextSection
+import com.typ.handtalk.core.articles.models.Article
+import com.typ.handtalk.core.articles.models.Section.ImageSection
+import com.typ.handtalk.core.articles.models.Section.TextSection
 
 object Articles {
 

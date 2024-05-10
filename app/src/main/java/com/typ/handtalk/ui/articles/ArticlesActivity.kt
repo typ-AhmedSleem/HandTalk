@@ -18,8 +18,8 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 import com.google.android.material.textview.MaterialTextView
 import com.typ.handtalk.R
-import com.typ.handtalk.articles.data.Categories
-import com.typ.handtalk.articles.models.Article
+import com.typ.handtalk.core.articles.data.Categories
+import com.typ.handtalk.core.articles.models.Article
 import com.typ.handtalk.databinding.ActivityArticlesBinding
 import com.typ.handtalk.utils.Utils
 

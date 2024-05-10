@@ -1,7 +1,7 @@
-package com.typ.handtalk.articles.data
+package com.typ.handtalk.core.articles.data
 
-import com.typ.handtalk.articles.models.Foundation
-import com.typ.handtalk.articles.models.MapPoint
+import com.typ.handtalk.core.articles.models.Foundation
+import com.typ.handtalk.core.articles.models.MapPoint
 
 object Foundations {
 

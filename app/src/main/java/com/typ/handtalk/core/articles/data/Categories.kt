@@ -1,7 +1,7 @@
-package com.typ.handtalk.articles.data
+package com.typ.handtalk.core.articles.data
 
 import com.typ.handtalk.R
-import com.typ.handtalk.articles.models.Category
+import com.typ.handtalk.core.articles.models.Category
 
 object Categories {
 
