@@ -61,5 +61,6 @@
     <string name="reply">الرد عن طريق مترجم العربية الي اشارة</string>
     <string name="speak_translation">استماع الي الترجمة</string>
     <string name="copy_translation">نسخ الترجمة</string>
+    <string name="welcome_speech">مرحباً بكم في HandTalk. أصبَح بإمكان الصُم الآن التحدث بلغتهم الأم</string>
 
 </resources>

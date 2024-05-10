@@ -99,5 +99,6 @@
     <string name="reply">Reply using A2S translator</string>
     <string name="speak_translation">Speak translation</string>
     <string name="copy_translation">Copy translation</string>
+    <string name="welcome_speech">Welcome to HandTalk. Now deaf can communicate in their native tongue</string>
 
 </resources>

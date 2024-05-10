@@ -11,7 +11,7 @@ object Words {
     internal val WORDS = arrayOf(
         Word(
             1,
-            "السلام",
+            "السلامُ",
             sequenceOfGestures(
                 rhResult("48"),
 //                rhResult("31"),
@@ -19,7 +19,7 @@ object Words {
         ),
         Word(
             2,
-            "صباح",
+            "صَبَاحُ",
             sequenceOfGestures(
 //                rhResult("44"),
                 rhResult("-"),
@@ -27,14 +27,14 @@ object Words {
         ),
         Word(
             3,
-            "ممكن",
+            "مُمْكِنْ",
             sequenceOfGestures(
                 rhResult("35"), // 12
             )
         ),
         Word(
             4,
-            "كلية",
+            "كُليةْ",
             sequenceOfGestures(
 //                rhResult("43"),
                 frameResult(
@@ -45,14 +45,14 @@ object Words {
         ),
         Word(
             5,
-            "الم", sequenceOfGestures(
+            "أَلَمْ", sequenceOfGestures(
                 rhResult("17"),
                 rhResult("23"),
             )
         ),
         Word(
             6,
-            "شكراً", sequenceOfGestures(
+            "شُكراً", sequenceOfGestures(
                 rhResult("36"),
             )
         ),
@@ -65,13 +65,13 @@ object Words {
         ),
         Word(
             8,
-            "الباطنة", sequenceOfGestures(
+            "الباطْنْة", sequenceOfGestures(
                 rhResult("7"),
             )
         ),
         Word(
             9,
-            "المعدة", sequenceOfGestures(
+            "المعدةْ", sequenceOfGestures(
                 rhResult("7"),
             )
         ),
@@ -122,21 +122,21 @@ object Words {
         ),
         Word(
             17,
-            "الله",
+            "اللَّهِ",
             sequenceOfGestures(
                 rhResult("41"),
             )
         ),
         Word(
             18,
-            "وبركاته",
+            "وبركاتهْ",
             sequenceOfGestures(
                 rhResult("49"),
             )
         ),
         Word(
             19,
-            "الخير",
+            "الخيرِ",
             sequenceOfGestures(
                 rhResult("-"),
 //                rhResult("37"),

@@ -31,11 +31,9 @@ import com.google.mediapipe.tasks.vision.gesturerecognizer.GestureRecognizerResu
 import com.typ.handtalk.core.algorithms.recognizer.interfaces.HandRecognizerInternalCallback
 import com.typ.handtalk.core.algorithms.recognizer.interfaces.HandSignRecognizerCallback
 import com.typ.handtalk.core.models.ImageShape
-import com.typ.handtalk.core.repository.Sentences
 import com.typ.handtalk.core.resolvers.FrameResultResolver
 import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.utils.shape
-import kotlin.random.Random
 
 class HandSignRecognizer(
     val context: Context,
@@ -158,19 +156,8 @@ class HandSignRecognizer(
         callback.onRecognizerError(RecognizerError.UnknownError(error.message))
     }
 
-    private val signs = Sentences.SENTENCES.random(Random(System.currentTimeMillis())).let {
-        Log.i(TAG, "Testing on sentence: ${it.arabic} signs: ${it.allSigns}")
-        return@let it.allSigns.iterator()
-    }
-
     /** Return the recognition result to the GestureRecognizerHelper's caller */
     private fun returnLivestreamResult(rawResult: GestureRecognizerResult, input: MPImage) {
-//        if (signs.hasNext()) {
-//            this.onHandSignChanged(
-//                frameResult(null),
-//                rhResult(signs.next())
-//            )
-//        } else return
 
         val finishTimeMs = SystemClock.uptimeMillis()
         val inferenceTime = finishTimeMs - rawResult.timestampMs()
