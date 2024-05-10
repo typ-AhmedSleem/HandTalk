@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,7 @@ class ArticlesActivity : AppCompatActivity() {
         with(ActivityArticlesBinding.inflate(layoutInflater)) {
             setContentView(root)
             supportActionBar?.hide()
+            Log.i("WA-Articles", "Showing category with ${category.articles.size} articles.")
 
             toolbar.apply {
                 setNavigationOnClickListener { finish() }
@@ -53,6 +55,7 @@ class ArticlesActivity : AppCompatActivity() {
                     // View the clicked article
                     startActivity(
                         Intent(this@ArticlesActivity, ArticleViewerActivity::class.java).apply {
+                            Log.d("WA-Articles", "=========== Requested to show an article ===========\n$article")
                             putExtra(Utils.EXTRA_ARTICLE, article)
                         },
                         opt.toBundle()
@@ -84,10 +87,8 @@ class ArticlesActivity : AppCompatActivity() {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-                if (itemView.hasOnClickListeners().not()) {
-                    itemView.setOnClickListener {
-                        callback.invoke(article, card)
-                    }
+                itemView.setOnClickListener {
+                    callback.invoke(article, card)
                 }
             }
         }
@@ -102,6 +103,7 @@ class ArticlesActivity : AppCompatActivity() {
         val card: MaterialCardView = view.findViewById(R.id.card_topic)
         val tvTopicTitle: MaterialTextView = view.findViewById(R.id.tv_topic_title)
         val ivTopicThumb: AppCompatImageView = view.findViewById(R.id.iv_topic_thumb)
+
     }
 
 }

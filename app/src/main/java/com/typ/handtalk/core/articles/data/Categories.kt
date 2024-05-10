@@ -91,7 +91,9 @@ object Categories {
                 Articles.Article_22,
                 Articles.Article_342,
                 Articles.Article_32,
-            )
+            ).apply {
+                shuffle()
+            }.take((5 until 13).random()).toTypedArray()
         )
     }
 

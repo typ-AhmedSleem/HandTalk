@@ -31,7 +31,6 @@ import java.io.InputStream
 
 class ArticleViewerActivity : AppCompatActivity() {
 
-    private val mTag = "ArticleViewer"
     private val context: Context
         get() = this
 
@@ -42,6 +41,8 @@ class ArticleViewerActivity : AppCompatActivity() {
         val article = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getSerializableExtra(Utils.EXTRA_ARTICLE, Article::class.java) as Article
         } else intent.getSerializableExtra(Utils.EXTRA_ARTICLE) as Article
+
+        Log.i(TAG, "Viewing: $article")
         // * Bind UI
         with(ActivityArticleViewerBinding.inflate(layoutInflater)) {
             setContentView(root)
@@ -68,7 +69,7 @@ class ArticleViewerActivity : AppCompatActivity() {
                                 // Show loading
                                 withContext(Dispatchers.Main) {
                                     progress.show()
-                                    Log.i(mTag, "Before: ${vidFile.path} | ${vidFile.exists()}")
+                                    Log.i(TAG, "Before: ${vidFile.path} | ${vidFile.exists()}")
                                 }
                                 // Cache video
                                 var ins: InputStream? = null
@@ -77,7 +78,7 @@ class ArticleViewerActivity : AppCompatActivity() {
                                     // Create in and out IO streams
                                     ins = assets.open(article.videoPath)
                                     ots = FileOutputStream(vidFile)
-                                    Log.i(mTag, "Available: ${ins.available()} bytes.")
+                                    Log.i(TAG, "Available: ${ins.available()} bytes.")
                                     // Copy video file from in to out
                                     var read: Int
                                     val buffer = ByteArray(1024)
@@ -100,7 +101,7 @@ class ArticleViewerActivity : AppCompatActivity() {
                                 delay(2000)
                                 // Hide loading
                                 withContext(Dispatchers.Main) {
-                                    Log.i(mTag, "After: ${vidFile.path} | ${vidFile.exists()}")
+                                    Log.i(TAG, "After: ${vidFile.path} | ${vidFile.exists()}")
                                     progress.hide()
                                     // Play video
                                     setVideoURI(Uri.fromFile(vidFile))
@@ -146,6 +147,10 @@ class ArticleViewerActivity : AppCompatActivity() {
     private fun Float.dp2px(context: Context): Int {
         val scale = context.resources.displayMetrics.density
         return (this * scale + 0.5f).toInt()
+    }
+
+    companion object {
+        private const val TAG = "WA-ArticleViewer"
     }
 
 }
