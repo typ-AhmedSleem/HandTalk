@@ -143,7 +143,8 @@ class HandTalkAlgorithm(
         Log.i(TAG, "onSequenceCompleted: Received seq: ${word.signs.signsToString}. word= $word")
         Log.d(TAG, "onSequenceCompleted: Completed word identified. word= $word.")
 
-        sentenceBuilder.appendWord(word)
+        val isWordAppended = sentenceBuilder.appendWord(word)
+        Log.w(TAG, "onSequenceCompleted: isWordAppended= $isWordAppended")
 
         Log.i(TAG, "onSequenceCompleted: Current sentence= ${sentenceBuilder.currentSentence}, expected= ${sentenceBuilder.expectedSentence}")
         // * Check if the sentence matches the expected sentence

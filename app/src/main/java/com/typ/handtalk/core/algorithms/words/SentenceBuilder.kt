@@ -28,14 +28,16 @@ class SentenceBuilder {
     val isSentenceCompleted: Boolean
         get() = currentSentence.sameAs(expectedSentence)
 
+    /**
+     * Append a word to the current sentence.
+     * @return true if the word is appended, false otherwise
+     */
     fun appendWord(word: Word): Boolean {
-        expectedSentence?.let {
-            if (currentSentence.length >= it.length) return true
-        }
+        // Check if the last word is same as the the given word
+        if (word == currentSentence.lastWord) return false
+
         words.add(word)
-        return expectedSentence?.let {
-            return currentSentence.length >= it.length
-        } ?: false
+        return true
     }
 
     fun reset() {

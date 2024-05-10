@@ -121,7 +121,6 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
         // * Initialize the TextSpeaker
         speaker = TextSpeaker().apply {
             this.initializeEngine(this@LiveSignTranslatorActivity) {
-                speaker.speak("مرحباً بكم في HandTalk")
             }
         }
 

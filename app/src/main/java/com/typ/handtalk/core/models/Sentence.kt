@@ -26,6 +26,12 @@ data class Sentence(
 
     val length: Int = words.size
 
+    val isEmpty: Boolean
+        get() = words.isEmpty()
+
+    val isNotEmpty: Boolean
+        get() = !isEmpty
+
     fun startsSameAs(other: Sentence): Boolean {
         return firstWord == other.firstWord
     }
