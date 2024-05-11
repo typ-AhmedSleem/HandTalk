@@ -14,9 +14,15 @@ interface HandTalkAlgorithmCallback {
     fun onIdentifyGesture(frameResult: FrameResult)
 
     /**
-     * Called when a new word is identified.
+     * Called when a new word is identified that flagged as SINGLE_WORD from builder.
      */
     fun onIdentifyNewWord(word: Word)
+
+    /**
+     * Called when a new word is identified that flagged as WORD_ACCEPTED from builder.
+     */
+    fun onIdentifySentenceWord(word: Word)
+
 
     /**
      * Called when the algorithm has identified a the full sentence.

@@ -30,6 +30,12 @@ import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.core.tts.TextSpeaker
 import com.typ.handtalk.databinding.ActivitySignToTextTranslatorBinding
 import com.typ.handtalk.utils.asSuggestion
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -205,19 +211,30 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
 
     override fun onIdentifyNewWord(word: Word) {
         runOnUiThread {
-            val sentence = binding.tvInterpretedText.text.toString() + " " + word.arabicText
+            val sentence = word.arabicText
             binding.tvInterpretedText.text = sentence
             // * Try to speak the word
             speaker.speak(word.arabicText)
         }
     }
 
+    override fun onIdentifySentenceWord(word: Word) {
+        // * Try to speak the word
+        speaker.speak(word.arabicText)
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onTranslateFullSentence(sentence: Sentence) {
         runOnUiThread {
             // * Display the translation
-            startActivity(Intent(this, DisplayTranslationActivity::class.java).apply {
-                putExtra(DisplayTranslationActivity.EXTRA_TRANSLATION, sentence.arabic)
-            })
+            GlobalScope.launch(Dispatchers.IO) {
+                delay(250)
+                withContext(Dispatchers.Main) {
+                    startActivity(Intent(this@LiveSignTranslatorActivity, DisplayTranslationActivity::class.java).apply {
+                        putExtra(DisplayTranslationActivity.EXTRA_TRANSLATION, sentence.arabic)
+                    })
+                }
+            }
         }
     }
 
