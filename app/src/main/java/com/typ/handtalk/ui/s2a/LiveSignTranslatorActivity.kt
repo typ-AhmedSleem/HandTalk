@@ -29,6 +29,7 @@ import com.typ.handtalk.core.perms.PermissionHelper
 import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.core.tts.TextSpeaker
 import com.typ.handtalk.databinding.ActivitySignToTextTranslatorBinding
+import com.typ.handtalk.utils.asSuggestion
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -217,6 +218,12 @@ class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallbac
             startActivity(Intent(this, DisplayTranslationActivity::class.java).apply {
                 putExtra(DisplayTranslationActivity.EXTRA_TRANSLATION, sentence.arabic)
             })
+        }
+    }
+
+    override fun onSuggestSentence(currentSentence: Sentence, expectedSentence: Sentence) {
+        runOnUiThread {
+            binding.tvInterpretedText.text = currentSentence.asSuggestion(expectedSentence)
         }
     }
 

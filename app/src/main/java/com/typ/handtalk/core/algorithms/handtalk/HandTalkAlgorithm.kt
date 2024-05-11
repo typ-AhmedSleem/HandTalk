@@ -153,7 +153,11 @@ class HandTalkAlgorithm(
             // * Notify callback
             sentenceBuilder.expectedSentence?.let { callback.onTranslateFullSentence(it.clone()) }
             sentenceBuilder.reset()
-        } else callback.onIdentifyNewWord(word)
+        } else {
+            sentenceBuilder.expectedSentence?.let {
+                callback.onSuggestSentence(sentenceBuilder.currentSentence, it)
+            } ?: callback.onIdentifyNewWord(word)
+        }
 
         return true
         /*

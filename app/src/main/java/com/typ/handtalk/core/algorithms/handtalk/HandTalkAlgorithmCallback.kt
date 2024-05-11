@@ -24,6 +24,13 @@ interface HandTalkAlgorithmCallback {
     fun onTranslateFullSentence(sentence: Sentence)
 
     /**
+     * Called when the algorithm has identified a partial sentence.
+     * @param currentSentence The current sentence.
+     * @param expectedSentence The expected sentence.
+     */
+    fun onSuggestSentence(currentSentence: Sentence, expectedSentence: Sentence)
+
+    /**
      * Called when the recognizer reports that primary hand has disappeared.
      */
     fun onHandsDisappear()
