@@ -10,11 +10,14 @@ import androidx.core.content.res.ResourcesCompat
 import com.typ.handtalk.R
 import com.typ.handtalk.core.perms.PermissionHelper
 import com.typ.handtalk.core.perms.RequestRequiredPermissionsContract
+import com.typ.handtalk.core.tts.TextSpeaker
 import com.typ.handtalk.databinding.ActivityWelcomeBinding
 import com.typ.handtalk.ui.a2s.Arabic2SignTranslationHistoryActivity
 import com.typ.handtalk.ui.articles.ArticlesActivity
 import com.typ.handtalk.ui.s2a.LiveSignTranslatorActivity
+import kotlinx.coroutines.DelicateCoroutinesApi
 
+@OptIn(DelicateCoroutinesApi::class)
 class WelcomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWelcomeBinding
@@ -25,7 +28,7 @@ class WelcomeActivity : AppCompatActivity() {
             if (isShowingNormalLayout) {
                 isShowingNormalLayout = false
                 showNormalOrDeafLayout()
-            } else finishAffinity()
+            } else finish()
         }
     }
 
@@ -33,6 +36,12 @@ class WelcomeActivity : AppCompatActivity() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
+        // * Initialize the TextSpeaker
+        TextSpeaker().apply {
+            this.initializeEngine(this@WelcomeActivity) {
+                speak(getString(R.string.welcome_speech))
+            }
+        }
         // * Initialize the contract
         val reqPermsLauncher = registerForActivityResult(RequestRequiredPermissionsContract()) {
             if (it) startActivity(Intent(this, LiveSignTranslatorActivity::class.java))
@@ -67,6 +76,7 @@ class WelcomeActivity : AppCompatActivity() {
             btnArticles.setOnClickListener {
                 startActivity(Intent(this@WelcomeActivity, ArticlesActivity::class.java))
             }
+
         }
 
         // Register on-back-pressed callback

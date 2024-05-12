@@ -1,13 +1,13 @@
 package com.typ.handtalk.core.resolvers.models
 
 import com.typ.handtalk.core.models.hands.Hand
+import com.typ.handtalk.core.models.hands.LeftHand
+import com.typ.handtalk.core.models.hands.RightHand
 import com.typ.handtalk.core.models.signs.HandSign
-import com.typ.handtalk.core.models.signs.MovingSign
-import com.typ.handtalk.core.repository.Signs
 
 data class FrameResult(
-    val leftHand: Hand? = null,
-    val rightHand: Hand? = null,
+    val leftHand: LeftHand? = null,
+    val rightHand: RightHand? = null,
     val timestamp: Long = System.currentTimeMillis(),
 ) {
 
@@ -28,18 +28,15 @@ data class FrameResult(
     }
 
     val isRhsNone by lazy {
-        rhsLabel == "None"
+        rhsLabel == "none" || rhsLabel == ""
     }
 
     val isRhsNull by lazy {
         rhsLabel == null
     }
 
-    fun isSeparator(): Boolean {
-        if (rightHand == null) return false
-        if ((rightHand is MovingSign).not()) return false
-        return false
-//        return ((leftHand?.label ?: "None") == "None") && ((rightHand as MovingSign).isSeparator())
+    val isLhsNone by lazy {
+        lhsLabel == "none" || lhsLabel == ""
     }
 
     override fun toString(): String {
@@ -57,7 +54,12 @@ data class FrameResult(
         if (other !is FrameResult) return false
 
 //        return lhs == other.lhs && rhs == other.rhs
-        return hasSameRightSignAs(other.rhs)
+        val hasLHS = !isLeftNullOrNone()
+        val sameRHS = hasSameRightSignAs(other.rhs)
+        if (hasLHS) {
+            return hasSameLeftSignAs(other.lhs) && sameRHS
+        }
+        return sameRHS
     }
 
     fun hasSameRightSignAs(prevRHS: HandSign?): Boolean {
@@ -65,13 +67,13 @@ data class FrameResult(
         return rightHand.hasSameSignAs(prevRHS)
     }
 
-    fun hasSameLeftSignAs(prevSign: Hand?): Boolean {
+    fun hasSameLeftSignAs(prevSign: HandSign?): Boolean {
         if (leftHand == null || prevSign == null) return false
-        return leftHand.hasSameSignAs(prevSign.sign)
+        return leftHand.hasSameSignAs(prevSign)
     }
 
     fun isRightNullOrNone(): Boolean {
-        return rhsLabel == null || isRhsNone
+        return isRhsNull || isRhsNone
     }
 
     fun isLeftNullOrNone(): Boolean {
@@ -82,15 +84,9 @@ data class FrameResult(
         return isRightNullOrNone() && isLeftNullOrNone()
     }
 
-}
+    fun forEachHand(action: (Hand) -> Unit) {
+        leftHand?.let(action)
+        rightHand?.let(action)
+    }
 
-private fun MovingSign.isSeparator(): Boolean {
-    val separator = Signs.Separator()
-
-    if (this.label != separator.label) return false
-    if (this.score < separator.score) return false
-    if (this.direction != separator.direction) return false
-    if (this.distance < separator.distance) return false
-
-    return true // Considered a separator.
 }

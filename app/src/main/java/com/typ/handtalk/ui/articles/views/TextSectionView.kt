@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.LinearLayout
 import com.google.android.material.textview.MaterialTextView
 import com.typ.handtalk.R
-import com.typ.handtalk.articles.models.Section
+import com.typ.handtalk.core.articles.models.Section
 
 @SuppressLint("ViewConstructor")
 class TextSectionView(

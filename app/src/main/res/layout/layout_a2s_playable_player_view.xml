@@ -1,25 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="300dp"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/transparent">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@color/transparent"
+        android:backgroundTint="@color/colorPrimary"
+        android:importantForAccessibility="no"
+        android:scaleType="centerCrop" />
 
     <VideoView
         android:id="@+id/video_playable"
         android:layout_width="match_parent"
-        android:layout_gravity="center"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         tools:visibility="invisible" />
 
     <ImageView
         android:id="@+id/iv_playable"
         android:layout_width="match_parent"
-        android:layout_gravity="center"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:background="@color/transparent"
+        android:visibility="gone"
         android:importantForAccessibility="no"
-        android:scaleType="centerCrop"
-        android:src="@drawable/thumb3" />
+        android:scaleType="centerCrop" />
 
 </FrameLayout>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    ~ Copyright 2022 The TensorFlow Authors. All Rights Reserved.
+    ~
+    ~ Licensed under the Apache License, Version 2.0 (the "License");
+    ~ you may not use this file except in compliance with the License.
+    ~ You may obtain a copy of the License at
+    ~
+    ~       http://www.apache.org/licenses/LICENSE-2.0
+    ~
+    ~ Unless required by applicable law or agreed to in writing, software
+    ~ distributed under the License is distributed on an "AS IS" BASIS,
+    ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    ~ See the License for the specific language governing permissions and
+    ~ limitations under the License.
+-->
+<resources>
+    <string name="app_name">Hand Talk</string>
+    <string name="welcome_to_handtalk">مرحباً بك في تطبيق HandTalk</string>
+    <string name="handtalk_goal_desc">الآن يمكن للصُم التحدث بلغتهم الأم</string>
+    <string name="start_using_handtalk">ابدأ استخدام التطبيق</string>
+    <string name="categories">المجموعات</string>
+    <string name="start_a_new_translation">بدء ترجمة جديدة</string>
+    <string name="msg_no_a2s_translation_history">انت لم تقم بأي ترجمات سابقة. انشئ ترجمة بالضغط علي زر + في الاسفل</string>
+
+    <!-- * Articles feature strings go here -->
+    <string name="topics">المواضيع</string>
+    <string name="map">الخريطة</string>
+    <string name="cat1">مين هم الصم و ضعاف السمع؟</string>
+    <string name="cat2">إزاي اتواصل معاهم؟</string>
+    <string name="cat3">طرق التأهيل و الرعاية</string>
+    <string name="cat4">المعينات السمعية و أنواعها</string>
+    <string name="cat5">عملية زراعة القوقعة</string>
+    <string name="cat6">مؤسسات تأهيل الصم</string>
+    <string name="cat7">مترجمين لغة الإشارة</string>
+    <string name="video">فيديو</string>
+    <string name="show_fnd_on_map">عرض الموقع علي الخرائط</string>
+    <string name="copy_fnd_number">نسخ رقم الهاتف</string>
+    <string name="sub_cat_34">مواضيع توعوية</string>
+    <string name="arabic_to_sign_translator">العربية إلي اشارة</string>
+    <string name="allow_camera_access">السماح باستخدام الكاميرا</string>
+    <string name="camera_permission_desc">يحتاج التطبيق الي استخدام الكاميرا لكي يعمل بشكل طبيعي</string>
+    <string name="allow">السماح</string>
+    <string name="permissions_granted">تم السماح باستخدام الكاميرا</string>
+    <string name="permissions_denied">تم رفض استخدام الكاميرا</string>
+    <string name="prompt_a2s">اكتب ما تريده هنا او استخدم الميكروفون…</string>
+    <string name="translate">ترجمة الجملة</string>
+    <string name="empty_translation_prompt">لا يمكن ترجمة جملة فارغة</string>
+    <string name="translation_has_missing_words">تم ترجمة الجملة ولكنها تحتوي علي بعض الكلمات المفقوده. تفقد الكلمات التي باللون الاحمر مره اخري</string>
+    <string name="articles">مواضيع توعوية</string>
+    <string name="stop_translating">توقف عن عرض الترجمة</string>
+    <string name="camera_perm_required">يحتاج التطبيق الي استخدام الكاميرا لتتمكن من الاستمرار</string>
+    <string name="browse_articles">تصفح المقالات</string>
+    <string name="a2s_translator">مترجم العربية إلي اشارة</string>
+    <string name="sign_to_arabic_translator">مترجم لغة الاشارة</string>
+    <string name="normal_user">مستخدم ناطق (🗣️)</string>
+    <string name="deaf_user">أصم (🧏🏻)</string>
+    <string name="mic_permission_denied_or_cancelled">تعذر استخدام الميكروفون</string>
+    <string name="mic_permission_granted">تم السماح باستخدام الميكروفون</string>
+    <string name="listening">يمكنك التحدث انا اسمعك…</string>
+    <string name="sign_language_will_be_displayed_here">سيتم عرض الترجمة الي لغة الاشاره هنا بمجرد القيام بها</string>
+    <string name="reply">الرد عن طريق مترجم العربية الي اشارة</string>
+    <string name="speak_translation">استماع الي الترجمة</string>
+    <string name="copy_translation">نسخ الترجمة</string>
+    <string name="welcome_speech">مرحباً بكم في HandTalk. أصبَح بإمكان الصُم الآن التحدث بلغتهم الأم</string>
+
+</resources>

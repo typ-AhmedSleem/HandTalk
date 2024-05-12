@@ -1,6 +1,7 @@
 package com.typ.handtalk.ui.s2a
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -15,28 +16,40 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import com.google.mediapipe.tasks.core.Delegate
-import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.typ.handtalk.MainViewModel
 import com.typ.handtalk.R
+import com.typ.handtalk.core.algorithms.handtalk.HandTalkAlgorithm
+import com.typ.handtalk.core.algorithms.handtalk.HandTalkAlgorithmCallback
+import com.typ.handtalk.core.algorithms.recognizer.RecognizerError
+import com.typ.handtalk.core.errors.HandTalkError
+import com.typ.handtalk.core.models.ImageShape
+import com.typ.handtalk.core.models.Sentence
+import com.typ.handtalk.core.models.Word
 import com.typ.handtalk.core.perms.PermissionHelper
-import com.typ.handtalk.core.recognizer.HandSignRecognizer
-import com.typ.handtalk.core.recognizer.RecognizerError
-import com.typ.handtalk.core.recognizer.ResultBundle
-import com.typ.handtalk.core.recognizer.interfaces.GestureRecognizerListener
+import com.typ.handtalk.core.resolvers.models.FrameResult
+import com.typ.handtalk.core.tts.TextSpeaker
 import com.typ.handtalk.databinding.ActivitySignToTextTranslatorBinding
+import com.typ.handtalk.utils.asSuggestion
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListener {
+class LiveSignTranslatorActivity : AppCompatActivity(), HandTalkAlgorithmCallback {
 
     companion object {
         private const val TAG = "SignLiveTranslator"
     }
 
-    private lateinit var binding: ActivitySignToTextTranslatorBinding
-    private lateinit var recognizer: HandSignRecognizer
     private val viewModel: MainViewModel by viewModels()
+    private lateinit var speaker: TextSpeaker
+    private lateinit var algoHandTalk: HandTalkAlgorithm
+    private lateinit var binding: ActivitySignToTextTranslatorBinding
 
     // * Camera runtime
     private var camera: Camera? = null
@@ -84,7 +97,7 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
             .build()
             // The analyzer can then be assigned to the instance
             .also {
-                it.setAnalyzer(backgroundExecutor, recognizer::recognizeSignsInFrame)
+                it.setAnalyzer(backgroundExecutor, algoHandTalk::recognizeHandGestures)
             }
 
         // Must unbind the use-cases before rebinding them
@@ -109,31 +122,18 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
         ensurePermissionsGranted()
         // Setup background executor instance
         backgroundExecutor = Executors.newSingleThreadExecutor()
+        // * Setup HandTalkAlgorithm instance
+        algoHandTalk = HandTalkAlgorithm(this, this)
 
-        // Setup GestureRecognizer instance
-        recognizer = HandSignRecognizer(
-            context = this,
-            minHandDetectionConfidence = viewModel.currentMinHandDetectionConfidence,
-            minHandTrackingConfidence = viewModel.currentMinHandTrackingConfidence,
-            minHandPresenceConfidence = viewModel.currentMinHandPresenceConfidence,
-            currentDelegate = viewModel.currentDelegate,
-            listener = this
-        ) { label ->
-            runOnUiThread {
-                label.let {
-                    var interpretedText = binding.tvInterpretedText.text.toString()
-
-                    interpretedText += it ?: "===SEPARATOR===\n"
-                    interpretedText += "\n"
-
-                    binding.tvCurrentGesture.text = it
-                    binding.tvInterpretedText.text = interpretedText
-                }
+        // * Initialize the TextSpeaker
+        speaker = TextSpeaker().apply {
+            this.initializeEngine(this@LiveSignTranslatorActivity) {
             }
         }
 
-        if (recognizer.closed) {
-            backgroundExecutor.execute(recognizer::setupGestureRecognizer)
+        // * Initialize HandTalk recognizer
+        if (!algoHandTalk.recognizerInitialized) {
+            backgroundExecutor.execute(algoHandTalk::setupGestureRecognizer)
         }
 
         // Setup Camera instance
@@ -157,20 +157,20 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
         ensurePermissionsGranted()
         // Start the recognizer again when users come back to foreground.
         backgroundExecutor.execute {
-            if (recognizer.closed) recognizer.setupGestureRecognizer()
+            if (algoHandTalk.recognizer.closed) algoHandTalk.setupGestureRecognizer()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        if (this::recognizer.isInitialized) {
-            viewModel.setMinHandDetectionConfidence(recognizer.minHandDetectionConfidence)
-            viewModel.setMinHandTrackingConfidence(recognizer.minHandTrackingConfidence)
-            viewModel.setMinHandPresenceConfidence(recognizer.minHandPresenceConfidence)
-            viewModel.setDelegate(recognizer.currentDelegate)
+        if (this::algoHandTalk.isInitialized) {
+            viewModel.setDelegate(algoHandTalk.recognizer.currentDelegate)
+            viewModel.setMinHandDetectionConfidence(algoHandTalk.recognizer.minHandDetectionConfidence)
+            viewModel.setMinHandTrackingConfidence(algoHandTalk.recognizer.minHandTrackingConfidence)
+            viewModel.setMinHandPresenceConfidence(algoHandTalk.recognizer.minHandPresenceConfidence)
             // Close the HandSignRecognizer instance and release resources
             backgroundExecutor.execute {
-                recognizer.clearGestureRecognizer()
+                algoHandTalk.recognizer.clearGestureRecognizer()
             }
         }
     }
@@ -187,45 +187,104 @@ class LiveSignTranslatorActivity : AppCompatActivity(), GestureRecognizerListene
         imageAnalyzer?.targetRotation = binding.viewFinder.display.rotation
     }
 
-    override fun onRecognizerResult(resultBundle: ResultBundle) {
-        runOnUiThread {
-            // Show result of recognized gesture
-            val rawResult = resultBundle.rawResult
-            // Pass necessary information to OverlayView for drawing on the canvas
-            binding.overlay.setResults(
-                rawResult,
-                resultBundle.inputImageHeight,
-                resultBundle.inputImageWidth,
-                RunningMode.LIVE_STREAM
-            )
+    // REGION: HandTalkAlgorithmCallback
 
-            // Force a redraw
-            binding.overlay.invalidate()
+    override fun onHandsDisappear() {
+        runOnUiThread {
+            binding.tvRightGesture.text = null
+            binding.tvLeftGesture.text = null
+            binding.tvInterpretedText.text = null
+            binding.overlay.clear()
         }
     }
 
-    override fun onRecognizerError(error: RecognizerError) {
+    override fun onIdentifyGesture(frameResult: FrameResult) {
+        runOnUiThread {
+            if (!frameResult.isRhsNone) {
+                binding.tvRightGesture.text = frameResult.rhsLabel
+            }
+            if (!frameResult.isLhsNone) {
+                binding.tvLeftGesture.text = frameResult.lhsLabel
+            }
+        }
+    }
+
+    override fun onIdentifyNewWord(word: Word) {
+        runOnUiThread {
+            val sentence = word.arabicText
+            binding.tvInterpretedText.text = sentence
+            // * Try to speak the word
+            speaker.speak(word.arabicText)
+        }
+    }
+
+    override fun onIdentifySentenceWord(word: Word) {
+        // * Try to speak the word
+        speaker.speak(word.arabicText)
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    override fun onTranslateFullSentence(sentence: Sentence) {
+        runOnUiThread {
+            // * Display the translation
+            GlobalScope.launch(Dispatchers.IO) {
+                delay(250)
+                withContext(Dispatchers.Main) {
+                    startActivity(Intent(this@LiveSignTranslatorActivity, DisplayTranslationActivity::class.java).apply {
+                        putExtra(DisplayTranslationActivity.EXTRA_TRANSLATION, sentence.arabic)
+                    })
+                }
+            }
+        }
+    }
+
+    override fun onSuggestSentence(currentSentence: Sentence, expectedSentence: Sentence) {
+        runOnUiThread {
+            binding.tvInterpretedText.text = currentSentence.asSuggestion(expectedSentence)
+        }
+    }
+
+    override fun onReadyToDrawLandmarks(frameResult: FrameResult, inputShape: ImageShape) {
+        runOnUiThread {
+            binding.overlay.drawLandmarks(
+                frameResult,
+                inputShape.height,
+                inputShape.width,
+            )
+        }
+    }
+
+    override fun onErrorOccurred(error: HandTalkError) {
         runOnUiThread {
             when (error) {
                 is RecognizerError.GPUError -> {
                     Log.e(TAG, "onRecognizerError::GPUError => $error")
                     viewModel.setDelegate(Delegate.CPU)
-                    recognizer.currentDelegate = viewModel.currentDelegate
-                    if (recognizer.running) {
-                        recognizer.clearGestureRecognizer()
-                        recognizer.setupGestureRecognizer()
+                    algoHandTalk.recognizer.currentDelegate = viewModel.currentDelegate
+                    if (algoHandTalk.recognizer.running) {
+                        algoHandTalk.recognizer.clearGestureRecognizer()
+                        algoHandTalk.setupGestureRecognizer()
                     }
                 }
 
                 is RecognizerError.OtherError -> {
                     Log.e(TAG, "onRecognizerError::OtherError => $error")
+                    errorHasOccurred()
                 }
 
                 else -> {
                     Log.e(TAG, "onRecognizerError::UnknownError => $error")
+                    errorHasOccurred()
                 }
             }
         }
+    }
+
+    // END: HandTalkAlgorithmCallback
+
+    private fun errorHasOccurred() {
+        Toast.makeText(this, "Error has occurred. Restart the app", Toast.LENGTH_SHORT).show()
+        finish()
     }
 
 }

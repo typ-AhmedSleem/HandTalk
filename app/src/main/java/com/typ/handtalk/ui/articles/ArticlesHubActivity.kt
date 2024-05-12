@@ -21,7 +21,7 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import com.google.android.material.transition.platform.MaterialElevationScale
 import com.typ.handtalk.R
-import com.typ.handtalk.articles.data.Categories
+import com.typ.handtalk.core.articles.data.Categories
 import com.typ.handtalk.databinding.ActivityCategoriesBinding
 import com.typ.handtalk.utils.Utils
 
