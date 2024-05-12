@@ -16,6 +16,10 @@ data class Word(
         if (this === other) return true
         if (other !is Word) return false
 
+        // Check exclusively for words of ids 8, 9 as they are the same
+        if (id == 8 && other.id == 9) return true
+        if (id == 9 && other.id == 8) return true
+
         return id == other.id
     }
 

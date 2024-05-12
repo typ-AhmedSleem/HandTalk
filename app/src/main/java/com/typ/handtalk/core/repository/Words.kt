@@ -117,7 +117,7 @@ object Words {
             16,
             "ورحمة",
             sequenceOfGestures(
-                rhResult("44"),
+                rhResult("33"),
             )
         ),
         Word(

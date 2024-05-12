@@ -13,6 +13,7 @@ import com.typ.handtalk.core.algorithms.recognizer.interfaces.HandSignRecognizer
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequencer
 import com.typ.handtalk.core.algorithms.sequencer.GestureSequencerCallback
 import com.typ.handtalk.core.algorithms.words.SentenceBuilder
+import com.typ.handtalk.core.algorithms.words.enums.SentenceFlag
 import com.typ.handtalk.core.models.ImageShape
 import com.typ.handtalk.core.models.Word
 import com.typ.handtalk.core.resolvers.models.FrameResult
@@ -143,54 +144,61 @@ class HandTalkAlgorithm(
         Log.i(TAG, "onSequenceCompleted: Received seq: ${word.signs.signsToString}. word= $word")
         Log.d(TAG, "onSequenceCompleted: Completed word identified. word= $word.")
 
-        val isWordAppended = sentenceBuilder.appendWord(word)
-        Log.w(TAG, "onSequenceCompleted: isWordAppended= $isWordAppended")
+        val flag = sentenceBuilder.appendWord(word)
+        Log.v(TAG, "onSequenceCompleted: flag= $flag")
 
-        Log.i(TAG, "onSequenceCompleted: Current sentence= ${sentenceBuilder.currentSentence}, expected= ${sentenceBuilder.expectedSentence}")
-        // * Check if the sentence matches the expected sentence
-        val isSentenceCompleted = sentenceBuilder.isSentenceCompleted
-        if (isSentenceCompleted) {
-            // * Notify callback
-            sentenceBuilder.expectedSentence?.let { callback.onTranslateFullSentence(it.clone()) }
-            sentenceBuilder.reset()
-        } else {
-            sentenceBuilder.expectedSentence?.let {
-                callback.onSuggestSentence(sentenceBuilder.currentSentence, it)
-            } ?: callback.onIdentifyNewWord(word)
+        when (flag) {
+            SentenceFlag.SINGLE_WORD -> {
+                callback.onIdentifyNewWord(word)
+                sequencer.createNewRun()
+                sentenceBuilder.reset()
+            }
+
+            SentenceFlag.WORD_ACCEPTED -> {
+                callback.onIdentifySentenceWord(word)
+                sentenceBuilder.expectedSentence?.let { callback.onSuggestSentence(sentenceBuilder.currentSentence, it) }
+            }
+
+            SentenceFlag.WORD_REJECTED -> {
+//                callback.onHandsDisappear()
+                sequencer.createNewRun()
+                sentenceBuilder.reset()
+            }
+
+            SentenceFlag.SENTENCE_COMPLETED -> {
+                sentenceBuilder.expectedSentence?.let { callback.onTranslateFullSentence(it) }
+                sequencer.createNewRun()
+                sentenceBuilder.reset()
+            }
+
+            SentenceFlag.WORD_MISMATCH -> {
+                Log.w(TAG, "onSequenceCompleted: Word mismatch detected. word= $word.")
+            }
+
+            SentenceFlag.REPEATING_WORD -> {
+                Log.w(TAG, "onSequenceCompleted: Word is repeating. word= $word.")
+            }
         }
 
-        return true
-        /*
-        * Validate the sequence
-        if (!sequence.isValid) {
-        Log.d(TAG, "onSequenceCompleted: Invalid sequence (Empty suggested words).")
-        return true
-        }
-        val suggestedWords = sequence.suggestedWords
-        Log.d(TAG, "onSequenceCompleted: Suggested words= ${suggestedWords.contentToString()}")
-        // * Get the current sentence
-        var currentSentence = sentenceBuilder.currentSentence
-        Log.d(TAG, "onSequenceCompleted: CurrentSentence= $currentSentence")
-        var expectedSentence = sentenceBuilder.expectedSentence
-        Log.d(TAG, "onSequenceCompleted: ExpectedSentence= $expectedSentence")
-        // * Select the most suitable word out of this sequence then append it to builder
-        val suitableWord = WordSelector.selectMostSuitableWord(currentSentence, expectedSentence, suggestedWords)
-        val completed = sentenceBuilder.appendWord(suitableWord)
-        currentSentence = sentenceBuilder.currentSentence
-        Log.d(TAG, "onSequenceCompleted: CurrentSentence= $currentSentence")
-        expectedSentence = sentenceBuilder.expectedSentence
-        Log.d(TAG, "onSequenceCompleted: ExpectedSentence= $expectedSentence")
-        // * Check if the sentence is completed
-        if (completed) {
-        // Notify callback
-        Log.d(TAG, "onSequenceCompleted: Sentence completed. cur=$currentSentence | exp=$expectedSentence")
-        sentenceBuilder.expectedSentence?.let { callback.onTranslateFullSentence(it) }
-        sentenceBuilder.reset()
-        } else {
-        Log.d(TAG, "onSequenceCompleted: Sentence not completed. length= ${sentenceBuilder.currentSentence}")
-        }
-        return true
-        */
+//
+//        val flag = sentenceBuilder.appendWord(word)
+//        Log.w(TAG, "onSequenceCompleted: flag= $flag")
+//
+//        Log.i(TAG, "onSequenceCompleted: $sentenceBuilder")
+//        // * Check if the sentence matches the expected sentence
+//        val isSentenceCompleted = sentenceBuilder.isSentenceCompleted
+//        if (isSentenceCompleted) {
+//            // * Notify callback
+//            sentenceBuilder.expectedSentence?.let { callback.onTranslateFullSentence(it.clone()) }
+//            sentenceBuilder.reset()
+//        } else {
+//            sentenceBuilder.expectedSentence?.let {
+//                callback.onIdentifySentenceWord(word)
+//                callback.onSuggestSentence(sentenceBuilder.currentSentence, it)
+//            } ?: callback.onIdentifyNewWord(word)
+//        }
+
+        return false
     }
 
     override fun onSequenceStarted() {

@@ -33,7 +33,9 @@ data class Sentence(
         get() = !isEmpty
 
     fun startsSameAs(other: Sentence): Boolean {
-        return firstWord == other.firstWord
+        return words.zip(other.words).all {
+            it.first == it.second
+        }
     }
 
     fun sameOrMoreLengthThan(other: Sentence?): Boolean {
@@ -64,6 +66,13 @@ data class Sentence(
     }
 
     fun clone() = Sentence(words.copyOf())
+
+    fun getNextWordBetween(current: Sentence): Word? {
+        if (words.size > current.words.size) {
+            return words[current.words.size]
+        }
+        return null
+    }
 
 
 }
