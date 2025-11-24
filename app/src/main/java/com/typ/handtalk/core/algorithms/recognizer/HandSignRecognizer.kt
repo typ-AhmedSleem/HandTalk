@@ -34,6 +34,7 @@ import com.typ.handtalk.core.models.ImageShape
 import com.typ.handtalk.core.resolvers.FrameResultResolver
 import com.typ.handtalk.core.resolvers.models.FrameResult
 import com.typ.handtalk.utils.shape
+import androidx.core.graphics.createBitmap
 
 class HandSignRecognizer(
     val context: Context,
@@ -118,7 +119,7 @@ class HandSignRecognizer(
         val frameTime = SystemClock.uptimeMillis()
 
         // Copy out RGB bits from the frame to a bitmap buffer
-        val bitmapBuffer = Bitmap.createBitmap(imageProxy.width, imageProxy.height, Bitmap.Config.ARGB_8888)
+        val bitmapBuffer = createBitmap(imageProxy.width, imageProxy.height)
         imageProxy.use { bitmapBuffer.copyPixelsFromBuffer(imageProxy.planes[0].buffer) }
         imageProxy.close()
 
