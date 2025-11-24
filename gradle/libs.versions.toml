@@ -1,8 +1,5 @@
 [versions]
-agp = "8.3.0"
-kotlin = "1.9.21"
 coreKtx = "1.12.0"
-junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
@@ -10,30 +7,70 @@ material = "1.11.0"
 activity = "1.8.2"
 constraintlayout = "2.1.4"
 navigation = "2.7.7"
-camera = "1.3.2"
 androidLibrary = "8.3.1"
-deUndercouchDownload = "4.1.2"
-ksp = "1.9.21-1.0.15"
-mediapipe = "0.10.11"
-kotlinxCoroutines = "1.7.3"
-easyrecyclerview = "4.4.2"
-recyclerview = "1.3.2"
-kiel = "1.2.1"
 roomRuntime = "2.6.1"
+agp = "8.12.3"
+android-compileSdk = "36"
+android-minSdk = "26"
+android-targetSdk = "36"
+androidx-activity = "1.11.0"
+androidx-appcompat = "1.7.1"
+androidx-constraintlayout = "2.2.1"
+androidx-core = "1.17.0"
+androidx-espresso = "3.7.0"
+androidx-lifecycle = "2.9.3"
+androidx-testExt = "1.3.0"
+androidx-room = "2.8.0"
+androidx-activityCompose = "1.9.0"
+androidx-espresso-core = "3.5.1"
+androidx-material = "1.13.0"
+androidx-test-junit = "1.3.0"
+androidx-browser = "1.9.0"
+androidx-startup = "1.2.0"
+androidx-runtime = "1.9.1"
+androidx-ui = "1.9.1"
+coilCompose = "3.3.0"
+ksp = "2.2.20-2.0.3"
+composeMultiplatform = "1.8.2"
+cupertino = "0.1.0-alpha04"
+junit = "4.13.2"
+kotlin = "2.2.20"
+alertKmp = "2.0.0"
+filekitComposeVersion = "0.8.8"
+kottie = "2.1.0"
+multiplatformSettingsNoArg = "1.1.1"
+moko-permissionsCompose = "0.18.0"
+playServicesLocation = "21.3.0"
+result = "5.6.0"
+kotlinxDatetime = "0.6.0"
+kotlinxSerialization = "1.7.1"
+kotlinxCoroutines = "1.9.0-RC"
+uiToolingPreviewAndroid = "1.6.8"
+voyagerNavigator = "1.1.0-beta03"
+sqlDelight = "2.1.0"
+kmputils = "1.7.0"
+sqlite = "2.6.0"
+testng = "6.9.6"
+ktor = "3.1.1"
+coil = "3.3.0"
+koin = "4.1.1"
+calf = "0.8.0"
+kotlinStdlib = "2.2.20"
+runner = "1.7.0"
+core = "1.7.0"
+camera = "1.3.2"
+deUndercouchDownload = "4.1.2"
+recyclerview = "1.3.2"
+mediapipe = "0.10.11"
+easyrecyclerview = "4.4.2"
+kiel = "1.2.1"
 
 [libraries]
-androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
-androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 kotlinx-corotines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
-androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-window = { group = "androidx.window", name = "window", version = "1.2.0" }
 androidx-camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camera" }
 androidx-camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camera" }
@@ -44,10 +81,99 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 mediapipe-tasks-vision = { group = "com.google.mediapipe", name = "tasks-vision", version.ref = "mediapipe"}
 easy-recyclerview = { group = "com.jude", name = "easyrecyclerview", version.ref = "easyrecyclerview" }
 kiel = { group = "io.github.ibrahimyilmaz", name = "kiel", version.ref = "kiel" }
+alert-kmp = { module = "io.github.khubaibkhan4:alert-kmp", version.ref = "alertKmp" }
+cupertino = { module = "io.github.alexzhirkevich:cupertino", version.ref = "cupertino" }
+cupertino-icons-extended = { module = "io.github.alexzhirkevich:cupertino-icons-extended", version.ref = "cupertino" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-core-core = { group = "androidx.core", name = "core", version.ref = "androidx-core" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
+androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-junit" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+androidx-material = { group = "com.google.android.material", name = "material", version.ref = "androidx-material" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
+androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "androidx-browser" }
+androidx-startup-runtime = { group = "androidx.startup", name = "startup-runtime", version.ref = "androidx-startup" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
+kottie = { module = "io.github.ismai117:kottie", version.ref = "kottie" }
+multiplatform-settings-no-arg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatformSettingsNoArg" }
+moko-permissions-compose = { module = "dev.icerock.moko:permissions-compose", version.ref = "moko-permissionsCompose" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
+result = { module = "com.github.kittinunf.result:result", version.ref = "result" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
+androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
+androidx-runtime = { group = "androidx.compose.runtime", name = "runtime", version.ref = "androidx-runtime" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "androidx-ui" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidx-room" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidx-room" }
+vinceglb-filekit-compose = { module = "io.github.vinceglb:filekit-compose", version.ref = "filekitComposeVersion" }
+voyager-bottom-sheet-navigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyagerNavigator" }
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyagerNavigator" }
+voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyagerNavigator" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyagerNavigator" }
+voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyagerNavigator" }
+sqlDelight-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
+sqlDelight-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
+kmputils-common = { module = "pro.respawn.kmmutils:common", version.ref = "kmputils" }
+kmputils-compose = { module = "pro.respawn.kmmutils:compose", version.ref = "kmputils" }
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+sqlDelight-primitiveAdapters = { module = "app.cash.sqldelight:primitive-adapters", version.ref = "sqlDelight" }
+sqlDelight-coroutinesExtensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqlDelight" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
+ktor-client-ios = { module = "io.ktor:ktor-client-ios", version.ref = "ktor" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-client-contentNegotiaition = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-serializationJson = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation", version.ref = "koin" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+calf-ui = { group = "com.mohamedrejeb.calf", name = "calf-ui", version.ref = "calf" }
+calf-permissions = { group = "com.mohamedrejeb.calf", name = "calf-permissions", version.ref = "calf" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+testng = { group = "org.testng", name = "testng", version.ref = "testng" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
+androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
+androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 
 [plugins]
-androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-androidLibrary = { id = "com.android.library", version.ref = "androidLibrary" }
 deUndercouchDownload = { id = "de.undercouch.download", version.ref = "deUndercouchDownload" }
+androidKotlinMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+androidLibrary = { id = "com.android.library", version.ref = "agp" }
+android-lint = { id = "com.android.lint", version.ref = "agp" }
+jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+sqlDelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+room = { id = "androidx.room", version.ref = "androidx-room" }
+
+[bundles]
+coil = ["coil-compose", "coil-network-ktor3"]
+kmpUtils = ["kmputils-common", "kmputils-compose"]
+krouteEssentials = ["voyager-navigator", "koin-core"]
+composeCupertino = ["cupertino", "cupertino-icons-extended"]
+voyager = ["voyager-navigator", "voyager-screenmodel", "voyager-transitions"]
+sqlDelightUtils = ["sqlDelight-coroutinesExtensions", "sqlDelight-primitiveAdapters"]
+androidxLifecycle = ["androidx-lifecycle-runtimeCompose", "androidx-lifecycle-viewmodel"]
+koin = ["koin-core", "koin-compose", "koin-compose-viewmodel", "koin-compose-viewmodel-navigation"]
+kotlinx = ["kotlinx-serialization", "kotlinx-datetime", "kotlinx-coroutines"]
+ktorBackend = ["ktor-client-serializationJson", "ktor-client-contentNegotiaition", "ktor-client-logging", "ktor-client-cio", "ktor-client-mock", "ktor-client-core"]
