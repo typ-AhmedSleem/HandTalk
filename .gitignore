@@ -16,3 +16,5 @@ local.properties
 /.idea
 *.mp4
 release/
+build/
+.kotlin/
