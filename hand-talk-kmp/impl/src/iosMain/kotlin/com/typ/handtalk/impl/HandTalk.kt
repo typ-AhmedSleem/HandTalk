@@ -3,22 +3,13 @@ package com.typ.handtalk.impl
 import com.typ.handtalk.domain.models.FrameResult
 import com.typ.handtalk.domain.models.HandTalkEvent
 import com.typ.handtalk.domain.models.RecognizerError
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 
-actual class HandTalk {
-    private val _frameState = MutableStateFlow<FrameResult?>(null)
-    actual val frameState: StateFlow<FrameResult?> = _frameState.asStateFlow()
-
-    private val _handtalkEvents = MutableSharedFlow<HandTalkEvent>()
-    actual val handtalkEvents: SharedFlow<HandTalkEvent> = _handtalkEvents.asSharedFlow()
-
-    private val _errors = MutableSharedFlow<RecognizerError>()
-    actual val errors: SharedFlow<RecognizerError> = _errors.asSharedFlow()
+actual class HandTalk actual constructor(recognizer: HandSignRecognizer) {
+    actual val frameState: StateFlow<FrameResult?> = recognizer.frameState
+    actual val handtalkEvents: SharedFlow<HandTalkEvent> = recognizer.handtalkEvents
+    actual val errors: SharedFlow<RecognizerError> = recognizer.errors
 
     actual fun start() {
         // iOS implementation stub
