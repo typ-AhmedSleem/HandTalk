@@ -1,8 +1,9 @@
 package com.typ.handtalk.impl
 
-import android.content.Context
 import android.os.SystemClock
 import com.google.mediapipe.framework.image.MPImage
+import com.google.mediapipe.framework.image.BitmapImageBuilder
+import androidx.camera.core.ImageProxy
 import com.google.mediapipe.tasks.core.BaseOptions
 import com.google.mediapipe.tasks.core.Delegate
 import com.google.mediapipe.tasks.vision.core.RunningMode
@@ -18,9 +19,10 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import android.content.Context
 
 actual class HandSignRecognizer(
-    private val context: Context,
+    val context: Context,
     private val delegate: Delegate = Delegate.CPU,
     val minHandDetectionConfidence: Float = 0.5f,
     val minHandTrackingConfidence: Float = 0.5f,
@@ -46,6 +48,11 @@ actual class HandSignRecognizer(
 
     private var lastFrameResult: FrameResult? = null
 
+    /** Allows the [HandTalk] facade to emit events (e.g., [HandTalkEvent.StopRecognizer]). */
+    fun emitEvent(event: HandTalkEvent) {
+        _handtalkEvents.tryEmit(event)
+    }
+
     actual fun setup() {
         val baseOptionsBuilder = BaseOptions.builder()
             .setDelegate(delegate)
@@ -70,8 +77,10 @@ actual class HandSignRecognizer(
 
     fun clearGestureRecognizer() = release()
 
-    fun recognize(mpImage: MPImage) {
+    fun recognize(imageProxy: ImageProxy) {
+        val mpImage = BitmapImageBuilder(imageProxy.toBitmap()).build()
         gestureRecognizer?.recognizeAsync(mpImage, SystemClock.uptimeMillis())
+        imageProxy.close()
     }
 
     private fun onResult(result: GestureRecognizerResult, image: MPImage) {
