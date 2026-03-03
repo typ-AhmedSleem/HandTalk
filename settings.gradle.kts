@@ -25,3 +25,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "HandTalk"
 include(":app")
+include(":hand-talk-kmp:domain")
+include(":hand-talk-kmp:impl")
+include(":hand-talk-kmp:utils")
