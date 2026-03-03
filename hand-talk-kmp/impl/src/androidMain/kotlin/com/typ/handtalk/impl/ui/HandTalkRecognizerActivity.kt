@@ -7,22 +7,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.AspectRatio
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.typ.handtalk.domain.models.HandTalkEvent
 import com.typ.handtalk.impl.HandSignRecognizer
+import com.typ.handtalk.impl.R
+import com.typ.handtalk.impl.ui.overlay.OverlayView
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 /**
- * A dedicated activity bridge that handles CameraX setup and feeds frames to the [HandSignRecognizer].
- * It has no UI — it is intended to be used as a background processing layer for Compose Multiplatform.
- *
- * The recognizer is injected via Koin and the activity reactively finishes itself when it
- * collects a [HandTalkEvent.StopRecognizer] event from the shared flow.
+ * Activity that displays the camera preview with a hand landmark overlay.
+ * Feeds frames to the [HandSignRecognizer] and reactively finishes when
+ * [HandTalkEvent.StopRecognizer] is collected.
  */
 class HandTalkRecognizerActivity : AppCompatActivity() {
 
@@ -30,36 +32,62 @@ class HandTalkRecognizerActivity : AppCompatActivity() {
         private const val TAG = "HandTalkRecognizerAct"
     }
 
-    /** Injected via Koin — same singleton instance used everywhere. */
     private val recognizer: HandSignRecognizer by inject()
+
+    private lateinit var viewFinder: PreviewView
+    private lateinit var overlay: OverlayView
 
     private var cameraProvider: ProcessCameraProvider? = null
     private var imageAnalyzer: ImageAnalysis? = null
+    private var preview: Preview? = null
     private lateinit var backgroundExecutor: ExecutorService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_handtalk_recognizer)
+
+        viewFinder = findViewById(R.id.view_finder)
+        overlay = findViewById(R.id.overlay)
 
         backgroundExecutor = Executors.newSingleThreadExecutor()
 
-        // Setup the recognizer if it hasn't been set up yet
         if (!recognizer.isInitialized) {
             backgroundExecutor.execute { recognizer.setup() }
         }
 
-        setupCamera()
+        viewFinder.post { setupCamera() }
+
         observeStopEvent()
+        observeFrameState()
     }
 
     /**
-     * Collect [HandTalkEvent.StopRecognizer] from the shared flow.
-     * When received, the activity finishes itself — no static references needed.
+     * Reactively finish this activity when [HandTalkEvent.StopRecognizer] is collected.
      */
     private fun observeStopEvent() {
         lifecycleScope.launch {
             recognizer.handtalkEvents.collect { event ->
                 if (event is HandTalkEvent.StopRecognizer) {
                     finish()
+                }
+            }
+        }
+    }
+
+    /**
+     * Update the landmark overlay whenever a new [FrameResult] arrives.
+     */
+    private fun observeFrameState() {
+        lifecycleScope.launch {
+            recognizer.frameState.collect { frameResult ->
+                if (frameResult != null) {
+                    overlay.drawLandmarks(
+                        frameResult,
+                        imageHeight = viewFinder.height,
+                        imageWidth = viewFinder.width
+                    )
+                } else {
+                    overlay.clear()
                 }
             }
         }
@@ -80,8 +108,16 @@ class HandTalkRecognizerActivity : AppCompatActivity() {
             .requireLensFacing(CameraSelector.LENS_FACING_FRONT)
             .build()
 
+        // Camera preview
+        preview = Preview.Builder()
+            .setTargetAspectRatio(AspectRatio.RATIO_4_3)
+            .setTargetRotation(viewFinder.display.rotation)
+            .build()
+
+        // Image analysis for frame processing
         imageAnalyzer = ImageAnalysis.Builder()
             .setTargetAspectRatio(AspectRatio.RATIO_4_3)
+            .setTargetRotation(viewFinder.display.rotation)
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)
             .build()
@@ -93,7 +129,8 @@ class HandTalkRecognizerActivity : AppCompatActivity() {
 
         try {
             cameraProvider.unbindAll()
-            cameraProvider.bindToLifecycle(this, cameraSelector, imageAnalyzer)
+            cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalyzer)
+            preview?.setSurfaceProvider(viewFinder.surfaceProvider)
         } catch (exc: Exception) {
             Log.e(TAG, "Use case binding failed", exc)
         }
