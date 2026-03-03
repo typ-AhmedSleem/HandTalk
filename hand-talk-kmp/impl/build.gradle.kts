@@ -21,6 +21,7 @@ kotlin {
             implementation(project(":hand-talk-kmp:domain"))
             implementation(project(":hand-talk-kmp:utils"))
             implementation(libs.kotlinx.coroutines)
+            implementation(libs.koin.core)
         }
         androidMain.dependencies {
             implementation(libs.mediapipe.tasks.vision)
@@ -29,6 +30,8 @@ kotlin {
             implementation(libs.androidx.camera.view)
             implementation(libs.androidx.camera.camera2)
             implementation(libs.androidx.core.ktx)
+            implementation(libs.androidx.appcompat)
+            implementation(libs.koin.android)
         }
         iosMain.dependencies {
         }
