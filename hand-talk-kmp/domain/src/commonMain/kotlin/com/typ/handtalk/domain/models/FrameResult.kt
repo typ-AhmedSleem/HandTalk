@@ -16,4 +16,10 @@ data class FrameResult(
 
     fun isRightNullOrNone(): Boolean = isRhsNull || isRhsNone
     fun isLeftNullOrNone(): Boolean = lhsLabel == null || lhsLabel == "None" || lhsLabel == "none" || lhsLabel == ""
+
+    /** Iterates over all non-null hands in this frame result. */
+    inline fun forEachHand(action: (Hand) -> Unit) {
+        leftHand?.let(action)
+        rightHand?.let(action)
+    }
 }
