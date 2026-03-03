@@ -5,16 +5,18 @@ plugins {
 }
 
 android {
+    val minSdkVersion = libs.versions.android.minSdk.get().toInt()
+    val compileSdkVersion = libs.versions.android.compileSdk.get().toInt()
+
     namespace = "com.typ.handtalk"
-    compileSdk = 34
+    compileSdk = compileSdkVersion
 
     defaultConfig {
         applicationId = "com.typ.handtalk"
-        minSdk = 26
-        targetSdk = 34
+        minSdk = minSdkVersion
+        targetSdk = compileSdkVersion
         versionCode = 1
         versionName = "0.1.0"
-
     }
 
     buildTypes {
@@ -24,11 +26,13 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        compileOptions {
+            jvmTarget = "11"
+        }
     }
     buildFeatures {
         viewBinding = true
@@ -37,7 +41,6 @@ android {
         includeInApk = false
         includeInBundle = false
     }
-    buildToolsVersion = "35.0.0 rc1"
 }
 
 dependencies {
